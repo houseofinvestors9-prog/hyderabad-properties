@@ -9,3 +9,6 @@ coverage/
 # Local embedded database
 .data/
 *.tsbuildinfo
+
+# Local editor and agent settings
+.claude/

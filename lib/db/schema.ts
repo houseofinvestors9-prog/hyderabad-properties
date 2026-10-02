@@ -225,3 +225,60 @@ export type MicroMarketRow = typeof microMarkets.$inferSelect;
 export type PendingUpdateRow = typeof pendingUpdates.$inferSelect;
 export type ProjectAlertRow = typeof projectAlerts.$inferSelect;
 export type WatchSubscriptionRow = typeof watchSubscriptions.$inferSelect;
+
+export type LeadSource = 'booking' | 'shortlist' | 'report' | 'concierge' | 'newsletter' | 'project_request';
+
+/**
+ * People who asked us for something: a call, a shortlist, a full report.
+ * Each row is also forwarded to LEAD_WEBHOOK_URL (the CRM) when it is set.
+ */
+export const leads = pgTable(
+  'leads',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    source: text('source').$type<LeadSource>().notNull(),
+    name: text('name'),
+    email: text('email'),
+    phone: text('phone'),
+    projectId: text('project_id'),
+    projectName: text('project_name'),
+    preferences: jsonb('preferences').$type<Record<string, unknown>>(),
+    message: text('message'),
+    slot: text('slot'),
+    pagePath: text('page_path'),
+    utm: jsonb('utm').$type<Record<string, string>>(),
+    consent: boolean('consent').notNull().default(false),
+    forwardStatus: text('forward_status').$type<'sent' | 'logged' | 'failed'>().notNull().default('logged'),
+    forwardError: text('forward_error'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('leads_created_idx').on(t.createdAt), index('leads_email_idx').on(t.email), index('leads_phone_idx').on(t.phone)]
+);
+
+export type ProjectRequestStatus = 'new' | 'researching' | 'added' | 'rejected';
+
+/**
+ * Projects buyers searched for that we have not checked yet.
+ * The team works this list on the Review Desk so coverage grows with demand.
+ */
+export const projectRequests = pgTable(
+  'project_requests',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    projectName: text('project_name').notNull(),
+    nameKey: text('name_key').notNull(),
+    developer: text('developer'),
+    area: text('area'),
+    reraNumber: text('rera_number'),
+    stage: text('stage'),
+    searchedQuery: text('searched_query'),
+    requesterName: text('requester_name'),
+    requesterEmail: text('requester_email'),
+    requesterPhone: text('requester_phone'),
+    leadId: uuid('lead_id'),
+    status: text('status').$type<ProjectRequestStatus>().notNull().default('new'),
+    addedProjectId: text('added_project_id'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('project_requests_name_idx').on(t.nameKey), index('project_requests_status_idx').on(t.status, t.createdAt)]
+);

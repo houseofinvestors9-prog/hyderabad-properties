@@ -35,7 +35,7 @@ export function JargonTooltip({ term, customExplanation, children }: JargonToolt
 
   return (
     <span className="relative inline-flex items-center align-baseline gap-1" ref={tooltipRef}>
-      <span className="font-medium underline decoration-dotted decoration-[#0E7C86] underline-offset-4 cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
+      <span className="font-medium underline decoration-dotted decoration-[#212121] underline-offset-4 cursor-pointer" onClick={() => setIsOpen(!isOpen)}>
         {children || term}
       </span>
       <button
@@ -45,13 +45,13 @@ export function JargonTooltip({ term, customExplanation, children }: JargonToolt
           setIsOpen(!isOpen);
         }}
         aria-label={`Explain ${term}`}
-        className="inline-flex items-center justify-center w-4 h-4 text-xs font-semibold rounded-full bg-[#0E7C86]/10 text-[#0E7C86] hover:bg-[#0E7C86] hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#0E7C86]/40 cursor-pointer"
+        className="inline-flex items-center justify-center w-4 h-4 text-xs font-semibold rounded-full bg-[#f2f2f2] text-[#212121] hover:bg-[#212121] hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#212121]/40 cursor-pointer"
       >
         <span className="text-[10px] leading-none">?</span>
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-[#0F1B2D] text-white text-xs rounded-xl shadow-xl z-50 animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-[#212121] text-white text-xs rounded-xl shadow-xl z-50 animate-in fade-in zoom-in-95 duration-150">
           <div className="flex items-start justify-between gap-2 mb-1">
             <span className="font-semibold text-white tracking-wide">{termData.term}</span>
             <button
@@ -65,7 +65,7 @@ export function JargonTooltip({ term, customExplanation, children }: JargonToolt
           <p className="text-slate-200 leading-relaxed font-normal">
             {termData.explanation}
           </p>
-          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-[#0F1B2D]" />
+          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-[#212121]" />
         </div>
       )}
     </span>

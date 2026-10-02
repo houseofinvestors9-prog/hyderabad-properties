@@ -1,40 +1,24 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans, Inter, Geist_Mono } from 'next/font/google';
+import { Manrope } from 'next/font/google';
 import './globals.css';
 
-const plusJakarta = Plus_Jakarta_Sans({
+// One family across the site, as in the HouseMarket layout: Manrope for headings, body and numbers.
+const manrope = Manrope({
   subsets: ['latin'],
-  variable: '--font-heading',
+  variable: '--font-manrope',
   display: 'swap',
-  weight: ['400', '500', '600', '700', '800'],
+  weight: ['400', '500', '600', '700'],
 });
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-sans',
-  display: 'swap',
-  weight: ['300', '400', '500', '600', '700'],
-});
-
-const geistMono = Geist_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono',
-  display: 'swap',
-});
+const title = 'hyderabad.properties: check any Hyderabad project before you buy';
+const description =
+  'Free, independent checks for Hyderabad homes. RERA status, building approvals, lake buffer zones and the true cost of buying, in one report.';
 
 export const metadata: Metadata = {
-  title: 'hyderabad.properties - Independent Property Verification',
-  description: 'Independent property verification by House of Investors. Checks RERA registration, approvals, lake buffer zones, and true costs in seconds.',
-  openGraph: {
-    title: 'hyderabad.properties - Independent Property Verification',
-    description: 'Independent property verification by House of Investors. Checks RERA registration, approvals, lake buffer zones, and true costs in seconds.',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'hyderabad.properties - Independent Property Verification',
-    description: 'Independent property verification by House of Investors. Checks RERA registration, approvals, lake buffer zones, and true costs in seconds.',
-  },
+  title,
+  description,
+  openGraph: { title, description, type: 'website' },
+  twitter: { card: 'summary_large_image', title, description },
 };
 
 export default function RootLayout({
@@ -43,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${plusJakarta.variable} ${inter.variable} ${geistMono.variable}`}>
-      <body className="min-h-screen bg-[#F2F2F2] text-[#131313] antialiased font-sans selection:bg-[#D6FD70] selection:text-[#131313]" suppressHydrationWarning>
+    <html lang="en" className={manrope.variable}>
+      <body className="min-h-screen bg-white text-[#212121] antialiased font-sans selection:bg-[#212121] selection:text-white" suppressHydrationWarning>
         {children}
       </body>
     </html>

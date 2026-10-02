@@ -24,6 +24,7 @@ import {
 import { ProjectSafetyItem, JARGON_DICTIONARY } from '@/lib/mock-data';
 import { useLiveData } from '@/components/live/LiveDataProvider';
 import { JargonTooltip } from '@/components/JargonTooltip';
+import { RequestProjectForm } from '@/components/RequestProjectForm';
 import { ViewType } from '@/components/TopBar';
 
 interface CheckViewProps {
@@ -192,7 +193,7 @@ export function CheckView({
         <button
           type="button"
           onClick={() => onNavigate('home')}
-          className="text-xs font-semibold text-stone-600 hover:text-[#0F1B2D] inline-flex items-center gap-1.5 py-1 min-h-[44px] cursor-pointer"
+          className="text-xs font-semibold text-[#6b6b6b] hover:text-[#212121] inline-flex items-center gap-1.5 py-1 min-h-[44px] cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
           <span>Back to Home</span>
@@ -202,13 +203,13 @@ export function CheckView({
       {/* 1. BIG CENTERED SEARCH */}
       <section className="space-y-4">
         <div className="text-left space-y-1">
-          <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#666666]">
+          <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#838383]">
             Independent Project Verification
           </div>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#0F1B2D]">
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#212121]">
             Property Safety Check Tool
           </h1>
-          <p className="text-sm text-stone-600 max-w-xl">
+          <p className="text-sm text-[#6b6b6b] max-w-xl">
             Verify building sanction orders, <JargonTooltip term="RERA" /> certificates, and <JargonTooltip term="FTL" /> lake buffer boundaries before paying any token advance.
           </p>
         </div>
@@ -217,7 +218,7 @@ export function CheckView({
         <div className="relative pt-2" ref={searchContainerRef}>
           <form onSubmit={handleSearchSubmit} className="relative flex items-center">
             <div className="relative w-full">
-              <Search className="w-5 h-5 text-stone-400 absolute left-4 top-1/2 -translate-y-1/2" strokeWidth={1.5} />
+              <Search className="w-5 h-5 text-[#a3a3a3] absolute left-4 top-1/2 -translate-y-1/2" strokeWidth={1.5} />
               <input
                 type="text"
                 value={searchTerm}
@@ -230,39 +231,39 @@ export function CheckView({
                 }}
                 placeholder="Type a project name or RERA number..."
                 aria-label="Search project name or RERA number"
-                className="w-full pl-12 pr-28 sm:pr-32 py-4 text-sm sm:text-base rounded-xl border border-stone-200 bg-white text-[#0F1B2D] placeholder:text-stone-400 focus:outline-none focus:border-[#0E7C86] min-h-[56px]"
+                className="w-full pl-12 pr-28 sm:pr-32 py-4 text-sm sm:text-base rounded-xl border border-[#eeeeee] bg-white text-[#212121] placeholder:text-[#a3a3a3] focus:outline-none focus:border-[#212121] min-h-[56px]"
               />
             </div>
             <button
               type="submit"
               disabled={isSearching}
-              className="absolute right-2 px-5 py-2.5 rounded-full bg-[#D6FD70] hover:bg-[#c7f354] text-[#131313] text-xs sm:text-sm font-bold font-mono uppercase tracking-wider transition-colors min-h-[44px] flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+              className="absolute right-2 px-5 py-2.5 rounded-full bg-[#212121] hover:bg-black text-white text-xs sm:text-sm font-bold font-mono uppercase tracking-wider transition-colors min-h-[44px] flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
             >
               <span>Check</span>
-              <ArrowRight className="w-4 h-4 text-[#131313]" strokeWidth={2} />
+              <ArrowRight className="w-4 h-4 text-white" strokeWidth={2} />
             </button>
           </form>
 
           {/* Autocomplete Dropdown */}
           {showDropdown && matchingProjects.length > 0 && (
-            <div className="absolute left-0 right-0 top-full mt-1.5 bg-white rounded-xl border border-stone-200 shadow-md overflow-hidden z-30 text-left animate-in fade-in duration-100">
-              <div className="p-2 text-[11px] font-semibold uppercase tracking-wider text-stone-400 px-3 border-b border-stone-100">
+            <div className="absolute left-0 right-0 top-full mt-1.5 bg-white rounded-xl border border-[#eeeeee] shadow-md overflow-hidden z-30 text-left animate-in fade-in duration-100">
+              <div className="p-2 text-[11px] font-semibold uppercase tracking-wider text-[#a3a3a3] px-3 border-b border-[#f2f2f2]">
                 Verified Database Matches
               </div>
-              <div className="divide-y divide-stone-100 max-h-64 overflow-y-auto">
+              <div className="divide-y divide-[#eeeeee] max-h-64 overflow-y-auto">
                 {matchingProjects.map((p) => (
                   <button
                     key={p.id}
                     type="button"
                     onClick={() => handleSelectFromDropdown(p)}
-                    className="w-full p-3.5 hover:bg-stone-50 transition-colors flex items-center justify-between text-left cursor-pointer group"
+                    className="w-full p-3.5 hover:bg-[#f9f9f9] transition-colors flex items-center justify-between text-left cursor-pointer group"
                   >
                     <div>
-                      <div className="font-semibold text-sm text-[#0F1B2D]">
+                      <div className="font-semibold text-sm text-[#212121]">
                         {p.name}
                       </div>
-                      <div className="text-xs text-stone-500 mt-0.5">
-                        {p.location} · RERA: <span className="font-mono text-stone-700">{p.reraNumber}</span>
+                      <div className="text-xs text-[#838383] mt-0.5">
+                        {p.location} · RERA: <span className="font-mono text-[#4a4a4a]">{p.reraNumber}</span>
                       </div>
                     </div>
                     <span
@@ -283,17 +284,17 @@ export function CheckView({
           )}
 
           {/* 3 Clickable Example Chips */}
-          <div className="flex flex-wrap items-center gap-2 pt-3 text-xs text-stone-600">
-            <span className="text-stone-400 font-medium">Try searching:</span>
+          <div className="flex flex-wrap items-center gap-2 pt-3 text-xs text-[#6b6b6b]">
+            <span className="text-[#a3a3a3] font-medium">Try searching:</span>
             {exampleChips.map((chip) => (
               <button
                 key={chip.label}
                 type="button"
                 onClick={() => handleChipClick(chip.query)}
-                className="px-3 py-1.5 rounded-lg bg-white hover:bg-stone-50 text-[#0F1B2D] border border-stone-200 font-medium transition-colors cursor-pointer min-h-[36px] flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-lg bg-white hover:bg-[#f9f9f9] text-[#212121] border border-[#eeeeee] font-medium transition-colors cursor-pointer min-h-[36px] flex items-center gap-1.5"
               >
                 <span>{chip.label}</span>
-                <ChevronRight className="w-3 h-3 text-stone-400" strokeWidth={1.5} />
+                <ChevronRight className="w-3 h-3 text-[#a3a3a3]" strokeWidth={1.5} />
               </button>
             ))}
           </div>
@@ -302,21 +303,21 @@ export function CheckView({
 
       {/* 2. LOADING STATE (600ms fake delay on submit with skeleton) */}
       {isSearching && (
-        <div className="bg-white rounded-xl border border-stone-200 p-8 sm:p-10 text-left space-y-4 animate-in fade-in duration-150">
+        <div className="bg-white rounded-xl border border-[#eeeeee] p-8 sm:p-10 text-left space-y-4 animate-in fade-in duration-150">
           <div className="flex items-center gap-3">
-            <Search className="w-5 h-5 text-[#0E7C86]" strokeWidth={1.5} />
-            <h3 className="font-serif text-lg font-bold text-[#0F1B2D]">
+            <Search className="w-5 h-5 text-[#212121]" strokeWidth={1.5} />
+            <h3 className="font-serif text-lg font-bold text-[#212121]">
               {loadingStep || 'Checking registration... approvals... lake safety...'}
             </h3>
           </div>
 
           <div className="space-y-2 max-w-md pt-1">
-            <div className="h-3 bg-stone-200 rounded w-3/4" />
-            <div className="h-3 bg-stone-200 rounded w-full" />
-            <div className="h-3 bg-stone-200 rounded w-5/6" />
+            <div className="h-3 bg-[#eeeeee] rounded w-3/4" />
+            <div className="h-3 bg-[#eeeeee] rounded w-full" />
+            <div className="h-3 bg-[#eeeeee] rounded w-5/6" />
           </div>
 
-          <p className="text-xs text-stone-500">
+          <p className="text-xs text-[#838383]">
             Querying state registries and waterbody cadastral coordinates...
           </p>
         </div>
@@ -324,7 +325,7 @@ export function CheckView({
 
       {/* 3. RESULT CARD */}
       {!isSearching && selectedResult && (
-        <div className="bg-white rounded-xl border border-stone-200 overflow-hidden space-y-6 animate-in fade-in duration-200">
+        <div className="bg-white rounded-xl border border-[#eeeeee] overflow-hidden space-y-6 animate-in fade-in duration-200">
           {/* Top Status Banner */}
           <div
             className={`p-6 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
@@ -337,15 +338,15 @@ export function CheckView({
           >
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">
+                <span className="text-xs font-semibold uppercase tracking-wider text-[#838383]">
                   {selectedResult.location} ({selectedResult.microMarket})
                 </span>
-                <span className="text-stone-300">·</span>
-                <span className="text-xs font-mono text-stone-600">
+                <span className="text-[#d4d4d4]">·</span>
+                <span className="text-xs font-mono text-[#6b6b6b]">
                   RERA: {selectedResult.reraNumber}
                 </span>
               </div>
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#0F1B2D]">
+              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#212121]">
                 {selectedResult.name}
               </h2>
 
@@ -372,14 +373,14 @@ export function CheckView({
             </div>
 
             {/* Small Score Ring */}
-            <div className="flex items-center gap-3 shrink-0 bg-white p-3 rounded-xl border border-stone-200">
+            <div className="flex items-center gap-3 shrink-0 bg-white p-3 rounded-xl border border-[#eeeeee]">
               <div className="relative w-12 h-12 flex items-center justify-center">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 48 48">
                   <circle
                     cx="24"
                     cy="24"
                     r="19"
-                    className="stroke-stone-200 fill-none"
+                    className="stroke-[#eeeeee] fill-none"
                     strokeWidth="4"
                   />
                   <circle
@@ -400,30 +401,30 @@ export function CheckView({
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                  <span className="font-bold text-xs text-[#0F1B2D] leading-none">
+                  <span className="font-bold text-xs text-[#212121] leading-none">
                     {selectedResult.score}
                   </span>
-                  <span className="text-[8px] text-stone-400">/100</span>
+                  <span className="text-[8px] text-[#a3a3a3]">/100</span>
                 </div>
               </div>
-              <span className="text-[11px] font-semibold text-stone-600">
+              <span className="text-[11px] font-semibold text-[#6b6b6b]">
                 Safety Index
               </span>
             </div>
           </div>
 
           <div className="px-6 space-y-6">
-            <p className="text-sm text-stone-700 leading-relaxed">
+            <p className="text-sm text-[#4a4a4a] leading-relaxed">
               {selectedResult.summary}
             </p>
 
             {/* 3 CHECK ROWS */}
             <div className="space-y-3">
-              <h3 className="font-serif font-bold text-base text-[#0F1B2D]">
+              <h3 className="font-medium text-base text-[#212121]">
                 Core Safety Breakdown
               </h3>
 
-              <div className="divide-y divide-stone-100 rounded-xl border border-stone-200 bg-stone-50/50 overflow-hidden">
+              <div className="divide-y divide-[#eeeeee] rounded-xl border border-[#eeeeee] bg-[#f9f9f9]/50 overflow-hidden">
                 {/* ROW 1: RERA */}
                 <div className="p-4 space-y-2">
                   <div className="flex items-start justify-between gap-3">
@@ -434,10 +435,10 @@ export function CheckView({
                         <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" strokeWidth={1.5} />
                       )}
                       <div>
-                        <div className="font-semibold text-sm text-[#0F1B2D]">
+                        <div className="font-semibold text-sm text-[#212121]">
                           Registered with the state regulator (<JargonTooltip term="RERA" />)
                         </div>
-                        <p className="text-xs text-stone-600 mt-0.5">
+                        <p className="text-xs text-[#6b6b6b] mt-0.5">
                           {selectedResult.reraStatus === 'Active'
                             ? `Active certificate registered on Telangana portal (Registration No: ${selectedResult.reraNumber}).`
                             : 'Application renewal currently undergoing administrative review.'}
@@ -448,7 +449,7 @@ export function CheckView({
                     <button
                       type="button"
                       onClick={() => toggleRowExpand('rera')}
-                      className="text-xs font-semibold text-[#131313] hover:underline flex items-center gap-1 shrink-0 py-1 cursor-pointer"
+                      className="text-xs font-semibold text-[#212121] hover:underline flex items-center gap-1 shrink-0 py-1 cursor-pointer"
                     >
                       <span>{expandedRows['rera'] ? 'Hide' : 'See why'}</span>
                       <ChevronDown className={`w-3.5 h-3.5 transition-transform ${expandedRows['rera'] ? 'rotate-180' : ''}`} strokeWidth={1.5} />
@@ -456,7 +457,7 @@ export function CheckView({
                   </div>
 
                   {expandedRows['rera'] && (
-                    <div className="mt-2 pl-7 pr-2 py-2 text-xs text-stone-600 bg-white rounded-lg border border-stone-200 space-y-1">
+                    <div className="mt-2 pl-7 pr-2 py-2 text-xs text-[#6b6b6b] bg-white rounded-lg border border-[#eeeeee] space-y-1">
                       <p>
                         <strong>Regulator Verification:</strong>{' '}
                         {selectedResult.reraStatus === 'Active'
@@ -477,10 +478,10 @@ export function CheckView({
                         <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" strokeWidth={1.5} />
                       )}
                       <div>
-                        <div className="font-semibold text-sm text-[#0F1B2D]">
+                        <div className="font-semibold text-sm text-[#212121]">
                           Building plans approved
                         </div>
-                        <p className="text-xs text-stone-600 mt-0.5">
+                        <p className="text-xs text-[#6b6b6b] mt-0.5">
                           {selectedResult.buildingPlan === 'Approved'
                             ? 'Sanctioned municipal construction permission in place for layout and floors.'
                             : 'Revised plans or additional upper floors currently pending final municipal sanction.'}
@@ -491,7 +492,7 @@ export function CheckView({
                     <button
                       type="button"
                       onClick={() => toggleRowExpand('plans')}
-                      className="text-xs font-semibold text-[#131313] hover:underline flex items-center gap-1 shrink-0 py-1 cursor-pointer"
+                      className="text-xs font-semibold text-[#212121] hover:underline flex items-center gap-1 shrink-0 py-1 cursor-pointer"
                     >
                       <span>{expandedRows['plans'] ? 'Hide' : 'See why'}</span>
                       <ChevronDown className={`w-3.5 h-3.5 transition-transform ${expandedRows['plans'] ? 'rotate-180' : ''}`} strokeWidth={1.5} />
@@ -499,7 +500,7 @@ export function CheckView({
                   </div>
 
                   {expandedRows['plans'] && (
-                    <div className="mt-2 pl-7 pr-2 py-2 text-xs text-stone-600 bg-white rounded-lg border border-stone-200 space-y-1">
+                    <div className="mt-2 pl-7 pr-2 py-2 text-xs text-[#6b6b6b] bg-white rounded-lg border border-[#eeeeee] space-y-1">
                       <p>
                         <strong>Sanction Verification:</strong>{' '}
                         {selectedResult.buildingPlan === 'Approved'
@@ -520,10 +521,10 @@ export function CheckView({
                         <XCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" strokeWidth={1.5} />
                       )}
                       <div>
-                        <div className="font-semibold text-sm text-[#0F1B2D]">
+                        <div className="font-semibold text-sm text-[#212121]">
                           Not near a protected lake zone
                         </div>
-                        <p className="text-xs text-stone-600 mt-0.5">
+                        <p className="text-xs text-[#6b6b6b] mt-0.5">
                           {selectedResult.lakeBuffer === 'Clear'
                             ? 'Completely outside lake full tank level (FTL) and protected stormwater buffer lines.'
                             : 'Boundary plot encroaches into the 30-meter lake conservation zone.'}
@@ -534,7 +535,7 @@ export function CheckView({
                     <button
                       type="button"
                       onClick={() => toggleRowExpand('lake')}
-                      className="text-xs font-semibold text-[#131313] hover:underline flex items-center gap-1 shrink-0 py-1 cursor-pointer"
+                      className="text-xs font-semibold text-[#212121] hover:underline flex items-center gap-1 shrink-0 py-1 cursor-pointer"
                     >
                       <span>{expandedRows['lake'] ? 'Hide' : 'See why'}</span>
                       <ChevronDown className={`w-3.5 h-3.5 transition-transform ${expandedRows['lake'] ? 'rotate-180' : ''}`} strokeWidth={1.5} />
@@ -542,7 +543,7 @@ export function CheckView({
                   </div>
 
                   {expandedRows['lake'] && (
-                    <div className="mt-2 pl-7 pr-2 py-2 text-xs text-stone-600 bg-white rounded-lg border border-stone-200 space-y-1">
+                    <div className="mt-2 pl-7 pr-2 py-2 text-xs text-[#6b6b6b] bg-white rounded-lg border border-[#eeeeee] space-y-1">
                       <p>
                         <strong>HYDRAA Buffer Analysis:</strong>{' '}
                         {selectedResult.lakeBuffer === 'Clear'
@@ -556,15 +557,15 @@ export function CheckView({
             </div>
 
             {/* Last verified line with info icon */}
-            <div className="flex items-center justify-between text-xs text-stone-500 pt-1 border-t border-stone-100">
+            <div className="flex items-center justify-between text-xs text-[#838383] pt-1 border-t border-[#f2f2f2]">
               <div className="flex items-center gap-1.5">
-                <Info className="w-4 h-4 text-stone-400 shrink-0" strokeWidth={1.5} />
+                <Info className="w-4 h-4 text-[#a3a3a3] shrink-0" strokeWidth={1.5} />
                 <span>Last verified: <strong>{selectedResult.lastVerifiedDate}</strong></span>
               </div>
               <button
                 type="button"
                 onClick={handleReset}
-                className="text-xs text-stone-500 hover:text-stone-800 underline flex items-center gap-1 cursor-pointer"
+                className="text-xs text-[#838383] hover:text-[#212121] underline flex items-center gap-1 cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5" strokeWidth={1.5} />
                 <span>Check another project</span>
@@ -584,7 +585,7 @@ export function CheckView({
                     <span>Watching</span>
                   </button>
                   {isStopWatchingMenuOpen && (
-                    <div className="absolute left-0 mt-1 w-36 bg-white border border-stone-200 rounded-lg shadow-lg p-1 z-30 animate-in fade-in duration-100">
+                    <div className="absolute left-0 mt-1 w-36 bg-white border border-[#eeeeee] rounded-lg shadow-lg p-1 z-30 animate-in fade-in duration-100">
                       <button
                         type="button"
                         onClick={() => {
@@ -603,9 +604,9 @@ export function CheckView({
                 <button
                   type="button"
                   onClick={() => onOpenWatchSheet && onOpenWatchSheet(selectedResult)}
-                  className="px-3 py-1.5 rounded-full border border-stone-300 hover:border-[#131313] bg-white text-stone-700 hover:text-[#131313] text-xs font-mono font-semibold inline-flex items-center gap-1.5 cursor-pointer min-h-[36px]"
+                  className="px-3 py-1.5 rounded-full border border-[#e0e0e0] hover:border-[#212121] bg-white text-[#4a4a4a] hover:text-[#212121] text-xs font-mono font-semibold inline-flex items-center gap-1.5 cursor-pointer min-h-[36px]"
                 >
-                  <Bell className="w-3.5 h-3.5 text-[#131313]" strokeWidth={1.5} />
+                  <Bell className="w-3.5 h-3.5 text-[#212121]" strokeWidth={1.5} />
                   <span>Watch this project</span>
                 </button>
               )}
@@ -619,18 +620,18 @@ export function CheckView({
                   onSelectProject(selectedResult);
                   onNavigate('project');
                 }}
-                className="min-h-[50px] px-6 py-3 rounded-full bg-[#131313] hover:bg-black text-[#D6FD70] font-bold font-mono text-xs sm:text-sm uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                className="min-h-[50px] px-6 py-3 rounded-full bg-[#212121] hover:bg-black text-white font-bold font-mono text-xs sm:text-sm uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
               >
                 <span>See full project report</span>
-                <ChevronRight className="w-4 h-4 text-[#D6FD70]" strokeWidth={2} />
+                <ChevronRight className="w-4 h-4 text-white" strokeWidth={2} />
               </button>
 
               <button
                 type="button"
                 onClick={() => onNavigate('booking')}
-                className="min-h-[50px] px-6 py-3 rounded-full bg-[#D6FD70] hover:bg-[#c7f354] text-[#131313] font-bold font-mono text-xs sm:text-sm uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                className="min-h-[50px] px-6 py-3 rounded-full bg-[#212121] hover:bg-black text-white font-bold font-mono text-xs sm:text-sm uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
               >
-                <PhoneCall className="w-4 h-4 text-[#131313]" strokeWidth={2} />
+                <PhoneCall className="w-4 h-4 text-white" strokeWidth={2} />
                 <span>Ask an advisor about this</span>
               </button>
             </div>
@@ -638,63 +639,54 @@ export function CheckView({
         </div>
       )}
 
-      {/* 4. NOT-FOUND STATE */}
+      {/* 4. NOT-FOUND STATE: ask for the basics so we can add the project */}
       {!isSearching && isNotFound && (
-        <div className="bg-white rounded-xl border border-stone-200 p-8 sm:p-10 text-left space-y-5 animate-in fade-in duration-200">
-          <div className="space-y-1">
-            <h3 className="font-serif text-2xl font-bold text-[#0F1B2D]">
-              We couldn&apos;t find this project. That itself is worth a closer look.
+        <div className="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-8 lg:gap-12 rounded-[20px] border border-[#eeeeee] bg-white p-6 sm:p-10 animate-in fade-in duration-200">
+          <div className="space-y-4">
+            <h3 className="text-[28px] sm:text-[32px] leading-tight font-medium text-[#212121]">
+              We haven&apos;t checked {searchedQuery ? <>&ldquo;{searchedQuery}&rdquo;</> : 'this project'} yet
             </h3>
-            <p className="text-sm text-stone-600 leading-relaxed">
-              You searched for <span className="font-semibold text-stone-900">&ldquo;{searchedQuery}&rdquo;</span>. If a project does not show up in verified public databases, it could be an unregistered pre-launch, an unapproved layout, or operating under a different developer entity name.
+            <p className="text-[16px] text-[#6b6b6b] leading-relaxed">
+              Give us the basics and we&apos;ll pull its RERA, approval and lake records, then send you the report. Every
+              project buyers ask about gets added, so the next person searching for it finds it here.
             </p>
-          </div>
-
-          <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 space-y-1">
-            <p className="font-semibold">Important buyer safety notice:</p>
-            <p>
-              In Hyderabad, advertising or collecting booking advances for unapproved projects is illegal under Telangana RERA laws. Never pay advances without verified RERA registration numbers.
-            </p>
-          </div>
-
-          <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-            <button
-              type="button"
-              onClick={() => onNavigate('booking')}
-              className="w-full sm:w-auto min-h-[50px] px-8 py-3 rounded-full bg-[#D6FD70] hover:bg-[#c7f354] text-[#131313] font-bold font-mono text-xs sm:text-sm uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
-            >
-              <PhoneCall className="w-4 h-4 text-[#131313]" strokeWidth={2} />
-              <span>Ask an Advisor to Verify This Project</span>
-            </button>
-
+            <div className="rounded-[14px] bg-[#f9f9f9] p-4 text-[14px] text-[#4a4a4a] space-y-1">
+              <p className="font-semibold text-[#212121]">Until then</p>
+              <p>
+                Don&apos;t pay a booking advance until you have seen the project&apos;s TG-RERA registration number. Under
+                RERA, a builder can&apos;t take more than 10% before a registered sale agreement.
+              </p>
+            </div>
             <button
               type="button"
               onClick={handleReset}
-              className="w-full sm:w-auto min-h-[50px] px-6 py-3 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-medium text-sm transition-colors cursor-pointer"
+              className="text-[15px] font-medium text-[#212121] underline underline-offset-4 cursor-pointer"
             >
               Try another search
             </button>
           </div>
+
+          <RequestProjectForm key={searchedQuery} initialName={searchedQuery} title="Add it to our list" />
         </div>
       )}
 
       {/* 5. COLLAPSIBLE GLOSSARY */}
-      <section className="bg-white rounded-xl border border-stone-200 overflow-hidden">
+      <section className="bg-white rounded-xl border border-[#eeeeee] overflow-hidden">
         <button
           type="button"
           onClick={() => setIsGlossaryOpen(!isGlossaryOpen)}
-          className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-3 hover:bg-stone-50 transition-colors min-h-[56px] cursor-pointer"
+          className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-3 hover:bg-[#f9f9f9] transition-colors min-h-[56px] cursor-pointer"
         >
           <div>
-            <h3 className="font-serif font-bold text-base text-[#0F1B2D]">
+            <h3 className="font-medium text-base text-[#212121]">
               What do these checks mean?
             </h3>
-            <p className="text-xs text-stone-500">
+            <p className="text-xs text-[#838383]">
               Plain-English explanation of Hyderabad real estate terms (RERA, FTL, HYDRAA, UDS).
             </p>
           </div>
           <ChevronDown
-            className={`w-5 h-5 text-stone-400 transition-transform duration-150 ${
+            className={`w-5 h-5 text-[#a3a3a3] transition-transform duration-150 ${
               isGlossaryOpen ? 'rotate-180' : ''
             }`}
             strokeWidth={1.5}
@@ -702,31 +694,31 @@ export function CheckView({
         </button>
 
         {isGlossaryOpen && (
-          <div className="px-5 pb-6 sm:px-6 divide-y divide-stone-100 text-xs sm:text-sm text-stone-700 animate-in fade-in duration-150">
+          <div className="px-5 pb-6 sm:px-6 divide-y divide-[#eeeeee] text-xs sm:text-sm text-[#4a4a4a] animate-in fade-in duration-150">
             <div className="py-3 space-y-1">
-              <strong className="text-[#0F1B2D] text-sm">RERA (Real Estate Regulatory Authority)</strong>
-              <p className="text-stone-600 text-xs">
+              <strong className="text-[#212121] text-sm">RERA (Real Estate Regulatory Authority)</strong>
+              <p className="text-[#6b6b6b] text-xs">
                 {JARGON_DICTIONARY.RERA.explanation} In Telangana, a builder cannot collect more than 10% advance payment without signing a registered agreement containing this number.
               </p>
             </div>
 
             <div className="py-3 space-y-1">
-              <strong className="text-[#0F1B2D] text-sm">FTL (Full Tank Level)</strong>
-              <p className="text-stone-600 text-xs">
+              <strong className="text-[#212121] text-sm">FTL (Full Tank Level)</strong>
+              <p className="text-[#6b6b6b] text-xs">
                 {JARGON_DICTIONARY.FTL.explanation} Even if local panchayats mistakenly issued old documents, construction within FTL boundaries cannot be regularized.
               </p>
             </div>
 
             <div className="py-3 space-y-1">
-              <strong className="text-[#0F1B2D] text-sm">HYDRAA (Asset Protection Agency)</strong>
-              <p className="text-stone-600 text-xs">
+              <strong className="text-[#212121] text-sm">HYDRAA (Asset Protection Agency)</strong>
+              <p className="text-[#6b6b6b] text-xs">
                 {JARGON_DICTIONARY.HYDRAA.explanation} The agency uses satellite maps to restore lake catchment areas. Properties caught in their crosshairs face power disconnection and demolition.
               </p>
             </div>
 
             <div className="py-3 space-y-1">
-              <strong className="text-[#0F1B2D] text-sm">UDS (Undivided Share of Land)</strong>
-              <p className="text-stone-600 text-xs">
+              <strong className="text-[#212121] text-sm">UDS (Undivided Share of Land)</strong>
+              <p className="text-[#6b6b6b] text-xs">
                 {JARGON_DICTIONARY.UDS.explanation} When you buy an apartment, you legally own a proportion of the physical plot. A higher UDS gives you stronger long-term asset value.
               </p>
             </div>

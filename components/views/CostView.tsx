@@ -248,7 +248,7 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
         <button
           type="button"
           onClick={() => onNavigate(selectedProject ? 'project' : 'home')}
-          className="text-xs font-semibold text-stone-600 hover:text-[#0F1B2D] inline-flex items-center gap-1.5 py-1 min-h-[44px] cursor-pointer"
+          className="text-xs font-semibold text-[#6b6b6b] hover:text-[#212121] inline-flex items-center gap-1.5 py-1 min-h-[44px] cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
           <span>{selectedProject ? `Back to ${selectedProject.name}` : 'Back to Home'}</span>
@@ -257,19 +257,19 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
 
       {/* Header */}
       <div className="space-y-1">
-        <span className="text-xs uppercase font-bold tracking-wider text-[#0E7C86]">
+        <span className="text-xs uppercase font-bold tracking-wider text-[#212121]">
           Real Estate True Cost Audit
         </span>
-        <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#0F1B2D]">
+        <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#212121]">
           What you&apos;ll actually pay
         </h1>
-        <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
+        <p className="text-xs sm:text-sm text-[#6b6b6b] leading-relaxed">
           In Hyderabad, the builder&apos;s quoted price is never your final cheque. See taxes, registration, and total loan costs upfront.
         </p>
 
         {selectedProject && (
-          <div className="pt-2 text-xs text-stone-600 flex items-center gap-1.5">
-            <Building2 className="w-3.5 h-3.5 text-[#0E7C86]" strokeWidth={1.5} />
+          <div className="pt-2 text-xs text-[#6b6b6b] flex items-center gap-1.5">
+            <Building2 className="w-3.5 h-3.5 text-[#212121]" strokeWidth={1.5} />
             <span>Prefilled with benchmark price for <strong>{selectedProject.name}</strong> ({selectedProject.location}).</span>
           </div>
         )}
@@ -278,8 +278,8 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
       {/* ============================================================ */}
       {/* 1. INPUTS (TOP, 4 FIELDS ONLY WITH "?" TOOLTIP) */}
       {/* ============================================================ */}
-      <div className="bg-white rounded-xl border border-stone-200 p-5 sm:p-7 space-y-6">
-        <h2 className="font-serif font-bold text-lg text-[#0F1B2D] border-b border-stone-100 pb-2">
+      <div className="bg-white rounded-xl border border-[#eeeeee] p-5 sm:p-7 space-y-6">
+        <h2 className="font-medium text-lg text-[#212121] border-b border-[#f2f2f2] pb-2">
           1. Property & Loan Inputs
         </h2>
 
@@ -287,31 +287,31 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
-              <label htmlFor="propertyPriceInput" className="text-xs font-semibold text-[#0F1B2D]">
+              <label htmlFor="propertyPriceInput" className="text-xs font-semibold text-[#212121]">
                 Listed property base price (₹)
               </label>
               <button
                 type="button"
                 onClick={() => toggleTooltip('price')}
-                className="text-stone-400 hover:text-stone-700 p-0.5 cursor-pointer"
+                className="text-[#a3a3a3] hover:text-[#4a4a4a] p-0.5 cursor-pointer"
                 aria-label="Explain listed price"
               >
                 <HelpCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
               </button>
             </div>
-            <span className="text-xs font-bold text-[#0E7C86]">
+            <span className="text-xs font-bold text-[#212121]">
               {formatFriendlyLakhCrore(propertyPrice)}
             </span>
           </div>
 
           {activeTooltip === 'price' && (
-            <p className="text-[11px] text-stone-600 bg-stone-50 p-2.5 rounded-lg border border-stone-200 leading-normal animate-in fade-in duration-100">
+            <p className="text-[11px] text-[#6b6b6b] bg-[#f9f9f9] p-2.5 rounded-lg border border-[#eeeeee] leading-normal animate-in fade-in duration-100">
               The basic sale price (BSP) quoted by the builder per square foot multiplied by the super built-up area.
             </p>
           )}
 
           <div className="relative">
-            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 font-semibold text-sm">
+            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#a3a3a3] font-semibold text-sm">
               ₹
             </span>
             <input
@@ -322,7 +322,7 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
               value={propertyPrice || ''}
               onChange={(e) => setPropertyPrice(Math.max(0, Number(e.target.value)))}
               placeholder="e.g. 12000000"
-              className="w-full pl-8 pr-4 py-3 rounded-xl border border-stone-200 bg-white text-sm font-semibold text-[#0F1B2D] focus:outline-none focus:border-[#0E7C86] min-h-[44px]"
+              className="w-full pl-8 pr-4 py-3 rounded-xl border border-[#eeeeee] bg-white text-sm font-semibold text-[#212121] focus:outline-none focus:border-[#212121] min-h-[44px]"
             />
           </div>
         </div>
@@ -331,25 +331,25 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
-              <label className="text-xs font-semibold text-[#0F1B2D]">
+              <label className="text-xs font-semibold text-[#212121]">
                 Construction stage
               </label>
               <button
                 type="button"
                 onClick={() => toggleTooltip('type')}
-                className="text-stone-400 hover:text-stone-700 p-0.5 cursor-pointer"
+                className="text-[#a3a3a3] hover:text-[#4a4a4a] p-0.5 cursor-pointer"
                 aria-label="Explain construction stage"
               >
                 <HelpCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
               </button>
             </div>
-            <span className="text-[11px] text-stone-500">
+            <span className="text-[11px] text-[#838383]">
               {propertyType === 'under_construction' ? '5% GST applies' : '0% GST (with OC)'}
             </span>
           </div>
 
           {activeTooltip === 'type' && (
-            <p className="text-[11px] text-stone-600 bg-stone-50 p-2.5 rounded-lg border border-stone-200 leading-normal animate-in fade-in duration-100">
+            <p className="text-[11px] text-[#6b6b6b] bg-[#f9f9f9] p-2.5 rounded-lg border border-[#eeeeee] leading-normal animate-in fade-in duration-100">
               Under Indian tax law, ready-to-move properties with an Occupancy Certificate (OC) attract zero GST. Under-construction homes carry 5% GST.
             </p>
           )}
@@ -360,8 +360,8 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
               onClick={() => setPropertyType('under_construction')}
               className={`py-3 px-3 rounded-full border text-xs font-mono font-semibold transition-colors cursor-pointer min-h-[44px] flex items-center justify-center gap-1.5 ${
                 propertyType === 'under_construction'
-                  ? 'border-[#131313] bg-[#131313] text-[#D6FD70] font-bold shadow-xs'
-                  : 'border-stone-200 bg-white text-stone-700 hover:border-stone-400'
+                  ? 'border-[#212121] bg-[#212121] text-white font-bold shadow-xs'
+                  : 'border-[#eeeeee] bg-white text-[#4a4a4a] hover:border-[#c9c9c9]'
               }`}
             >
               <span>Under construction</span>
@@ -371,8 +371,8 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
               onClick={() => setPropertyType('ready')}
               className={`py-3 px-3 rounded-full border text-xs font-mono font-semibold transition-colors cursor-pointer min-h-[44px] flex items-center justify-center gap-1.5 ${
                 propertyType === 'ready'
-                  ? 'border-[#131313] bg-[#131313] text-[#D6FD70] font-bold shadow-xs'
-                  : 'border-stone-200 bg-white text-stone-700 hover:border-stone-400'
+                  ? 'border-[#212121] bg-[#212121] text-white font-bold shadow-xs'
+                  : 'border-[#eeeeee] bg-white text-[#4a4a4a] hover:border-[#c9c9c9]'
               }`}
             >
               <span>Ready to move in</span>
@@ -384,25 +384,25 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
-              <label htmlFor="downPaymentSlider" className="text-xs font-semibold text-[#0F1B2D]">
+              <label htmlFor="downPaymentSlider" className="text-xs font-semibold text-[#212121]">
                 Down payment: {downPaymentPct}%
               </label>
               <button
                 type="button"
                 onClick={() => toggleTooltip('downPayment')}
-                className="text-stone-400 hover:text-stone-700 p-0.5 cursor-pointer"
+                className="text-[#a3a3a3] hover:text-[#4a4a4a] p-0.5 cursor-pointer"
                 aria-label="Explain down payment"
               >
                 <HelpCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
               </button>
             </div>
-            <span className="text-xs font-bold text-stone-800">
+            <span className="text-xs font-bold text-[#212121]">
               {formatIndianCurrency((propertyPrice * downPaymentPct) / 100)}
             </span>
           </div>
 
           {activeTooltip === 'downPayment' && (
-            <p className="text-[11px] text-stone-600 bg-stone-50 p-2.5 rounded-lg border border-stone-200 leading-normal animate-in fade-in duration-100">
+            <p className="text-[11px] text-[#6b6b6b] bg-[#f9f9f9] p-2.5 rounded-lg border border-[#eeeeee] leading-normal animate-in fade-in duration-100">
               The upfront cash amount you contribute from your savings. In India, most banks require at least 15% to 20% down payment.
             </p>
           )}
@@ -415,9 +415,9 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
             step={5}
             value={downPaymentPct}
             onChange={(e) => setDownPaymentPct(Number(e.target.value))}
-            className="w-full accent-[#0E7C86] cursor-pointer"
+            className="w-full accent-[#212121] cursor-pointer"
           />
-          <div className="flex justify-between text-[10px] text-stone-400">
+          <div className="flex justify-between text-[10px] text-[#a3a3a3]">
             <span>10% (Minimum)</span>
             <span>20% (Recommended)</span>
             <span>50% (Conservative)</span>
@@ -425,16 +425,16 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
         </div>
 
         {/* FIELD 4: Loan: interest rate % and years + "Skip loan" toggle */}
-        <div className="space-y-3 pt-2 border-t border-stone-100">
+        <div className="space-y-3 pt-2 border-t border-[#f2f2f2]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
-              <span className="text-xs font-semibold text-[#0F1B2D]">
+              <span className="text-xs font-semibold text-[#212121]">
                 Home loan settings
               </span>
               <button
                 type="button"
                 onClick={() => toggleTooltip('loan')}
-                className="text-stone-400 hover:text-stone-700 p-0.5 cursor-pointer"
+                className="text-[#a3a3a3] hover:text-[#4a4a4a] p-0.5 cursor-pointer"
                 aria-label="Explain home loan"
               >
                 <HelpCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
@@ -442,19 +442,19 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
             </div>
 
             {/* "Skip loan" Toggle */}
-            <label className="inline-flex items-center gap-2 cursor-pointer text-xs font-medium text-stone-600">
+            <label className="inline-flex items-center gap-2 cursor-pointer text-xs font-medium text-[#6b6b6b]">
               <input
                 type="checkbox"
                 checked={isLoanSkipped}
                 onChange={(e) => setIsLoanSkipped(e.target.checked)}
-                className="w-4 h-4 rounded text-[#0E7C86] focus:ring-[#0E7C86] cursor-pointer"
+                className="w-4 h-4 rounded text-[#212121] focus:ring-[#212121] cursor-pointer"
               />
               <span>Skip loan (100% self-funded)</span>
             </label>
           </div>
 
           {activeTooltip === 'loan' && (
-            <p className="text-[11px] text-stone-600 bg-stone-50 p-2.5 rounded-lg border border-stone-200 leading-normal animate-in fade-in duration-100">
+            <p className="text-[11px] text-[#6b6b6b] bg-[#f9f9f9] p-2.5 rounded-lg border border-[#eeeeee] leading-normal animate-in fade-in duration-100">
               Housing loans in India are typically floating rate. Enter current bank interest rate and planned tenure.
             </p>
           )}
@@ -462,7 +462,7 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
           {!isLoanSkipped && (
             <div className="grid grid-cols-2 gap-3 pt-1">
               <div>
-                <label className="block text-[11px] text-stone-500 mb-1">
+                <label className="block text-[11px] text-[#838383] mb-1">
                   Interest rate (% per year)
                 </label>
                 <input
@@ -472,18 +472,18 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
                   max={15}
                   value={interestRatePct}
                   onChange={(e) => setInterestRatePct(Number(e.target.value))}
-                  className="w-full px-3 py-2.5 rounded-xl border border-stone-200 bg-white text-xs sm:text-sm font-semibold text-[#0F1B2D] focus:outline-none focus:border-[#0E7C86] min-h-[44px]"
+                  className="w-full px-3 py-2.5 rounded-xl border border-[#eeeeee] bg-white text-xs sm:text-sm font-semibold text-[#212121] focus:outline-none focus:border-[#212121] min-h-[44px]"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] text-stone-500 mb-1">
+                <label className="block text-[11px] text-[#838383] mb-1">
                   Loan tenure (Years)
                 </label>
                 <select
                   value={loanTenureYears}
                   onChange={(e) => setLoanTenureYears(Number(e.target.value))}
-                  className="w-full px-3 py-2.5 rounded-xl border border-stone-200 bg-white text-xs sm:text-sm font-semibold text-[#0F1B2D] focus:outline-none focus:border-[#0E7C86] min-h-[44px]"
+                  className="w-full px-3 py-2.5 rounded-xl border border-[#eeeeee] bg-white text-xs sm:text-sm font-semibold text-[#212121] focus:outline-none focus:border-[#212121] min-h-[44px]"
                 >
                   <option value={10}>10 Years (120 Months)</option>
                   <option value={15}>15 Years (180 Months)</option>
@@ -501,21 +501,21 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
       {/* 2. RESULT (LARGE SERIF HEADLINE + ONE PLAIN LINE) */}
       {/* ============================================================ */}
       {propertyPrice > 0 ? (
-        <div className="bg-[#131313] border-2 border-[#D6FD70] rounded-3xl p-6 sm:p-8 space-y-3 text-white shadow-xl">
-          <span className="text-xs uppercase font-mono font-bold tracking-wider text-[#D6FD70] block">
+        <div className="bg-[#212121] border-2 border-[#212121] rounded-3xl p-6 sm:p-8 space-y-3 text-white shadow-xl">
+          <span className="text-xs uppercase font-mono font-bold tracking-wider text-white block">
             Acquisition Total
           </span>
 
-          <div className="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+          <div className="font-heading text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-white leading-tight">
             You&apos;ll actually pay about {formatIndianCurrency(roundToThousand(result.totalAcquisitionCost))}
           </div>
 
           <p className="text-sm sm:text-base text-[#AAAAAA] font-medium pt-1 font-sans">
-            That is <strong className="text-[#D6FD70]">{formatIndianCurrency(roundToThousand(result.totalExtraAboveBase))}</strong> more than the listed price ({formatFriendlyLakhCrore(result.totalExtraAboveBase)} extra).
+            That is <strong className="text-white">{formatIndianCurrency(roundToThousand(result.totalExtraAboveBase))}</strong> more than the listed price ({formatFriendlyLakhCrore(result.totalExtraAboveBase)} extra).
           </p>
         </div>
       ) : (
-        <div className="bg-stone-50 border border-stone-200 rounded-xl p-6 text-stone-600 text-sm">
+        <div className="bg-[#f9f9f9] border border-[#eeeeee] rounded-xl p-6 text-[#6b6b6b] text-sm">
           Please enter a property base price above to view your actual out-of-pocket acquisition calculation.
         </div>
       )}
@@ -524,27 +524,27 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
       {/* 3. WHERE THE EXTRA GOES (ORDERED LIST + STACKED BAR) */}
       {/* ============================================================ */}
       {propertyPrice > 0 && (
-        <div className="bg-white rounded-xl border border-stone-200 p-5 sm:p-7 space-y-6">
+        <div className="bg-white rounded-xl border border-[#eeeeee] p-5 sm:p-7 space-y-6">
           <div className="space-y-1">
-            <h3 className="font-serif font-bold text-xl text-[#0F1B2D]">
+            <h3 className="font-medium text-xl text-[#212121]">
               Where the extra goes
             </h3>
-            <p className="text-xs text-stone-500">
+            <p className="text-xs text-[#838383]">
               Mandatory government registration duties, statutory taxes, and developer deposits.
             </p>
           </div>
 
           {/* Thin horizontal stacked bar (pure CSS, no chart library) */}
           <div className="space-y-1.5">
-            <div className="h-3 w-full bg-stone-100 rounded-full overflow-hidden flex">
+            <div className="h-3 w-full bg-[#f2f2f2] rounded-full overflow-hidden flex">
               <div
                 style={{ width: `${basePct}%` }}
-                className="bg-[#0F1B2D]"
+                className="bg-[#212121]"
                 title={`Base price: ${basePct}%`}
               />
               <div
                 style={{ width: `${stampRegPct}%` }}
-                className="bg-[#0E7C86]"
+                className="bg-[#212121]"
                 title={`Stamp & Registration: ${stampRegPct}%`}
               />
               {gstPct > 0 && (
@@ -557,19 +557,19 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
               {otherPct > 0 && (
                 <div
                   style={{ width: `${otherPct}%` }}
-                  className="bg-stone-400"
+                  className="bg-[#a3a3a3]"
                   title={`Other: ${otherPct}%`}
                 />
               )}
             </div>
 
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-stone-600">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-[#6b6b6b]">
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#0F1B2D]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#212121]" />
                 <span>Base price ({basePct}%)</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#0E7C86]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#212121]" />
                 <span>Stamp & Reg ({stampRegPct}%)</span>
               </div>
               {gstPct > 0 && (
@@ -580,7 +580,7 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
               )}
               {otherPct > 0 && (
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-stone-400" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#a3a3a3]" />
                   <span>Other ({otherPct}%)</span>
                 </div>
               )}
@@ -588,18 +588,18 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
           </div>
 
           {/* Simple Ordered List with Amounts */}
-          <div className="divide-y divide-stone-100 text-xs sm:text-sm">
+          <div className="divide-y divide-[#eeeeee] text-xs sm:text-sm">
             {/* 1. Stamp Duty */}
             <div className="py-3 flex items-center justify-between">
               <div>
-                <div className="font-semibold text-[#0F1B2D]">
+                <div className="font-semibold text-[#212121]">
                   1. Stamp duty ({settings.stampDutyPct}%)
                 </div>
-                <div className="text-[11px] text-stone-500">
+                <div className="text-[11px] text-[#838383]">
                   Telangana State Government revenue stamp on sale deed.
                 </div>
               </div>
-              <div className="font-bold text-[#0F1B2D]">
+              <div className="font-bold text-[#212121]">
                 about {formatIndianCurrency(roundToThousand(result.stampDuty))}
               </div>
             </div>
@@ -607,14 +607,14 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
             {/* 2. Transfer Duty */}
             <div className="py-3 flex items-center justify-between">
               <div>
-                <div className="font-semibold text-[#0F1B2D]">
+                <div className="font-semibold text-[#212121]">
                   2. Transfer duty ({settings.transferDutyPct}%)
                 </div>
-                <div className="text-[11px] text-stone-500">
+                <div className="text-[11px] text-[#838383]">
                   Local body development surcharge on title deed transfer.
                 </div>
               </div>
-              <div className="font-bold text-[#0F1B2D]">
+              <div className="font-bold text-[#212121]">
                 about {formatIndianCurrency(roundToThousand(result.transferDuty))}
               </div>
             </div>
@@ -622,14 +622,14 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
             {/* 3. Registration Fee */}
             <div className="py-3 flex items-center justify-between">
               <div>
-                <div className="font-semibold text-[#0F1B2D]">
+                <div className="font-semibold text-[#212121]">
                   3. Registration fee ({settings.registrationPct}%)
                 </div>
-                <div className="text-[11px] text-stone-500">
+                <div className="text-[11px] text-[#838383]">
                   Sub-registrar office recording fee for legal title documentation.
                 </div>
               </div>
-              <div className="font-bold text-[#0F1B2D]">
+              <div className="font-bold text-[#212121]">
                 about {formatIndianCurrency(roundToThousand(result.registrationFee))}
               </div>
             </div>
@@ -637,16 +637,16 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
             {/* 4. GST */}
             <div className="py-3 flex items-center justify-between">
               <div>
-                <div className="font-semibold text-[#0F1B2D]">
+                <div className="font-semibold text-[#212121]">
                   4. Goods and Services Tax (GST)
                 </div>
-                <div className="text-[11px] text-stone-500">
+                <div className="text-[11px] text-[#838383]">
                   {propertyType === 'under_construction'
                     ? `${settings.gstUnderConstructionPct}% levied on under-construction housing.`
                     : '0% levied on ready-to-move property with Occupancy Certificate.'}
                 </div>
               </div>
-              <div className="font-bold text-[#0F1B2D]">
+              <div className="font-bold text-[#212121]">
                 {result.gst > 0 ? `about ${formatIndianCurrency(roundToThousand(result.gst))}` : '₹0 (Exempt with OC)'}
               </div>
             </div>
@@ -655,21 +655,21 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
             <div className="py-3 space-y-2">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="font-semibold text-[#0F1B2D]">
+                  <div className="font-semibold text-[#212121]">
                     5. Other builder charges & deposits
                   </div>
-                  <div className="text-[11px] text-stone-500">
+                  <div className="text-[11px] text-[#838383]">
                     Car parking allotment, society corpus deposit, and clubhouse amenity fee.
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-[#0F1B2D]">
+                  <span className="font-bold text-[#212121]">
                     about {formatIndianCurrency(roundToThousand(result.otherCosts))}
                   </span>
                   <button
                     type="button"
                     onClick={() => setIsOtherCostsOpen(!isOtherCostsOpen)}
-                    className="text-xs text-[#0E7C86] font-semibold hover:underline cursor-pointer"
+                    className="text-xs text-[#212121] font-semibold hover:underline cursor-pointer"
                   >
                     {isOtherCostsOpen ? 'Hide' : 'Edit breakdown'}
                   </button>
@@ -678,9 +678,9 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
 
               {/* 3 Optional Inputs (Default 0 or standard) */}
               {isOtherCostsOpen && (
-                <div className="p-4 bg-stone-50 rounded-xl border border-stone-200 grid grid-cols-1 sm:grid-cols-3 gap-3 animate-in fade-in duration-100">
+                <div className="p-4 bg-[#f9f9f9] rounded-xl border border-[#eeeeee] grid grid-cols-1 sm:grid-cols-3 gap-3 animate-in fade-in duration-100">
                   <div>
-                    <label className="block text-[11px] font-semibold text-stone-600 mb-1">
+                    <label className="block text-[11px] font-semibold text-[#6b6b6b] mb-1">
                       Car parking allotment (₹)
                     </label>
                     <input
@@ -689,12 +689,12 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
                       min={0}
                       value={parkingCost}
                       onChange={(e) => setParkingCost(Math.max(0, Number(e.target.value)))}
-                      className="w-full px-3 py-2 rounded-lg border border-stone-200 bg-white text-xs font-semibold focus:outline-none focus:border-[#0E7C86]"
+                      className="w-full px-3 py-2 rounded-lg border border-[#eeeeee] bg-white text-xs font-semibold focus:outline-none focus:border-[#212121]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-stone-600 mb-1">
+                    <label className="block text-[11px] font-semibold text-[#6b6b6b] mb-1">
                       Corpus / Maintenance deposit (₹)
                     </label>
                     <input
@@ -703,12 +703,12 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
                       min={0}
                       value={maintenanceDeposit}
                       onChange={(e) => setMaintenanceDeposit(Math.max(0, Number(e.target.value)))}
-                      className="w-full px-3 py-2 rounded-lg border border-stone-200 bg-white text-xs font-semibold focus:outline-none focus:border-[#0E7C86]"
+                      className="w-full px-3 py-2 rounded-lg border border-[#eeeeee] bg-white text-xs font-semibold focus:outline-none focus:border-[#212121]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-stone-600 mb-1">
+                    <label className="block text-[11px] font-semibold text-[#6b6b6b] mb-1">
                       Clubhouse membership fee (₹)
                     </label>
                     <input
@@ -717,7 +717,7 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
                       min={0}
                       value={clubhouseFee}
                       onChange={(e) => setClubhouseFee(Math.max(0, Number(e.target.value)))}
-                      className="w-full px-3 py-2 rounded-lg border border-stone-200 bg-white text-xs font-semibold focus:outline-none focus:border-[#0E7C86]"
+                      className="w-full px-3 py-2 rounded-lg border border-[#eeeeee] bg-white text-xs font-semibold focus:outline-none focus:border-[#212121]"
                     />
                   </div>
                 </div>
@@ -731,39 +731,39 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
       {/* 4. LOAN SUMMARY CARD (WHEN LOAN NOT SKIPPED) */}
       {/* ============================================================ */}
       {!isLoanSkipped && propertyPrice > 0 && (
-        <div className="bg-white rounded-xl border border-stone-200 p-5 sm:p-7 space-y-4">
+        <div className="bg-white rounded-xl border border-[#eeeeee] p-5 sm:p-7 space-y-4">
           <div className="space-y-1">
-            <h3 className="font-serif font-bold text-xl text-[#0F1B2D]">
+            <h3 className="font-medium text-xl text-[#212121]">
               Loan & Monthly Cashflow Breakdown
             </h3>
-            <p className="text-xs text-stone-600">
+            <p className="text-xs text-[#6b6b6b]">
               EMI is your fixed monthly payment to the bank.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="p-4 rounded-xl bg-stone-50 border border-stone-200">
-              <span className="text-[11px] text-stone-500 block mb-1">Monthly EMI</span>
-              <span className="text-lg sm:text-xl font-bold text-[#0E7C86]">
+            <div className="p-4 rounded-xl bg-[#f9f9f9] border border-[#eeeeee]">
+              <span className="text-[11px] text-[#838383] block mb-1">Monthly EMI</span>
+              <span className="text-lg sm:text-xl font-bold text-[#212121]">
                 about {formatIndianCurrency(roundToThousand(result.monthlyEmi))}
               </span>
-              <span className="text-[10px] text-stone-400 block mt-0.5">per month for {loanTenureYears} years</span>
+              <span className="text-[10px] text-[#a3a3a3] block mt-0.5">per month for {loanTenureYears} years</span>
             </div>
 
-            <div className="p-4 rounded-xl bg-stone-50 border border-stone-200">
-              <span className="text-[11px] text-stone-500 block mb-1">Total Loan Interest</span>
-              <span className="text-lg sm:text-xl font-bold text-stone-800">
+            <div className="p-4 rounded-xl bg-[#f9f9f9] border border-[#eeeeee]">
+              <span className="text-[11px] text-[#838383] block mb-1">Total Loan Interest</span>
+              <span className="text-lg sm:text-xl font-bold text-[#212121]">
                 about {formatIndianCurrency(roundToThousand(result.totalLoanInterest))}
               </span>
-              <span className="text-[10px] text-stone-400 block mt-0.5">paid to lender over tenure</span>
+              <span className="text-[10px] text-[#a3a3a3] block mt-0.5">paid to lender over tenure</span>
             </div>
 
-            <div className="p-4 rounded-xl bg-stone-50 border border-stone-200">
-              <span className="text-[11px] text-stone-500 block mb-1">Total Cost of Owning</span>
-              <span className="text-lg sm:text-xl font-bold text-[#0F1B2D]">
+            <div className="p-4 rounded-xl bg-[#f9f9f9] border border-[#eeeeee]">
+              <span className="text-[11px] text-[#838383] block mb-1">Total Cost of Owning</span>
+              <span className="text-lg sm:text-xl font-bold text-[#212121]">
                 about {formatIndianCurrency(roundToThousand(result.totalCostWithInterest))}
               </span>
-              <span className="text-[10px] text-stone-400 block mt-0.5">base + taxes + loan interest</span>
+              <span className="text-[10px] text-[#a3a3a3] block mt-0.5">base + taxes + loan interest</span>
             </div>
           </div>
         </div>
@@ -772,20 +772,20 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
       {/* ============================================================ */}
       {/* 5. NRI NOTE (COLLAPSED BY DEFAULT, 3 SHORT BULLETS) */}
       {/* ============================================================ */}
-      <div className="bg-white rounded-xl border border-stone-200 overflow-hidden">
+      <div className="bg-white rounded-xl border border-[#eeeeee] overflow-hidden">
         <button
           type="button"
           onClick={() => setIsNriExpanded(!isNriExpanded)}
-          className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-3 hover:bg-stone-50 transition-colors cursor-pointer min-h-[48px]"
+          className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-3 hover:bg-[#f9f9f9] transition-colors cursor-pointer min-h-[48px]"
         >
           <div className="flex items-center gap-2">
-            <Info className="w-4 h-4 text-[#0E7C86]" strokeWidth={1.5} />
-            <span className="font-semibold text-sm text-[#0F1B2D]">
+            <Info className="w-4 h-4 text-[#212121]" strokeWidth={1.5} />
+            <span className="font-semibold text-sm text-[#212121]">
               Buying from abroad?
             </span>
           </div>
           <ChevronDown
-            className={`w-4 h-4 text-stone-400 transition-transform duration-150 ${
+            className={`w-4 h-4 text-[#a3a3a3] transition-transform duration-150 ${
               isNriExpanded ? 'rotate-180' : ''
             }`}
             strokeWidth={1.5}
@@ -793,7 +793,7 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
         </button>
 
         {isNriExpanded && (
-          <div className="p-5 pt-0 border-t border-stone-100 text-xs text-stone-700 space-y-3 leading-relaxed animate-in fade-in duration-150">
+          <div className="p-5 pt-0 border-t border-[#f2f2f2] text-xs text-[#4a4a4a] space-y-3 leading-relaxed animate-in fade-in duration-150">
             <ul className="space-y-2 list-disc list-outside pl-4">
               <li>
                 <strong>Designated Bank Accounts:</strong> Payments generally flow through Non-Resident External (NRE) or Non-Resident Ordinary (NRO) accounts under Reserve Bank of India (RBI) guidelines.
@@ -806,7 +806,7 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
               </li>
             </ul>
 
-            <p className="text-[11px] text-stone-500 italic pt-1 border-t border-stone-100">
+            <p className="text-[11px] text-[#838383] italic pt-1 border-t border-[#f2f2f2]">
               General information only. Confirm with a chartered accountant before you act.
             </p>
           </div>
@@ -814,19 +814,19 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
       </div>
 
       {/* Advisor Consultation CTA */}
-      <div className="p-6 bg-white rounded-xl border border-stone-200 space-y-3">
-        <h4 className="font-serif font-bold text-base text-[#0F1B2D]">
+      <div className="p-6 bg-white rounded-xl border border-[#eeeeee] space-y-3">
+        <h4 className="font-medium text-base text-[#212121]">
           Need help reviewing a builder&apos;s cost sheet?
         </h4>
-        <p className="text-xs text-stone-600 leading-relaxed">
-          Builders often bundle floor-rise charges, preferred location charges (PLC), and clubhouse GST. Have an independent HoI advisor audit the sheet line by line.
+        <p className="text-xs text-[#6b6b6b] leading-relaxed">
+          Builders often bundle floor-rise charges, preferred location charges (PLC), and clubhouse GST. Have an expert go through the sheet line by line.
         </p>
         <button
           type="button"
           onClick={() => onNavigate('booking')}
-          className="w-full sm:w-auto min-h-[48px] px-6 py-2.5 rounded-full bg-[#D6FD70] hover:bg-[#c7f354] text-[#131313] text-xs sm:text-sm font-bold font-mono uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+          className="w-full sm:w-auto min-h-[48px] px-6 py-2.5 rounded-full bg-[#212121] hover:bg-black text-white text-xs sm:text-sm font-bold font-mono uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
         >
-          <PhoneCall className="w-4 h-4 text-[#131313]" strokeWidth={2} />
+          <PhoneCall className="w-4 h-4 text-white" strokeWidth={2} />
           <span>Talk to an Advisor about your numbers</span>
         </button>
       </div>
@@ -834,7 +834,7 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
       {/* ============================================================ */}
       {/* 6. FOOTER LINE + "EDIT RATES (HOI STAFF)" LINK */}
       {/* ============================================================ */}
-      <div className="pt-4 border-t border-stone-200 text-xs text-stone-500 space-y-2">
+      <div className="pt-4 border-t border-[#eeeeee] text-xs text-[#838383] space-y-2">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <p>
             Rates last updated: <strong>{settings.ratesUpdatedOn}</strong>. Verify with the Telangana Registration & Stamps Department.
@@ -843,24 +843,24 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
           <button
             type="button"
             onClick={() => setIsStaffEditorOpen(!isStaffEditorOpen)}
-            className="text-[11px] text-[#131313] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer self-start sm:self-auto"
+            className="text-[11px] text-[#212121] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer self-start sm:self-auto"
           >
             <Settings2 className="w-3.5 h-3.5" strokeWidth={1.5} />
-            <span>{isStaffEditorOpen ? 'Close staff editor' : 'Edit rates (HoI staff)'}</span>
+            <span>{isStaffEditorOpen ? 'Close staff editor' : 'Edit rates (staff)'}</span>
           </button>
         </div>
 
         {/* Live Staff Editor Drawer */}
         {isStaffEditorOpen && (
-          <div className="p-4 mt-2 bg-stone-100 rounded-xl border border-stone-300 space-y-3 animate-in fade-in duration-150">
+          <div className="p-4 mt-2 bg-[#f2f2f2] rounded-xl border border-[#e0e0e0] space-y-3 animate-in fade-in duration-150">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-stone-800 text-xs uppercase tracking-wider">
-                HoI Internal Rate Parameters
+              <span className="font-bold text-[#212121] text-xs uppercase tracking-wider">
+                Internal rate parameters
               </span>
               <button
                 type="button"
                 onClick={() => setSettings(DEFAULT_COST_SETTINGS)}
-                className="text-[11px] text-stone-500 hover:text-stone-800 underline flex items-center gap-1 cursor-pointer"
+                className="text-[11px] text-[#838383] hover:text-[#212121] underline flex items-center gap-1 cursor-pointer"
               >
                 <RotateCcw className="w-3 h-3" strokeWidth={1.5} />
                 <span>Reset to defaults</span>
@@ -869,50 +869,50 @@ export function CostView({ onNavigate, selectedProject, initialPrice }: CostView
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
               <div>
-                <label className="block text-[10px] text-stone-500">Stamp Duty (%)</label>
+                <label className="block text-[10px] text-[#838383]">Stamp Duty (%)</label>
                 <input
                   type="number"
                   step={0.1}
                   value={settings.stampDutyPct}
                   onChange={(e) => setSettings({ ...settings, stampDutyPct: Number(e.target.value) })}
-                  className="w-full px-2 py-1.5 bg-white rounded border border-stone-200 text-xs font-semibold"
+                  className="w-full px-2 py-1.5 bg-white rounded border border-[#eeeeee] text-xs font-semibold"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] text-stone-500">Transfer Duty (%)</label>
+                <label className="block text-[10px] text-[#838383]">Transfer Duty (%)</label>
                 <input
                   type="number"
                   step={0.1}
                   value={settings.transferDutyPct}
                   onChange={(e) => setSettings({ ...settings, transferDutyPct: Number(e.target.value) })}
-                  className="w-full px-2 py-1.5 bg-white rounded border border-stone-200 text-xs font-semibold"
+                  className="w-full px-2 py-1.5 bg-white rounded border border-[#eeeeee] text-xs font-semibold"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] text-stone-500">Registration (%)</label>
+                <label className="block text-[10px] text-[#838383]">Registration (%)</label>
                 <input
                   type="number"
                   step={0.1}
                   value={settings.registrationPct}
                   onChange={(e) => setSettings({ ...settings, registrationPct: Number(e.target.value) })}
-                  className="w-full px-2 py-1.5 bg-white rounded border border-stone-200 text-xs font-semibold"
+                  className="w-full px-2 py-1.5 bg-white rounded border border-[#eeeeee] text-xs font-semibold"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] text-stone-500">GST Under-Const (%)</label>
+                <label className="block text-[10px] text-[#838383]">GST Under-Const (%)</label>
                 <input
                   type="number"
                   step={0.5}
                   value={settings.gstUnderConstructionPct}
                   onChange={(e) => setSettings({ ...settings, gstUnderConstructionPct: Number(e.target.value) })}
-                  className="w-full px-2 py-1.5 bg-white rounded border border-stone-200 text-xs font-semibold"
+                  className="w-full px-2 py-1.5 bg-white rounded border border-[#eeeeee] text-xs font-semibold"
                 />
               </div>
             </div>
-            <p className="text-[10px] text-stone-500">
+            <p className="text-[10px] text-[#838383]">
               Changes reflect live across all formulas above.
             </p>
           </div>

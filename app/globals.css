@@ -1,23 +1,43 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens, modelled on the HouseMarket layout: white canvas, near-black ink,
+ * soft grey panels, 16px cards, pill buttons and one typeface (Manrope).
+ * Verdict colours (green / amber / red) are the only accents.
+ */
 @layer base {
   :root {
-    --bg-green: #d6fd70;
-    --bg-dark: #131313;
-    --bg-primary: #f2f2f2;
-    --grey-100: #f2f2f2;
-    --grey-200: #ececec;
-    --grey-300: #c7c7c7;
-    --grey-400: #585858;
+    --ink: #212121;
+    --ink-soft: #303030;
+    --text: #6b6b6b;
+    --text-muted: #838383;
+    --line: #eeeeee;
+    --panel: #f9f9f9;
+    --panel-2: #f2f2f2;
+    --white: #ffffff;
+
+    /* Legacy names kept so older components keep resolving */
+    --bg-green: var(--ink);
+    --bg-dark: var(--ink);
+    --bg-primary: var(--white);
+    --grey-100: var(--panel);
+    --grey-200: var(--line);
+    --grey-300: #d4d4d4;
+    --grey-400: var(--text);
     --grey-600: #363636;
-    --grey-700: #2f2f2f;
-    --grey-900: #131313;
+    --grey-700: var(--ink-soft);
+    --grey-900: var(--ink);
+
+    --font-heading: var(--font-manrope);
+    --font-sans: var(--font-manrope);
+    --font-mono: var(--font-manrope);
   }
 
   body {
-    background-color: #f2f2f2;
-    color: #131313;
+    background-color: var(--white);
+    color: var(--ink);
     font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -25,136 +45,118 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    letter-spacing: -0.02em;
   }
 }
 
-.font-heading {
-  font-family: var(--font-heading), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
-
+.font-heading,
+.font-serif,
 .font-sans {
-  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-manrope), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
+/* Former monospace labels now use Manrope with tabular figures so numbers still line up. */
 .font-mono {
-  font-family: var(--font-mono), monospace;
+  font-family: var(--font-manrope), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
 }
 
-/* Fallback for legacy class references */
-.font-serif {
-  font-family: var(--font-heading), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+/* Section rhythm */
+.hm-container {
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+@media (min-width: 640px) {
+  .hm-container { padding-inline: 24px; }
 }
 
-/* Aeline Signature Arrow Button styling */
-.btn-aeline {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 9999px;
-  padding: 0.35rem 0.45rem 0.35rem 1.4rem;
-  background-color: #d6fd70;
-  color: #131313;
-  font-family: var(--font-mono), monospace;
-  font-size: 0.8125rem;
+.hm-eyebrow {
+  font-size: 0.875rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  cursor: pointer;
-  white-space: nowrap;
+  color: var(--text-muted);
 }
 
-.btn-aeline:hover {
-  transform: translateY(-1px) scale(1.015);
-  box-shadow: 0 6px 20px -4px rgba(214, 253, 112, 0.45);
-}
-
-.btn-aeline-dark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 9999px;
-  padding: 0.35rem 0.45rem 0.35rem 1.4rem;
-  background-color: #131313;
-  color: #ffffff;
-  font-family: var(--font-mono), monospace;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.btn-aeline-dark:hover {
-  background-color: #000000;
-  transform: translateY(-1px) scale(1.015);
-  box-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.3);
-}
-
+/* Pill buttons. Class names kept from the earlier design so every view picks them up. */
+.btn-aeline,
+.btn-aeline-dark,
 .btn-aeline-outline {
   display: inline-flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 0.5rem;
   border-radius: 9999px;
-  padding: 0.35rem 0.45rem 0.35rem 1.4rem;
-  background-color: transparent;
-  color: #131313;
-  border: 1px solid #d1d1d1;
-  font-family: var(--font-mono), monospace;
-  font-size: 0.8125rem;
+  padding: 0.625rem 1.5rem;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 0.9375rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  letter-spacing: -0.01em;
+  text-transform: none;
+  min-height: 44px;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
   cursor: pointer;
   white-space: nowrap;
 }
 
-.btn-aeline-outline:hover {
-  border-color: #131313;
-  background-color: #ffffff;
+.btn-aeline,
+.btn-aeline-dark {
+  background-color: var(--ink);
+  color: var(--white);
+  border: 1px solid var(--ink);
+}
+.btn-aeline:hover,
+.btn-aeline-dark:hover {
+  background-color: #000000;
   transform: translateY(-1px);
 }
 
-/* Arrow Capsule */
-.btn-arrow-capsule {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 9999px;
-  background-color: #131313;
-  color: #ffffff;
-  margin-left: 0.75rem;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+.btn-aeline-outline {
+  background-color: var(--white);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.btn-aeline-outline:hover {
+  border-color: var(--ink);
+  transform: translateY(-1px);
 }
 
-.btn-aeline:hover .btn-arrow-capsule {
-  transform: translate(2px, -2px);
-}
-
+/* Small round arrow that sits inside a pill */
+.btn-arrow-capsule,
 .btn-arrow-capsule-lime {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: 9999px;
-  background-color: #d6fd70;
-  color: #131313;
-  margin-left: 0.75rem;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-right: -0.75rem;
+  transition: transform 0.2s ease;
+}
+.btn-arrow-capsule { background-color: rgba(255, 255, 255, 0.14); color: currentColor; }
+.btn-arrow-capsule-lime { background-color: rgba(255, 255, 255, 0.14); color: currentColor; }
+.btn-aeline-outline .btn-arrow-capsule { background-color: var(--panel-2); color: var(--ink); }
+.btn-aeline:hover .btn-arrow-capsule,
+.btn-aeline-dark:hover .btn-arrow-capsule-lime,
+.btn-aeline-outline:hover .btn-arrow-capsule {
+  transform: translateX(2px);
 }
 
-.btn-aeline-dark:hover .btn-arrow-capsule-lime {
-  transform: translate(2px, -2px);
+/* Scroll reveal, the template's signature motion. Content stays visible without JS. */
+@media (prefers-reduced-motion: no-preference) {
+  .js-reveal [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .js-reveal [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
 }
 
-/* Infinite Marquee */
+/* Infinite marquee */
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
@@ -163,7 +165,7 @@
 .animate-marquee {
   display: flex;
   width: 200%;
-  animation: marquee 24s linear infinite;
+  animation: marquee 32s linear infinite;
 }
 
 .animate-marquee:hover {
@@ -171,9 +173,11 @@
 }
 
 /* Focus styles */
+a:focus-visible,
 input:focus-visible,
 button:focus-visible,
-select:focus-visible {
-  outline: 2px solid #131313;
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--ink);
   outline-offset: 2px;
 }

@@ -56,7 +56,7 @@ export function ConciergeView({
   const getInitialGreeting = () => {
     const nriNote = isNRI ? ' and coordinating remote due diligence from abroad' : '';
     const purposeNote = userPreferences.lookingFor ? ` for ${userPreferences.lookingFor.toLowerCase()}` : '';
-    return `Hello. Welcome to the House of Investors Wealth Desk. I am Ananya. I see you are evaluating ${selectedProject.name} in ${selectedProject.location}${purposeNote}${nriNote}.\n\nTo help our diligence team tailor advice to your goals, what budget range are you planning for this acquisition?`;
+    return `Hi, I'm the hyderabad.properties assistant, an automated helper. I see you are looking at ${selectedProject.name} in ${selectedProject.location}${purposeNote}${nriNote}.\n\nA few quick questions so an expert can give you useful advice. What budget range are you planning for?`;
   };
 
   const [messages, setMessages] = useState<Message[]>([
@@ -229,7 +229,7 @@ export function ConciergeView({
         <button
           type="button"
           onClick={() => onNavigate('project')}
-          className="text-xs font-semibold text-stone-600 hover:text-[#0F1B2D] inline-flex items-center gap-1.5 py-1 min-h-[44px] cursor-pointer"
+          className="text-xs font-semibold text-[#6b6b6b] hover:text-[#212121] inline-flex items-center gap-1.5 py-1 min-h-[44px] cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
           <span>Back to Project Report</span>
@@ -237,26 +237,26 @@ export function ConciergeView({
       </div>
 
       {/* 1. HEADER */}
-      <div className="bg-white rounded-xl border border-stone-200 p-4 sm:p-5 flex items-center justify-between gap-3 text-left">
+      <div className="bg-white rounded-xl border border-[#eeeeee] p-4 sm:p-5 flex items-center justify-between gap-3 text-left">
         <div className="flex items-center gap-3">
           {/* Human Advisor Avatar Group */}
           <div className="flex -space-x-2 overflow-hidden">
-            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#131313] text-[#D6FD70] text-[10px] font-bold ring-2 ring-white">
+            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#212121] text-white text-[10px] font-bold ring-2 ring-white">
               AN
             </span>
-            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#131313] text-[#D6FD70] text-[10px] font-bold ring-2 ring-white">
+            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#212121] text-white text-[10px] font-bold ring-2 ring-white">
               VK
             </span>
-            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#131313] text-[#D6FD70] text-[10px] font-bold ring-2 ring-white">
+            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#212121] text-white text-[10px] font-bold ring-2 ring-white">
               PR
             </span>
           </div>
 
           <div>
-            <h1 className="font-serif font-bold text-base text-[#0F1B2D]">
-              HoI Wealth Desk Assistant
+            <h1 className="font-medium text-base text-[#212121]">
+              hyderabad.properties assistant
             </h1>
-            <p className="text-xs text-stone-500">
+            <p className="text-xs text-[#838383]">
               Assisting with <strong>{selectedProject.name}</strong> ({selectedProject.location})
             </p>
           </div>
@@ -273,7 +273,7 @@ export function ConciergeView({
             type="button"
             onClick={handleResetConversation}
             title="Restart conversation"
-            className="p-1.5 text-stone-400 hover:text-stone-700 rounded-lg hover:bg-stone-100 transition-colors cursor-pointer"
+            className="p-1.5 text-[#a3a3a3] hover:text-[#4a4a4a] rounded-lg hover:bg-[#f2f2f2] transition-colors cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" strokeWidth={1.5} />
           </button>
@@ -281,7 +281,7 @@ export function ConciergeView({
       </div>
 
       {/* 2. CHAT MESSAGES WINDOW */}
-      <div className="bg-white rounded-xl border border-stone-200 p-4 sm:p-6 min-h-[460px] flex flex-col justify-between space-y-4">
+      <div className="bg-white rounded-xl border border-[#eeeeee] p-4 sm:p-6 min-h-[460px] flex flex-col justify-between space-y-4">
         <div className="space-y-4 overflow-y-auto max-h-[520px] pr-1">
           {messages.map((msg) => (
             <div
@@ -293,24 +293,24 @@ export function ConciergeView({
               <div
                 className={`max-w-[85%] sm:max-w-[80%] rounded-xl p-4 text-xs sm:text-sm leading-relaxed whitespace-pre-line text-left ${
                   msg.sender === 'user'
-                    ? 'bg-[#131313] text-[#D6FD70] font-mono'
-                    : 'bg-[#FAF8F5] text-stone-800 border border-stone-200'
+                    ? 'bg-[#212121] text-white font-mono'
+                    : 'bg-[#f9f9f9] text-[#212121] border border-[#eeeeee]'
                 }`}
               >
                 {msg.text}
               </div>
 
-              <span className="text-[10px] text-stone-400 mt-1 px-1">
+              <span className="text-[10px] text-[#a3a3a3] mt-1 px-1">
                 {msg.time}
               </span>
 
               {/* SUMMARY CARD AT THE END */}
               {msg.isSummary && (
-                <div className="w-full mt-4 p-5 rounded-2xl bg-[#131313] text-white border border-[#2F2F2F] space-y-4 text-left animate-in fade-in duration-200 shadow-xl">
+                <div className="w-full mt-4 p-5 rounded-2xl bg-[#212121] text-white border border-white/10 space-y-4 text-left animate-in fade-in duration-200 shadow-xl">
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <FileCheck className="w-4 h-4 text-[#D6FD70]" strokeWidth={2} />
-                      <h3 className="font-heading font-extrabold text-base text-white">
+                      <FileCheck className="w-4 h-4 text-white" strokeWidth={2} />
+                      <h3 className="font-medium text-base text-white">
                         Your Summary
                       </h3>
                     </div>
@@ -323,30 +323,30 @@ export function ConciergeView({
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-xs bg-[#1F1F1F] p-3 rounded-xl border border-[#2F2F2F]">
+                  <div className="grid grid-cols-2 gap-2 text-xs bg-[#2a2a2a] p-3 rounded-xl border border-white/10">
                     <div>
-                      <span className="text-[#888888] block text-[10px] uppercase font-mono font-semibold">Project</span>
+                      <span className="text-[#838383] block text-[10px] uppercase font-mono font-semibold">Project</span>
                       <strong className="text-white">{selectedProject.name}</strong>
                     </div>
                     <div>
-                      <span className="text-[#888888] block text-[10px] uppercase font-mono font-semibold">Budget</span>
-                      <strong className="text-[#D6FD70]">{budgetAnswer || '₹1 Cr – ₹2.5 Cr'}</strong>
+                      <span className="text-[#838383] block text-[10px] uppercase font-mono font-semibold">Budget</span>
+                      <strong className="text-white">{budgetAnswer || '₹1 Cr – ₹2.5 Cr'}</strong>
                     </div>
                     <div>
-                      <span className="text-[#888888] block text-[10px] uppercase font-mono font-semibold">Purpose</span>
+                      <span className="text-[#838383] block text-[10px] uppercase font-mono font-semibold">Purpose</span>
                       <strong className="text-white">{purposeAnswer || 'Live / Invest'}</strong>
                     </div>
                     <div>
-                      <span className="text-[#888888] block text-[10px] uppercase font-mono font-semibold">Timeline</span>
+                      <span className="text-[#838383] block text-[10px] uppercase font-mono font-semibold">Timeline</span>
                       <strong className="text-white">{timelineAnswer || 'Within 6 months'}</strong>
                     </div>
                     <div>
-                      <span className="text-[#888888] block text-[10px] uppercase font-mono font-semibold">NRI Status</span>
+                      <span className="text-[#838383] block text-[10px] uppercase font-mono font-semibold">NRI Status</span>
                       <strong className="text-white">{isNRI ? 'Yes (Overseas)' : 'No (Resident)'}</strong>
                     </div>
                     {browsingFocus && (
                       <div>
-                        <span className="text-[#888888] block text-[10px] uppercase font-mono font-semibold">Focus</span>
+                        <span className="text-[#838383] block text-[10px] uppercase font-mono font-semibold">Focus</span>
                         <strong className="text-white">{browsingFocus}</strong>
                       </div>
                     )}
@@ -361,11 +361,11 @@ export function ConciergeView({
                   <button
                     type="button"
                     onClick={() => onNavigate('booking')}
-                    className="w-full min-h-[50px] py-3.5 px-6 rounded-full bg-[#D6FD70] hover:bg-[#c7f354] text-[#131313] font-bold font-mono text-xs sm:text-sm uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                    className="w-full min-h-[50px] py-3.5 px-6 rounded-full bg-[#212121] hover:bg-black text-white font-bold font-mono text-xs sm:text-sm uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
                   >
-                    <PhoneCall className="w-4 h-4 text-[#131313]" strokeWidth={2} />
+                    <PhoneCall className="w-4 h-4 text-white" strokeWidth={2} />
                     <span>Book a free advisor call</span>
-                    <ArrowRight className="w-4 h-4 text-[#131313]" strokeWidth={2} />
+                    <ArrowRight className="w-4 h-4 text-white" strokeWidth={2} />
                   </button>
                 </div>
               )}
@@ -379,10 +379,10 @@ export function ConciergeView({
                       type="button"
                       onClick={() => handleUserResponse(reply)}
                       disabled={isTyping}
-                      className="px-3.5 py-2 rounded-lg bg-white hover:bg-stone-50 text-[#0F1B2D] border border-stone-200 text-xs font-semibold transition-colors cursor-pointer min-h-[40px] flex items-center gap-1.5 disabled:opacity-50"
+                      className="px-3.5 py-2 rounded-lg bg-white hover:bg-[#f9f9f9] text-[#212121] border border-[#eeeeee] text-xs font-semibold transition-colors cursor-pointer min-h-[40px] flex items-center gap-1.5 disabled:opacity-50"
                     >
                       <span>{reply}</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-stone-400" strokeWidth={1.5} />
+                      <ArrowRight className="w-3.5 h-3.5 text-[#a3a3a3]" strokeWidth={1.5} />
                     </button>
                   ))}
                 </div>
@@ -392,9 +392,9 @@ export function ConciergeView({
 
           {/* Typing Indicator */}
           {isTyping && (
-            <div className="flex items-center gap-2 text-stone-500 text-xs py-1">
-              <span className="text-[10px] font-bold text-[#0E7C86]">AN:</span>
-              <span className="text-[11px] text-stone-500 italic">Ananya is reviewing project records...</span>
+            <div className="flex items-center gap-2 text-[#838383] text-xs py-1">
+              <span className="text-[10px] font-bold text-[#212121]">AN:</span>
+              <span className="text-[11px] text-[#838383] italic">Checking the project records…</span>
             </div>
           )}
 
@@ -407,7 +407,7 @@ export function ConciergeView({
             e.preventDefault();
             handleUserResponse(inputText);
           }}
-          className="pt-3 border-t border-stone-100 flex items-center gap-2"
+          className="pt-3 border-t border-[#f2f2f2] flex items-center gap-2"
         >
           <input
             type="text"
@@ -415,20 +415,20 @@ export function ConciergeView({
             onChange={(e) => setInputText(e.target.value)}
             placeholder="Type your reply or pick an option above..."
             disabled={isTyping}
-            className="flex-1 py-3 px-4 rounded-xl border border-stone-200 bg-white text-xs sm:text-sm focus:outline-none focus:border-[#0E7C86] transition-colors min-h-[44px]"
+            className="flex-1 py-3 px-4 rounded-xl border border-[#eeeeee] bg-white text-xs sm:text-sm focus:outline-none focus:border-[#212121] transition-colors min-h-[44px]"
           />
           <button
             type="submit"
             disabled={!inputText.trim() || isTyping}
-            className="px-5 py-3 rounded-full bg-[#D6FD70] hover:bg-[#c7f354] text-[#131313] text-xs font-bold font-mono min-h-[44px] flex items-center justify-center transition-colors cursor-pointer disabled:opacity-40 shadow-xs"
+            className="px-5 py-3 rounded-full bg-[#212121] hover:bg-black text-white text-xs font-bold font-mono min-h-[44px] flex items-center justify-center transition-colors cursor-pointer disabled:opacity-40 shadow-xs"
           >
-            <Send className="w-4 h-4 text-[#131313]" strokeWidth={2} />
+            <Send className="w-4 h-4 text-white" strokeWidth={2} />
           </button>
         </form>
       </div>
 
-      <div className="text-[11px] text-stone-500 text-center">
-        Confidential client intake · House of Investors Real Estate Advisory
+      <div className="text-[11px] text-[#838383] text-center">
+        Confidential · your answers go only to our team
       </div>
     </div>
   );

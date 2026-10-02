@@ -15,7 +15,9 @@ import { WatchSheet } from '@/components/WatchSheet';
 import { AdvisorDemoPanel } from '@/components/AdvisorDemoPanel';
 import { MOCK_PROJECTS, ProjectSafetyItem } from '@/lib/mock-data';
 import { useLiveData, formatDate } from '@/components/live/LiveDataProvider';
-import { Shield, AlertCircle, X } from 'lucide-react';
+import { AlertCircle, X } from 'lucide-react';
+import { useReveal } from '@/components/useReveal';
+import { DEMO_DATA } from '@/lib/demo';
 
 export interface UserPreferences {
   lookingFor?: 'A home to live in' | 'An investment' | 'Not sure yet';
@@ -82,8 +84,6 @@ export function AppShell({ initialView = 'home', initialProjectId }: AppShellPro
   const [userPreferences, setUserPreferences] = useState<UserPreferences>({});
   const [activeSearchTerm, setActiveSearchTerm] = useState<string>('');
 
-  // 1.5s Initial Splash screen (skipped on deep links)
-  const [showSplash, setShowSplash] = useState<boolean>(!initialProjectId);
 
   // Viewed projects tracking
   const [viewedProjectIds, setViewedProjectIds] = useState<string[]>([selectedProjectId]);
@@ -101,15 +101,19 @@ export function AppShell({ initialView = 'home', initialProjectId }: AppShellPro
   // ==========================================
   // WATCH THIS PROJECT STATE
   // ==========================================
-  const [watches, setWatches] = useState<StoredWatch[]>(() => [
-    {
-      projectId: MOCK_PROJECTS[0].id, // Aurelia Heights pre-watched for immediate demo readiness
-      channel: 'whatsapp',
-      contact: '+91 98765 43210',
-      watchedAt: 'Yesterday',
-      watchedAtIso: new Date(Date.now() - 86400_000).toISOString(),
-    },
-  ]);
+  const [watches, setWatches] = useState<StoredWatch[]>(() =>
+    DEMO_DATA
+      ? [
+          {
+            projectId: MOCK_PROJECTS[0].id, // Aurelia Heights pre-watched for immediate demo readiness
+            channel: 'whatsapp',
+            contact: '+91 98765 43210',
+            watchedAt: 'Yesterday',
+            watchedAtIso: new Date(Date.now() - 86400_000).toISOString(),
+          },
+        ]
+      : []
+  );
   const watchesLoaded = useRef(false);
   const [localAlerts, setLocalAlerts] = useState<WatchedAlertPreview[]>([]);
   const [latestAlert, setLatestAlert] = useState<WatchedAlertPreview | null>(null);
@@ -126,12 +130,7 @@ export function AppShell({ initialView = 'home', initialProjectId }: AppShellPro
     setTimeout(() => setToastMessage(null), ms);
   };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowSplash(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
+  useReveal([currentView, selectedProjectId, projects.length]);
 
   // Restore this browser's watch list.
   useEffect(() => {
@@ -369,35 +368,7 @@ export function AppShell({ initialView = 'home', initialProjectId }: AppShellPro
   const watchedProjectIds = watches.map((w) => w.projectId);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F2F2F2] text-[#131313]">
-      {/* 1.5s First-Load Splash Screen */}
-      {showSplash && (
-        <div
-          onClick={() => setShowSplash(false)}
-          className="fixed inset-0 z-50 bg-[#131313] text-white flex flex-col items-center justify-center p-6 text-center animate-out fade-out duration-300 cursor-pointer"
-        >
-          <div className="space-y-4 max-w-sm">
-            <div className="flex items-center justify-center">
-              <div className="w-14 h-14 rounded-2xl bg-[#131313] border-2 border-[#D6FD70] flex items-center justify-center text-[#D6FD70] shadow-xl">
-                <Shield className="w-7 h-7 text-[#D6FD70]" strokeWidth={2} />
-              </div>
-            </div>
-            <div className="space-y-1">
-              <div className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-                hyderabad<span className="text-[#D6FD70]">.properties</span>
-              </div>
-              <p className="text-[11px] uppercase font-mono font-semibold tracking-widest text-[#AAAAAA]">
-                HOUSE OF INVESTORS · INDEPENDENT VERIFICATION
-              </p>
-            </div>
-            <div className="flex items-center justify-center gap-2 text-xs font-mono text-[#D6FD70]">
-              <span className="w-2 h-2 rounded-full bg-[#D6FD70] animate-ping" />
-              <span>Loading verified land and municipal records...</span>
-            </div>
-          </div>
-        </div>
-      )}
-
+    <div className="min-h-screen flex flex-col bg-white text-[#212121]">
       {/* Persistent Top Bar with Watching count badge */}
       <TopBar 
         currentView={currentView} 
@@ -406,7 +377,7 @@ export function AppShell({ initialView = 'home', initialProjectId }: AppShellPro
       />
 
       {/* Main Content Area with State-Based Routing */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      <main className={currentView === 'home' ? 'flex-1 w-full pt-2' : 'flex-1 hm-container py-8 sm:py-12'}>
         {currentView === 'home' && (
           <HomeView
             onNavigate={handleNavigate}
@@ -487,6 +458,7 @@ export function AppShell({ initialView = 'home', initialProjectId }: AppShellPro
 
       {/* Footer with Mandatory Disclaimer & Demo Controls */}
       <Footer
+        onNavigate={handleNavigate}
         isAdvisorDemoOpen={isAdvisorDemoOpen}
         onToggleAdvisorDemo={() => setIsAdvisorDemoOpen(!isAdvisorDemoOpen)}
         onSimulateChange={handleSimulateChange}
@@ -521,14 +493,14 @@ export function AppShell({ initialView = 'home', initialProjectId }: AppShellPro
         <div 
           role="status"
           aria-live="polite"
-          className="fixed bottom-6 right-6 z-50 bg-[#0F1B2D] text-white px-4 py-3 rounded-xl shadow-xl border border-stone-700 flex items-center gap-3 animate-in slide-in-from-bottom-3 duration-200"
+          className="fixed bottom-6 right-6 left-6 sm:left-auto z-50 bg-[#212121] text-white px-5 py-3.5 rounded-full shadow-xl flex items-center gap-3 animate-in slide-in-from-bottom-3 duration-200"
         >
-          <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" strokeWidth={1.5} />
+          <AlertCircle className="w-4 h-4 text-white shrink-0" strokeWidth={1.5} />
           <span className="text-xs sm:text-sm font-medium">{toastMessage}</span>
           <button
             type="button"
             onClick={() => setToastMessage(null)}
-            className="text-stone-400 hover:text-white p-1 cursor-pointer"
+            className="text-white/60 hover:text-white p-1 cursor-pointer"
             aria-label="Dismiss toast"
           >
             <X className="w-3.5 h-3.5" />

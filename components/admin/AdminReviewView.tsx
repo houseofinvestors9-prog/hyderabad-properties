@@ -92,10 +92,10 @@ function fmtTime(iso: string | null | undefined): string {
 function Pill({ children, tone = 'light' }: { children: React.ReactNode; tone?: 'light' | 'dark' | 'lime' }) {
   const cls =
     tone === 'dark'
-      ? 'bg-[#131313] text-[#D6FD70]'
+      ? 'bg-[#212121] text-white'
       : tone === 'lime'
-      ? 'bg-[#D6FD70] text-[#131313]'
-      : 'bg-[#F2F2F2] text-[#131313] border border-[#E2E2E2]';
+      ? 'bg-[#212121] text-[#212121]'
+      : 'bg-[#f9f9f9] text-[#212121] border border-[#eeeeee]';
   return <span className={`inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-full ${cls}`}>{children}</span>;
 }
 
@@ -176,9 +176,9 @@ function ReviewCard({ item, onDone }: { item: QueueItem; onDone: (id: string, ms
   };
 
   return (
-    <article className="bg-white rounded-2xl border border-[#E2E2E2] overflow-hidden">
+    <article className="bg-white rounded-2xl border border-[#eeeeee] overflow-hidden">
       {/* Header */}
-      <header className="px-5 sm:px-6 pt-5 pb-4 space-y-3 border-b border-[#E2E2E2]">
+      <header className="px-5 sm:px-6 pt-5 pb-4 space-y-3 border-b border-[#eeeeee]">
         <div className="flex flex-wrap items-center gap-1.5">
           <Pill tone="dark">{SOURCE_LABEL[u.source] ?? u.source}</Pill>
           <Pill>{DOC_LABEL[u.documentType] ?? u.documentType}</Pill>
@@ -196,32 +196,32 @@ function ReviewCard({ item, onDone }: { item: QueueItem; onDone: (id: string, ms
               <Bell className="w-3 h-3" strokeWidth={2} /> {item.watchers} watching
             </Pill>
           )}
-          <span className="ml-auto font-mono text-[10px] uppercase tracking-wider text-[#585858]">{fmtTime(u.createdAt)}</span>
+          <span className="ml-auto font-mono text-[10px] uppercase tracking-wider text-[#6b6b6b]">{fmtTime(u.createdAt)}</span>
         </div>
 
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div className="min-w-0">
-            <h3 className="font-heading font-extrabold text-xl tracking-tight text-[#131313]">
+            <h3 className="font-medium text-xl tracking-tight text-[#212121]">
               {item.live?.name ?? item.market?.name ?? 'Unknown target'}
-              {item.live && <span className="font-sans font-medium text-sm text-[#585858]"> · {item.live.location}</span>}
+              {item.live && <span className="font-sans font-medium text-sm text-[#6b6b6b]"> · {item.live.location}</span>}
             </h3>
-            <p className="text-xs text-[#585858] mt-0.5 flex items-center gap-1.5 break-all">
+            <p className="text-xs text-[#6b6b6b] mt-0.5 flex items-center gap-1.5 break-all">
               <FileText className="w-3.5 h-3.5 shrink-0" strokeWidth={1.5} />
               {u.rawTitle}
               {u.sourceUrl && (
-                <a href={u.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-0.5 font-semibold text-[#131313] underline decoration-[#D6FD70] decoration-2 underline-offset-2">
+                <a href={u.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-0.5 font-semibold text-[#212121] underline decoration-[#212121] decoration-2 underline-offset-2">
                   source <ExternalLink className="w-3 h-3" strokeWidth={2} />
                 </a>
               )}
             </p>
           </div>
           <div className="w-40 shrink-0">
-            <div className="flex justify-between font-mono text-[10px] uppercase tracking-wider text-[#585858]">
+            <div className="flex justify-between font-mono text-[10px] uppercase tracking-wider text-[#6b6b6b]">
               <span>AI confidence</span>
-              <span className="font-bold text-[#131313]">{confidencePct}%</span>
+              <span className="font-bold text-[#212121]">{confidencePct}%</span>
             </div>
-            <div className="mt-1 h-1.5 rounded-full bg-[#F2F2F2] overflow-hidden">
-              <div className={`h-full rounded-full ${confidencePct >= 75 ? 'bg-[#D6FD70]' : 'bg-[#131313]'}`} style={{ width: `${confidencePct}%` }} />
+            <div className="mt-1 h-1.5 rounded-full bg-[#f9f9f9] overflow-hidden">
+              <div className={`h-full rounded-full ${confidencePct >= 75 ? 'bg-[#212121]' : 'bg-[#212121]'}`} style={{ width: `${confidencePct}%` }} />
             </div>
           </div>
         </div>
@@ -230,7 +230,7 @@ function ReviewCard({ item, onDone }: { item: QueueItem; onDone: (id: string, ms
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:divide-x divide-[#E2E2E2]">
         {/* Side-by-side comparison */}
         <section className="p-5 sm:p-6 space-y-3" aria-label="Current live data versus newly scraped data">
-          <div className="grid grid-cols-[1fr_1fr_1fr] gap-2 font-mono text-[10px] uppercase tracking-wider font-bold text-[#585858]">
+          <div className="grid grid-cols-[1fr_1fr_1fr] gap-2 font-mono text-[10px] uppercase tracking-wider font-bold text-[#6b6b6b]">
             <span>Field</span>
             <span>Current live</span>
             <span>Newly scraped</span>
@@ -242,28 +242,28 @@ function ReviewCard({ item, onDone }: { item: QueueItem; onDone: (id: string, ms
                 <div
                   key={d.key}
                   className={`grid grid-cols-[1fr_1fr_1fr] gap-2 text-xs rounded-lg px-2 py-1.5 ${
-                    d.changed ? 'bg-[#D6FD70]/35 border-l-4 border-[#131313] font-semibold' : 'text-[#585858]'
+                    d.changed ? 'bg-[#212121]/35 border-l-4 border-[#212121] font-semibold' : 'text-[#6b6b6b]'
                   }`}
                 >
-                  <span className="text-[#131313]">{d.label}</span>
-                  <span className={d.changed ? 'line-through decoration-[#131313]/40 text-[#585858]' : ''}>{fmtValue(d.current)}</span>
-                  <span className="text-[#131313] break-words">{fmtValue(d.proposed)}</span>
+                  <span className="text-[#212121]">{d.label}</span>
+                  <span className={d.changed ? 'line-through decoration-[#212121]/40 text-[#6b6b6b]' : ''}>{fmtValue(d.current)}</span>
+                  <span className="text-[#212121] break-words">{fmtValue(d.proposed)}</span>
                 </div>
               ))}
             {item.diff.every((d) => !d.changed) && (
-              <p className="text-xs text-[#585858] italic px-2 pt-1">No tracked field changes. Publishing adds a timeline entry only.</p>
+              <p className="text-xs text-[#6b6b6b] italic px-2 pt-1">No tracked field changes. Publishing adds a timeline entry only.</p>
             )}
           </div>
 
           {item.live && (
-            <div className="pt-3 border-t border-[#E2E2E2] flex flex-wrap items-center gap-2 text-xs">
-              <span className="font-mono text-[10px] uppercase tracking-wider text-[#585858]">Live verdict</span>
+            <div className="pt-3 border-t border-[#eeeeee] flex flex-wrap items-center gap-2 text-xs">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-[#6b6b6b]">Live verdict</span>
               <Pill>
                 {STATUS_LABEL[item.live.status]} · {item.live.safetyScore}
               </Pill>
               {item.suggested && (
                 <>
-                  <span className="text-[#585858]">→ suggested</span>
+                  <span className="text-[#6b6b6b]">→ suggested</span>
                   <Pill tone="dark">
                     {STATUS_LABEL[item.suggested.status]} · {item.suggested.score}
                   </Pill>
@@ -275,42 +275,42 @@ function ReviewCard({ item, onDone }: { item: QueueItem; onDone: (id: string, ms
           <button
             type="button"
             onClick={() => setShowRaw(!showRaw)}
-            className="font-mono text-[10px] uppercase tracking-wider font-bold text-[#131313] inline-flex items-center gap-1 pt-1 cursor-pointer"
+            className="font-mono text-[10px] uppercase tracking-wider font-bold text-[#212121] inline-flex items-center gap-1 pt-1 cursor-pointer"
           >
             {showRaw ? 'Hide' : 'Show'} source excerpt
             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showRaw ? 'rotate-180' : ''}`} strokeWidth={2} />
           </button>
           {showRaw && (
-            <pre className="max-h-64 overflow-auto whitespace-pre-wrap rounded-xl bg-[#131313] text-[#E2E2E2] p-3 font-mono text-[11px] leading-relaxed">{excerpt}</pre>
+            <pre className="max-h-64 overflow-auto whitespace-pre-wrap rounded-xl bg-[#212121] text-[#E2E2E2] p-3 font-mono text-[11px] leading-relaxed">{excerpt}</pre>
           )}
         </section>
 
         {/* Editable summary + decision */}
         <section className="p-5 sm:p-6 space-y-4 bg-[#FAFAFA]" aria-label="Edit and decide">
           <label className="block space-y-1.5">
-            <span className="font-mono text-[10px] uppercase tracking-wider font-bold text-[#131313]">What changed</span>
+            <span className="font-mono text-[10px] uppercase tracking-wider font-bold text-[#212121]">What changed</span>
             <textarea
               value={whatChanged}
               onChange={(e) => setWhatChanged(e.target.value)}
               rows={2}
-              className="w-full rounded-xl border border-[#E2E2E2] bg-white px-3 py-2 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#D6FD70] focus:border-[#131313]"
+              className="w-full rounded-xl border border-[#eeeeee] bg-white px-3 py-2 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#212121] focus:border-[#212121]"
             />
           </label>
           <label className="block space-y-1.5">
-            <span className="font-mono text-[10px] uppercase tracking-wider font-bold text-[#131313]">What it means for a buyer</span>
+            <span className="font-mono text-[10px] uppercase tracking-wider font-bold text-[#212121]">What it means for a buyer</span>
             <textarea
               value={whatItMeans}
               onChange={(e) => setWhatItMeans(e.target.value)}
               rows={3}
-              className="w-full rounded-xl border border-[#E2E2E2] bg-white px-3 py-2 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#D6FD70] focus:border-[#131313]"
+              className="w-full rounded-xl border border-[#eeeeee] bg-white px-3 py-2 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#212121] focus:border-[#212121]"
             />
           </label>
 
           {!isMarket && (
             <div className="flex flex-wrap items-end gap-4">
               <div className="space-y-1.5">
-                <span className="block font-mono text-[10px] uppercase tracking-wider font-bold text-[#131313]">Published verdict</span>
-                <div role="radiogroup" className="inline-flex p-1 rounded-full bg-white border border-[#E2E2E2] gap-1">
+                <span className="block font-mono text-[10px] uppercase tracking-wider font-bold text-[#212121]">Published verdict</span>
+                <div role="radiogroup" className="inline-flex p-1 rounded-full bg-white border border-[#eeeeee] gap-1">
                   {(['verified', 'caution', 'risk'] as DbProjectStatus[]).map((s) => (
                     <button
                       key={s}
@@ -319,7 +319,7 @@ function ReviewCard({ item, onDone }: { item: QueueItem; onDone: (id: string, ms
                       aria-checked={status === s}
                       onClick={() => setStatus(s)}
                       className={`px-3.5 py-1.5 rounded-full font-mono text-[11px] uppercase tracking-wider font-bold transition-all cursor-pointer ${
-                        status === s ? 'bg-[#131313] text-[#D6FD70] ring-2 ring-[#D6FD70] ring-offset-1' : 'text-[#585858] hover:text-[#131313]'
+                        status === s ? 'bg-[#212121] text-white ring-2 ring-[#212121] ring-offset-1' : 'text-[#6b6b6b] hover:text-[#212121]'
                       }`}
                     >
                       {STATUS_LABEL[s]}
@@ -328,14 +328,14 @@ function ReviewCard({ item, onDone }: { item: QueueItem; onDone: (id: string, ms
                 </div>
               </div>
               <label className="space-y-1.5">
-                <span className="block font-mono text-[10px] uppercase tracking-wider font-bold text-[#131313]">Safety score</span>
+                <span className="block font-mono text-[10px] uppercase tracking-wider font-bold text-[#212121]">Safety score</span>
                 <input
                   type="number"
                   min={0}
                   max={100}
                   value={score ?? ''}
                   onChange={(e) => setScore(e.target.value === '' ? undefined : Number(e.target.value))}
-                  className="w-20 rounded-full border border-[#E2E2E2] bg-white px-3 py-1.5 font-mono text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-[#D6FD70]"
+                  className="w-20 rounded-full border border-[#eeeeee] bg-white px-3 py-1.5 font-mono text-sm font-bold text-center focus:outline-none focus:ring-2 focus:ring-[#212121]"
                 />
               </label>
             </div>
@@ -346,7 +346,7 @@ function ReviewCard({ item, onDone }: { item: QueueItem; onDone: (id: string, ms
               <button
                 type="button"
                 onClick={() => setEditSummary(!editSummary)}
-                className="font-mono text-[10px] uppercase tracking-wider font-bold text-[#131313] inline-flex items-center gap-1 cursor-pointer"
+                className="font-mono text-[10px] uppercase tracking-wider font-bold text-[#212121] inline-flex items-center gap-1 cursor-pointer"
               >
                 {editSummary ? 'Keep current public summary' : 'Edit public summary'}
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform ${editSummary ? 'rotate-180' : ''}`} strokeWidth={2} />
@@ -356,11 +356,11 @@ function ReviewCard({ item, onDone }: { item: QueueItem; onDone: (id: string, ms
                   value={summary}
                   onChange={(e) => setSummary(e.target.value)}
                   rows={3}
-                  className="w-full rounded-xl border border-[#E2E2E2] bg-white px-3 py-2 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#D6FD70] focus:border-[#131313]"
+                  className="w-full rounded-xl border border-[#eeeeee] bg-white px-3 py-2 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#212121] focus:border-[#212121]"
                 />
               )}
-              <label className="flex items-center gap-2 text-xs text-[#131313] cursor-pointer select-none">
-                <input type="checkbox" checked={notify} onChange={(e) => setNotify(e.target.checked)} className="w-4 h-4 accent-[#131313]" />
+              <label className="flex items-center gap-2 text-xs text-[#212121] cursor-pointer select-none">
+                <input type="checkbox" checked={notify} onChange={(e) => setNotify(e.target.checked)} className="w-4 h-4 accent-[#212121]" />
                 Send WhatsApp / email alert to {item.watchers} watcher{item.watchers === 1 ? '' : 's'}
               </label>
             </div>
@@ -373,16 +373,16 @@ function ReviewCard({ item, onDone }: { item: QueueItem; onDone: (id: string, ms
           )}
 
           {noteMode ? (
-            <div className="space-y-2 rounded-xl border border-[#E2E2E2] bg-white p-3">
+            <div className="space-y-2 rounded-xl border border-[#eeeeee] bg-white p-3">
               <label className="block space-y-1.5">
-                <span className="font-mono text-[10px] uppercase tracking-wider font-bold text-[#131313]">
+                <span className="font-mono text-[10px] uppercase tracking-wider font-bold text-[#212121]">
                   {noteMode === 'flag' ? 'What should the paralegal check?' : 'Why is this a false positive?'}
                 </span>
                 <input
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   autoFocus
-                  className="w-full rounded-lg border border-[#E2E2E2] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D6FD70]"
+                  className="w-full rounded-lg border border-[#eeeeee] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#212121]"
                   placeholder={noteMode === 'flag' ? 'e.g. Verify survey no. 239 on site with the FTL map' : 'e.g. Notice refers to a different project'}
                 />
               </label>
@@ -391,11 +391,11 @@ function ReviewCard({ item, onDone }: { item: QueueItem; onDone: (id: string, ms
                   type="button"
                   disabled={busy}
                   onClick={() => dismiss(noteMode)}
-                  className="px-4 py-2 rounded-full bg-[#131313] text-[#D6FD70] font-mono text-[11px] uppercase tracking-wider font-bold cursor-pointer disabled:opacity-50"
+                  className="px-4 py-2 rounded-full bg-[#212121] text-white font-mono text-[11px] uppercase tracking-wider font-bold cursor-pointer disabled:opacity-50"
                 >
                   {noteMode === 'flag' ? 'Flag for paralegal' : 'Reject update'}
                 </button>
-                <button type="button" onClick={() => setNoteMode(null)} className="px-3 py-2 rounded-full font-mono text-[11px] uppercase tracking-wider text-[#585858] cursor-pointer">
+                <button type="button" onClick={() => setNoteMode(null)} className="px-3 py-2 rounded-full font-mono text-[11px] uppercase tracking-wider text-[#6b6b6b] cursor-pointer">
                   Cancel
                 </button>
               </div>
@@ -409,7 +409,7 @@ function ReviewCard({ item, onDone }: { item: QueueItem; onDone: (id: string, ms
                 <button
                   type="button"
                   onClick={() => setNoteMode('flag')}
-                  className="px-4 py-2 rounded-full border border-[#131313] text-[#131313] font-mono text-[11px] uppercase tracking-wider font-bold inline-flex items-center gap-1.5 hover:bg-white cursor-pointer min-h-[40px]"
+                  className="px-4 py-2 rounded-full border border-[#212121] text-[#212121] font-mono text-[11px] uppercase tracking-wider font-bold inline-flex items-center gap-1.5 hover:bg-white cursor-pointer min-h-[40px]"
                 >
                   <Flag className="w-3.5 h-3.5" strokeWidth={2} />
                   Flag for paralegal
@@ -418,7 +418,7 @@ function ReviewCard({ item, onDone }: { item: QueueItem; onDone: (id: string, ms
               <button
                 type="button"
                 onClick={() => setNoteMode('reject')}
-                className="px-3 py-2 rounded-full font-mono text-[11px] uppercase tracking-wider font-bold text-[#585858] hover:text-[#131313] inline-flex items-center gap-1 cursor-pointer min-h-[40px]"
+                className="px-3 py-2 rounded-full font-mono text-[11px] uppercase tracking-wider font-bold text-[#6b6b6b] hover:text-[#212121] inline-flex items-center gap-1 cursor-pointer min-h-[40px]"
               >
                 <X className="w-3.5 h-3.5" strokeWidth={2} />
                 Reject
@@ -426,8 +426,8 @@ function ReviewCard({ item, onDone }: { item: QueueItem; onDone: (id: string, ms
             </div>
           )}
           {u.reviewerNote && (
-            <p className="text-xs text-[#585858]">
-              <span className="font-mono text-[10px] uppercase tracking-wider font-bold text-[#131313]">Reviewer note:</span> {u.reviewerNote}
+            <p className="text-xs text-[#6b6b6b]">
+              <span className="font-mono text-[10px] uppercase tracking-wider font-bold text-[#212121]">Reviewer note:</span> {u.reviewerNote}
             </p>
           )}
         </section>
@@ -470,16 +470,16 @@ function NoticeIntake({ projects, onQueued }: { projects: SourceRow[]; onQueued:
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-[#E2E2E2] p-5 sm:p-6 space-y-3">
-      <h3 className="font-heading font-extrabold text-lg text-[#131313] flex items-center gap-2">
+    <div className="bg-white rounded-2xl border border-[#eeeeee] p-5 sm:p-6 space-y-3">
+      <h3 className="font-medium text-lg text-[#212121] flex items-center gap-2">
         <ClipboardPaste className="w-4 h-4" strokeWidth={2} /> Read a notice with AI
       </h3>
-      <p className="text-xs text-[#585858]">Paste an order or give a PDF link. The summary lands in the queue for review, never straight to live.</p>
+      <p className="text-xs text-[#6b6b6b]">Paste an order or give a PDF link. The summary lands in the queue for review, never straight to live.</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <select
           value={projectId}
           onChange={(e) => setProjectId(e.target.value)}
-          className="rounded-xl border border-[#E2E2E2] bg-[#F2F2F2] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D6FD70]"
+          className="rounded-xl border border-[#eeeeee] bg-[#f9f9f9] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#212121]"
         >
           {projects.map((p) => (
             <option key={p.id} value={p.id}>
@@ -491,27 +491,27 @@ function NoticeIntake({ projects, onQueued }: { projects: SourceRow[]; onQueued:
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Title (optional)"
-          className="rounded-xl border border-[#E2E2E2] bg-[#F2F2F2] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D6FD70]"
+          className="rounded-xl border border-[#eeeeee] bg-[#f9f9f9] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#212121]"
         />
       </div>
       <input
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         placeholder="https://rera.telangana.gov.in/... .pdf (optional)"
-        className="w-full rounded-xl border border-[#E2E2E2] bg-[#F2F2F2] px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#D6FD70]"
+        className="w-full rounded-xl border border-[#eeeeee] bg-[#f9f9f9] px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#212121]"
       />
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         rows={5}
         placeholder="Paste notice text"
-        className="w-full rounded-xl border border-[#E2E2E2] bg-[#F2F2F2] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D6FD70]"
+        className="w-full rounded-xl border border-[#eeeeee] bg-[#f9f9f9] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#212121]"
       />
       <div className="flex flex-wrap items-center gap-3">
         <AelineButton variant="dark" onClick={submit} disabled={busy || !projectId || (!text.trim() && !url.trim())}>
           {busy ? 'Reading' : 'Analyse & queue'}
         </AelineButton>
-        {msg && <span className="text-xs text-[#131313]">{msg}</span>}
+        {msg && <span className="text-xs text-[#212121]">{msg}</span>}
       </div>
     </div>
   );
@@ -550,25 +550,25 @@ function SourcesPanel({ rows }: { rows: SourceRow[] }) {
     }
   };
 
-  const input = 'w-full rounded-lg border border-[#E2E2E2] bg-[#F2F2F2] px-2.5 py-1.5 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-[#D6FD70]';
+  const input = 'w-full rounded-lg border border-[#eeeeee] bg-[#f9f9f9] px-2.5 py-1.5 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-[#212121]';
 
   return (
     <div className="space-y-3">
-      <p className="text-xs text-[#585858] max-w-3xl">
+      <p className="text-xs text-[#6b6b6b] max-w-3xl">
         The live worker watches these pages for changes and reads any new PDF orders linked from them. Paste each project&apos;s public TG-RERA and
         TS-bPASS page. Site coordinates drive the lake FTL buffer check.
       </p>
       {err && <p className="text-xs font-semibold text-rose-700">{err}</p>}
       {state.map((r) => (
-        <div key={r.id} className="bg-white rounded-2xl border border-[#E2E2E2] p-4 sm:p-5 space-y-3">
+        <div key={r.id} className="bg-white rounded-2xl border border-[#eeeeee] p-4 sm:p-5 space-y-3">
           <div className="flex items-center justify-between gap-2 flex-wrap">
-            <h4 className="font-heading font-extrabold text-base text-[#131313]">
-              {r.name} <span className="font-mono text-[11px] font-normal text-[#585858]">{r.reraId}</span>
+            <h4 className="font-medium text-base text-[#212121]">
+              {r.name} <span className="font-mono text-[11px] font-normal text-[#6b6b6b]">{r.reraId}</span>
             </h4>
             <button
               type="button"
               onClick={() => save(r)}
-              className="px-3.5 py-1.5 rounded-full bg-[#131313] text-[#D6FD70] font-mono text-[10px] uppercase tracking-wider font-bold inline-flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-1.5 rounded-full bg-[#212121] text-white font-mono text-[10px] uppercase tracking-wider font-bold inline-flex items-center gap-1.5 cursor-pointer"
             >
               {saved === r.id ? <Check className="w-3.5 h-3.5" strokeWidth={2.5} /> : <Save className="w-3.5 h-3.5" strokeWidth={2} />}
               {saved === r.id ? 'Saved' : 'Save'}
@@ -576,13 +576,13 @@ function SourcesPanel({ rows }: { rows: SourceRow[] }) {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <label className="space-y-1">
-              <span className="font-mono text-[10px] uppercase tracking-wider text-[#585858] inline-flex items-center gap-1">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-[#6b6b6b] inline-flex items-center gap-1">
                 <Link2 className="w-3 h-3" /> TG-RERA page
               </span>
               <input className={input} value={r.sourceUrls.rera ?? ''} onChange={(e) => update(r.id, { sourceUrls: { ...r.sourceUrls, rera: e.target.value } })} placeholder="https://rera.telangana.gov.in/..." />
             </label>
             <label className="space-y-1">
-              <span className="font-mono text-[10px] uppercase tracking-wider text-[#585858] inline-flex items-center gap-1">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-[#6b6b6b] inline-flex items-center gap-1">
                 <Link2 className="w-3 h-3" /> TS-bPASS page
               </span>
               <input className={input} value={r.sourceUrls.bpass ?? ''} onChange={(e) => update(r.id, { sourceUrls: { ...r.sourceUrls, bpass: e.target.value } })} placeholder="https://tsbpass.telangana.gov.in/..." />
@@ -590,17 +590,17 @@ function SourcesPanel({ rows }: { rows: SourceRow[] }) {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             <label className="space-y-1">
-              <span className="font-mono text-[10px] uppercase tracking-wider text-[#585858] inline-flex items-center gap-1">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-[#6b6b6b] inline-flex items-center gap-1">
                 <MapPin className="w-3 h-3" /> Latitude
               </span>
               <input className={input} type="number" step="any" value={r.siteLat ?? ''} onChange={(e) => update(r.id, { siteLat: e.target.value === '' ? null : Number(e.target.value) })} />
             </label>
             <label className="space-y-1">
-              <span className="font-mono text-[10px] uppercase tracking-wider text-[#585858]">Longitude</span>
+              <span className="font-mono text-[10px] uppercase tracking-wider text-[#6b6b6b]">Longitude</span>
               <input className={input} type="number" step="any" value={r.siteLng ?? ''} onChange={(e) => update(r.id, { siteLng: e.target.value === '' ? null : Number(e.target.value) })} />
             </label>
             <label className="space-y-1 col-span-2">
-              <span className="font-mono text-[10px] uppercase tracking-wider text-[#585858]">Survey numbers</span>
+              <span className="font-mono text-[10px] uppercase tracking-wider text-[#6b6b6b]">Survey numbers</span>
               <input className={input} value={r.surveyNumbers ?? ''} onChange={(e) => update(r.id, { surveyNumbers: e.target.value })} />
             </label>
           </div>
@@ -690,23 +690,23 @@ export function AdminReviewView({
   const flagged = items.filter((i) => i.update.status === 'flagged');
 
   return (
-    <div className="min-h-screen bg-[#F2F2F2] text-[#131313]">
+    <div className="min-h-screen bg-[#f9f9f9] text-[#212121]">
       {/* Top bar */}
-      <header className="bg-[#131313] text-white">
+      <header className="bg-[#212121] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-[#242424] flex items-center justify-center">
-              <Shield className="w-4 h-4 text-[#D6FD70]" strokeWidth={2} />
+              <Shield className="w-4 h-4 text-white" strokeWidth={2} />
             </div>
             <div>
-              <div className="font-heading font-extrabold text-base leading-none">
-                hyderabad<span className="text-[#D6FD70]">.properties</span>
+              <div className="font-medium text-base leading-none">
+                hyderabad<span className="text-white">.properties</span>
               </div>
               <div className="font-mono text-[9px] uppercase tracking-widest text-[#AAAAAA] mt-1">Review desk · approve before live</div>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <a href="/" target="_blank" className="hidden sm:inline-flex font-mono text-[10px] uppercase tracking-wider text-[#AAAAAA] hover:text-[#D6FD70] items-center gap-1 px-2">
+            <a href="/" target="_blank" className="hidden sm:inline-flex font-mono text-[10px] uppercase tracking-wider text-[#AAAAAA] hover:text-white items-center gap-1 px-2">
               Public site <ExternalLink className="w-3 h-3" />
             </a>
             <span className="hidden md:inline font-mono text-[10px] uppercase tracking-wider text-[#AAAAAA] px-2">{user}</span>
@@ -726,29 +726,29 @@ export function AdminReviewView({
             { label: 'Pushed live (7d)', value: stats.approved7d },
             { label: 'Buyers watching', value: stats.watchers },
           ].map((s) => (
-            <div key={s.label} className="bg-white rounded-2xl border border-[#E2E2E2] p-4">
-              <div className="font-mono text-[10px] uppercase tracking-wider text-[#585858]">{s.label}</div>
-              <div className="font-heading font-extrabold text-3xl tracking-tight">{s.value}</div>
+            <div key={s.label} className="bg-white rounded-2xl border border-[#eeeeee] p-4">
+              <div className="font-mono text-[10px] uppercase tracking-wider text-[#6b6b6b]">{s.label}</div>
+              <div className="font-medium text-3xl tracking-tight">{s.value}</div>
             </div>
           ))}
-          <div className="col-span-2 md:col-span-1 bg-[#131313] text-white rounded-2xl p-4">
+          <div className="col-span-2 md:col-span-1 bg-[#212121] text-white rounded-2xl p-4">
             <div className="font-mono text-[10px] uppercase tracking-wider text-[#AAAAAA]">Last sync</div>
             {stats.lastRun ? (
               <>
-                <div className="font-heading font-extrabold text-lg text-[#D6FD70]">{fmtTime(stats.lastRun.startedAt)}</div>
+                <div className="font-medium text-lg text-white">{fmtTime(stats.lastRun.startedAt)}</div>
                 <div className="font-mono text-[10px] uppercase tracking-wider text-[#AAAAAA]">
                   {stats.lastRun.mode} · {stats.lastRun.trigger} · {stats.lastRun.stats.queued ?? 0} queued
                 </div>
               </>
             ) : (
-              <div className="font-heading font-extrabold text-lg text-[#D6FD70]">Never</div>
+              <div className="font-medium text-lg text-white">Never</div>
             )}
           </div>
         </section>
 
         {/* Controls */}
         <section className="flex flex-wrap items-center gap-3">
-          <div role="radiogroup" aria-label="Sync mode" className="inline-flex p-1 rounded-full bg-white border border-[#E2E2E2] gap-1">
+          <div role="radiogroup" aria-label="Sync mode" className="inline-flex p-1 rounded-full bg-white border border-[#eeeeee] gap-1">
             {(['simulate', 'live'] as const).map((m) => (
               <button
                 key={m}
@@ -757,7 +757,7 @@ export function AdminReviewView({
                 aria-checked={mode === m}
                 onClick={() => setMode(m)}
                 className={`px-3.5 py-1.5 rounded-full font-mono text-[11px] uppercase tracking-wider font-bold cursor-pointer ${
-                  mode === m ? 'bg-[#131313] text-[#D6FD70] ring-2 ring-[#D6FD70] ring-offset-1' : 'text-[#585858] hover:text-[#131313]'
+                  mode === m ? 'bg-[#212121] text-white ring-2 ring-[#212121] ring-offset-1' : 'text-[#6b6b6b] hover:text-[#212121]'
                 }`}
               >
                 {m === 'simulate' ? 'Demo notices' : 'Live portals'}
@@ -773,12 +773,12 @@ export function AdminReviewView({
           <button
             type="button"
             onClick={() => setShowIntake(!showIntake)}
-            className="px-4 py-2 rounded-full border border-[#131313] font-mono text-[11px] uppercase tracking-wider font-bold inline-flex items-center gap-1.5 cursor-pointer min-h-[40px] hover:bg-white"
+            className="px-4 py-2 rounded-full border border-[#212121] font-mono text-[11px] uppercase tracking-wider font-bold inline-flex items-center gap-1.5 cursor-pointer min-h-[40px] hover:bg-white"
           >
             <ClipboardPaste className="w-3.5 h-3.5" strokeWidth={2} />
             Read a notice
           </button>
-          <span className="font-mono text-[10px] uppercase tracking-wider text-[#585858]">
+          <span className="font-mono text-[10px] uppercase tracking-wider text-[#6b6b6b]">
             AI reader: {geminiEnabled ? 'Gemini' : 'rules fallback (add GEMINI_API_KEY)'}
           </span>
         </section>
@@ -786,7 +786,7 @@ export function AdminReviewView({
         {showIntake && <NoticeIntake projects={initialSources} onQueued={reload} />}
 
         {/* Tabs */}
-        <nav className="flex gap-1 p-1 rounded-full bg-white border border-[#E2E2E2] w-fit">
+        <nav className="flex gap-1 p-1 rounded-full bg-white border border-[#eeeeee] w-fit">
           {(
             [
               ['queue', `Queue (${items.length})`],
@@ -802,7 +802,7 @@ export function AdminReviewView({
                 if (t === 'history' && !history) loadHistory();
               }}
               className={`px-4 py-1.5 rounded-full font-mono text-[11px] uppercase tracking-wider font-bold cursor-pointer ${
-                tab === t ? 'bg-[#131313] text-[#D6FD70]' : 'text-[#585858] hover:text-[#131313]'
+                tab === t ? 'bg-[#212121] text-white' : 'text-[#6b6b6b] hover:text-[#212121]'
               }`}
             >
               {label}
@@ -815,12 +815,12 @@ export function AdminReviewView({
             {tab === 'queue' && (
               <>
                 {pending.length === 0 && flagged.length === 0 && (
-                  <div className="bg-white rounded-2xl border border-[#E2E2E2] p-10 text-center space-y-2">
-                    <div className="w-10 h-10 rounded-full bg-[#D6FD70] flex items-center justify-center mx-auto">
-                      <Check className="w-5 h-5" strokeWidth={2.5} />
+                  <div className="bg-white rounded-2xl border border-[#eeeeee] p-10 text-center space-y-2">
+                    <div className="w-10 h-10 rounded-full bg-[#f2f2f2] flex items-center justify-center mx-auto">
+                      <Check className="w-5 h-5 text-[#212121]" strokeWidth={2.5} />
                     </div>
-                    <h3 className="font-heading font-extrabold text-lg">Queue is clear</h3>
-                    <p className="text-xs text-[#585858]">Run a sync or read a notice to pull in new records.</p>
+                    <h3 className="font-medium text-lg">Queue is clear</h3>
+                    <p className="text-xs text-[#6b6b6b]">Run a sync or read a notice to pull in new records.</p>
                   </div>
                 )}
                 {pending.map((item) => (
@@ -828,7 +828,7 @@ export function AdminReviewView({
                 ))}
                 {flagged.length > 0 && (
                   <>
-                    <h3 className="font-mono text-[11px] uppercase tracking-widest font-bold text-[#585858] pt-4">With paralegal ({flagged.length})</h3>
+                    <h3 className="font-mono text-[11px] uppercase tracking-widest font-bold text-[#6b6b6b] pt-4">With paralegal ({flagged.length})</h3>
                     {flagged.map((item) => (
                       <ReviewCard key={item.update.id} item={item} onDone={handleDone} />
                     ))}
@@ -838,23 +838,23 @@ export function AdminReviewView({
             )}
 
             {tab === 'history' && (
-              <div className="bg-white rounded-2xl border border-[#E2E2E2] divide-y divide-[#E2E2E2]">
-                {!history && <p className="p-6 text-xs text-[#585858]">Loading</p>}
-                {history?.length === 0 && <p className="p-6 text-xs text-[#585858]">No reviewed updates yet.</p>}
+              <div className="bg-white rounded-2xl border border-[#eeeeee] divide-y divide-[#E2E2E2]">
+                {!history && <p className="p-6 text-xs text-[#6b6b6b]">Loading</p>}
+                {history?.length === 0 && <p className="p-6 text-xs text-[#6b6b6b]">No reviewed updates yet.</p>}
                 {history?.map((i) => (
                   <div key={i.update.id} className="p-4 sm:p-5 space-y-1">
                     <div className="flex flex-wrap items-center gap-1.5">
                       <Pill tone={i.update.status === 'approved' ? 'lime' : 'light'}>{i.update.status}</Pill>
                       <Pill>{SOURCE_LABEL[i.update.source]}</Pill>
-                      <span className="font-heading font-extrabold text-sm">{i.live?.name ?? i.market?.name}</span>
-                      <span className="ml-auto font-mono text-[10px] uppercase tracking-wider text-[#585858]">
+                      <span className="font-medium text-sm">{i.live?.name ?? i.market?.name}</span>
+                      <span className="ml-auto font-mono text-[10px] uppercase tracking-wider text-[#6b6b6b]">
                         {i.update.reviewedBy} · {fmtTime(i.update.reviewedAt)}
                       </span>
                     </div>
-                    <p className="text-xs text-[#131313]">{i.update.aiSummaryWhatChanged}</p>
-                    {i.update.reviewerNote && <p className="text-xs text-[#585858]">Note: {i.update.reviewerNote}</p>}
+                    <p className="text-xs text-[#212121]">{i.update.aiSummaryWhatChanged}</p>
+                    {i.update.reviewerNote && <p className="text-xs text-[#6b6b6b]">Note: {i.update.reviewerNote}</p>}
                     {i.update.status === 'approved' && i.live && (
-                      <a href={`/project?id=${i.live.id}`} target="_blank" className="font-mono text-[10px] uppercase tracking-wider font-bold underline decoration-[#D6FD70] decoration-2 underline-offset-2">
+                      <a href={`/project?id=${i.live.id}`} target="_blank" className="font-mono text-[10px] uppercase tracking-wider font-bold underline decoration-[#212121] decoration-2 underline-offset-2">
                         Live report ↗
                       </a>
                     )}
@@ -867,15 +867,15 @@ export function AdminReviewView({
           </div>
 
           {/* Delivery log */}
-          <aside className="bg-white rounded-2xl border border-[#E2E2E2] p-4 space-y-3 xl:sticky xl:top-6">
+          <aside className="bg-white rounded-2xl border border-[#eeeeee] p-4 space-y-3 xl:sticky xl:top-6">
             <h3 className="font-mono text-[11px] uppercase tracking-widest font-bold">Alert delivery log</h3>
-            {notificationsLog.length === 0 && <p className="text-xs text-[#585858]">No alerts sent yet.</p>}
+            {notificationsLog.length === 0 && <p className="text-xs text-[#6b6b6b]">No alerts sent yet.</p>}
             <ul className="space-y-2">
               {notificationsLog.map((n) => (
                 <li key={n.id} className="text-xs flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <div className="font-semibold truncate">{n.contact}</div>
-                    <div className="font-mono text-[10px] uppercase tracking-wider text-[#585858]">
+                    <div className="font-mono text-[10px] uppercase tracking-wider text-[#6b6b6b]">
                       {n.channel} · {fmtTime(n.createdAt)}
                     </div>
                     {n.error && <div className="text-[10px] text-rose-700 break-words">{n.error}</div>}
@@ -884,7 +884,7 @@ export function AdminReviewView({
                 </li>
               ))}
             </ul>
-            <p className="text-[10px] text-[#585858] leading-relaxed">
+            <p className="text-[10px] text-[#6b6b6b] leading-relaxed">
               &ldquo;Logged&rdquo; means no WhatsApp webhook or email key is configured yet, so the message was recorded instead of sent.
             </p>
           </aside>
@@ -892,11 +892,11 @@ export function AdminReviewView({
       </main>
 
       {toast && (
-        <div role="status" aria-live="polite" className="fixed bottom-6 right-6 left-6 sm:left-auto z-50 bg-[#131313] text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 max-w-md">
-          <span className="w-2 h-2 rounded-full bg-[#D6FD70] shrink-0" />
+        <div role="status" aria-live="polite" className="fixed bottom-6 right-6 left-6 sm:left-auto z-50 bg-[#212121] text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 max-w-md">
+          <span className="w-2 h-2 rounded-full bg-[#212121] shrink-0" />
           <span className="text-xs sm:text-sm">{toast.msg}</span>
           {toast.url && (
-            <a href={toast.url} target="_blank" className="shrink-0 px-3 py-1 rounded-full bg-[#D6FD70] text-[#131313] font-mono text-[10px] uppercase tracking-wider font-bold">
+            <a href={toast.url} target="_blank" className="shrink-0 px-3 py-1 rounded-full bg-[#212121] text-white font-mono text-[10px] uppercase tracking-wider font-bold">
               View ↗
             </a>
           )}

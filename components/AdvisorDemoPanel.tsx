@@ -52,15 +52,15 @@ export function AdvisorDemoPanel({
     : 'bg-sky-100 text-sky-800 border-sky-300';
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 max-h-[85vh] bg-[#FAF8F5] border-t-2 border-stone-300 shadow-xl overflow-y-auto animate-in slide-in-from-bottom duration-200">
+    <div className="fixed inset-x-0 bottom-0 z-50 max-h-[85vh] bg-[#f9f9f9] border-t-2 border-[#e0e0e0] shadow-xl overflow-y-auto animate-in slide-in-from-bottom duration-200">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 space-y-6">
         {/* Top Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-stone-200">
+        <div className="flex items-center justify-between pb-3 border-b border-[#eeeeee]">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-stone-200 text-stone-800">
+            <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#eeeeee] text-[#212121]">
               Internal, not visible to users
             </span>
-            <h2 className="font-serif text-lg font-bold text-[#0F1B2D]">
+            <h2 className="font-serif text-lg font-bold text-[#212121]">
               HoI Advisor CRM & Diligence Dossier
             </h2>
           </div>
@@ -68,7 +68,7 @@ export function AdvisorDemoPanel({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-stone-200 text-stone-600 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg hover:bg-[#eeeeee] text-[#6b6b6b] transition-colors cursor-pointer"
             aria-label="Close Advisor Demo Panel"
           >
             <X className="w-5 h-5" strokeWidth={1.5} />
@@ -78,9 +78,9 @@ export function AdvisorDemoPanel({
         {/* 4-section grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
           {/* Section 1: Lead Card with Temperature */}
-          <div className="p-4 rounded-xl bg-white border border-stone-200 space-y-3">
+          <div className="p-4 rounded-xl bg-white border border-[#eeeeee] space-y-3">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-[#0F1B2D] uppercase tracking-wider text-[11px]">
+              <span className="font-bold text-[#212121] uppercase tracking-wider text-[11px]">
                 Lead Profile
               </span>
               <span className={`px-2 py-0.5 rounded-full font-bold border ${tempColor}`}>
@@ -88,24 +88,24 @@ export function AdvisorDemoPanel({
               </span>
             </div>
 
-            <div className="space-y-1.5 text-stone-700">
+            <div className="space-y-1.5 text-[#4a4a4a]">
               <div>
-                <span className="text-stone-400 block text-[10px]">Client Contact:</span>
+                <span className="text-[#a3a3a3] block text-[10px]">Client Contact:</span>
                 <strong>{bookingDetails?.email || 'Browsing anonymously'}</strong>
               </div>
               {bookingDetails?.phone && (
                 <div>
-                  <span className="text-stone-400 block text-[10px]">WhatsApp:</span>
+                  <span className="text-[#a3a3a3] block text-[10px]">WhatsApp:</span>
                   <span>{bookingDetails.phone}</span>
                 </div>
               )}
               <div>
-                <span className="text-stone-400 block text-[10px]">Consultation Scheduled:</span>
+                <span className="text-[#a3a3a3] block text-[10px]">Consultation Scheduled:</span>
                 <span>{bookingDetails?.slot || 'No slot booked yet'}</span>
               </div>
               <div>
-                <span className="text-stone-400 block text-[10px]">Buyer Residency:</span>
-                <span className="font-semibold text-[#131313]">
+                <span className="text-[#a3a3a3] block text-[10px]">Buyer Residency:</span>
+                <span className="font-semibold text-[#212121]">
                   {userPreferences.location === 'Abroad (NRI)' ? 'NRI (Overseas Buyer)' : 'Domestic / Hyderabad'}
                 </span>
               </div>
@@ -113,43 +113,43 @@ export function AdvisorDemoPanel({
           </div>
 
           {/* Section 2: Extracted Preferences */}
-          <div className="p-4 rounded-xl bg-white border border-stone-200 space-y-3">
-            <span className="font-bold text-[#0F1B2D] uppercase tracking-wider text-[11px] block">
+          <div className="p-4 rounded-xl bg-white border border-[#eeeeee] space-y-3">
+            <span className="font-bold text-[#212121] uppercase tracking-wider text-[11px] block">
               Extracted Preferences
             </span>
 
-            <div className="space-y-2 text-stone-700">
-              <div className="flex justify-between border-b border-stone-100 pb-1">
-                <span className="text-stone-500">Primary Goal:</span>
+            <div className="space-y-2 text-[#4a4a4a]">
+              <div className="flex justify-between border-b border-[#f2f2f2] pb-1">
+                <span className="text-[#838383]">Primary Goal:</span>
                 <strong>{userPreferences.lookingFor || 'A home to live in'}</strong>
               </div>
-              <div className="flex justify-between border-b border-stone-100 pb-1">
-                <span className="text-stone-500">Target Budget:</span>
+              <div className="flex justify-between border-b border-[#f2f2f2] pb-1">
+                <span className="text-[#838383]">Target Budget:</span>
                 <strong>{userPreferences.budget || '₹1 Cr – ₹2.5 Cr'}</strong>
               </div>
-              <div className="flex justify-between border-b border-stone-100 pb-1">
-                <span className="text-stone-500">Possession Window:</span>
+              <div className="flex justify-between border-b border-[#f2f2f2] pb-1">
+                <span className="text-[#838383]">Possession Window:</span>
                 <strong>{userPreferences.timeline || 'Within 6 months'}</strong>
               </div>
               <div className="flex justify-between pb-1">
-                <span className="text-stone-500">Active Inquiry:</span>
-                <strong className="text-[#131313]">{selectedProject.name}</strong>
+                <span className="text-[#838383]">Active Inquiry:</span>
+                <strong className="text-[#212121]">{selectedProject.name}</strong>
               </div>
             </div>
           </div>
 
           {/* Section 3: Projects Viewed */}
-          <div className="p-4 rounded-xl bg-white border border-stone-200 space-y-3">
-            <span className="font-bold text-[#0F1B2D] uppercase tracking-wider text-[11px] block">
+          <div className="p-4 rounded-xl bg-white border border-[#eeeeee] space-y-3">
+            <span className="font-bold text-[#212121] uppercase tracking-wider text-[11px] block">
               Projects Viewed This Session ({viewedProjects.length || 1})
             </span>
 
             <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
               {(viewedProjects.length > 0 ? viewedProjects : [selectedProject]).map((p, idx) => (
-                <div key={`${p.id}-${idx}`} className="p-2 bg-stone-50 rounded-lg border border-stone-200 flex items-center justify-between">
+                <div key={`${p.id}-${idx}`} className="p-2 bg-[#f9f9f9] rounded-lg border border-[#eeeeee] flex items-center justify-between">
                   <div>
-                    <div className="font-bold text-[#0F1B2D]">{p.name}</div>
-                    <div className="text-[10px] text-stone-500">{p.location} · {p.priceRange}</div>
+                    <div className="font-bold text-[#212121]">{p.name}</div>
+                    <div className="text-[10px] text-[#838383]">{p.location} · {p.priceRange}</div>
                   </div>
                   <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${
                     p.status === 'safe'
@@ -166,21 +166,21 @@ export function AdvisorDemoPanel({
           </div>
 
           {/* Section 4: Chat Transcript */}
-          <div className="p-4 rounded-xl bg-white border border-stone-200 space-y-3">
-            <span className="font-bold text-[#0F1B2D] uppercase tracking-wider text-[11px] block">
+          <div className="p-4 rounded-xl bg-white border border-[#eeeeee] space-y-3">
+            <span className="font-bold text-[#212121] uppercase tracking-wider text-[11px] block">
               Recent Wealth Desk Dialogue
             </span>
 
             <div className="space-y-1.5 max-h-40 overflow-y-auto text-[11px] pr-1">
               {chatTranscript.length > 0 ? (
                 chatTranscript.slice(-4).map((msg, idx) => (
-                  <div key={idx} className="pb-1 border-b border-stone-100 last:border-0">
-                    <span className="font-bold text-stone-700 capitalize">{msg.sender}: </span>
-                    <span className="text-stone-600 line-clamp-2">{msg.text}</span>
+                  <div key={idx} className="pb-1 border-b border-[#f2f2f2] last:border-0">
+                    <span className="font-bold text-[#4a4a4a] capitalize">{msg.sender}: </span>
+                    <span className="text-[#6b6b6b] line-clamp-2">{msg.text}</span>
                   </div>
                 ))
               ) : (
-                <div className="text-stone-400 italic">
+                <div className="text-[#a3a3a3] italic">
                   Initial greeting sent regarding {selectedProject.name}. Awaiting live response.
                 </div>
               )}

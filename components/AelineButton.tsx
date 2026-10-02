@@ -39,15 +39,7 @@ export function AelineButton({
       className={`${getButtonClass()} group ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
     >
       <span className="leading-none">{children}</span>
-      <span
-        className={
-          variant === 'dark'
-            ? 'btn-arrow-capsule-lime'
-            : variant === 'outline'
-            ? 'btn-arrow-capsule bg-[#131313] text-white'
-            : 'btn-arrow-capsule'
-        }
-      >
+      <span className={variant === 'dark' ? 'btn-arrow-capsule-lime' : 'btn-arrow-capsule'}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"

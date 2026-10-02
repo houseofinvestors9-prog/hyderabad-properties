@@ -124,7 +124,7 @@ export function ProjectView({
         <button
           type="button"
           onClick={() => onNavigate('home')}
-          className="text-xs font-semibold text-stone-600 hover:text-[#0F1B2D] inline-flex items-center gap-1.5 py-1 min-h-[44px] cursor-pointer"
+          className="text-xs font-semibold text-[#6b6b6b] hover:text-[#212121] inline-flex items-center gap-1.5 py-1 min-h-[44px] cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
           <span>Back to Home</span>
@@ -132,8 +132,8 @@ export function ProjectView({
       </div>
 
       {/* Switcher Bar */}
-      <div className="bg-stone-100 p-3 rounded-xl border border-stone-200 flex items-center justify-between gap-3 flex-wrap">
-        <span className="text-xs font-semibold text-stone-600">
+      <div className="bg-[#f2f2f2] p-3 rounded-xl border border-[#eeeeee] flex items-center justify-between gap-3 flex-wrap">
+        <span className="text-xs font-semibold text-[#6b6b6b]">
           Viewing Project Audit:
         </span>
         <div className="flex items-center gap-1.5 overflow-x-auto py-0.5">
@@ -143,8 +143,8 @@ export function ProjectView({
               onClick={() => onSelectProject(p)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap min-h-[36px] cursor-pointer ${
                 p.id === project.id
-                  ? 'bg-white text-[#0F1B2D] font-bold border border-stone-200 shadow-2xs'
-                  : 'text-stone-600 hover:text-stone-900'
+                  ? 'bg-white text-[#212121] font-bold border border-[#eeeeee] shadow-2xs'
+                  : 'text-[#6b6b6b] hover:text-[#212121]'
               }`}
             >
               {p.name}
@@ -154,19 +154,19 @@ export function ProjectView({
       </div>
 
       {/* STICKY SUMMARY HEADER */}
-      <header className="sticky top-18 z-30 bg-[#FAF8F5] border border-stone-200 rounded-xl p-4 sm:p-5 flex items-center justify-between gap-4">
+      <header className="sticky top-18 z-30 bg-[#f9f9f9] border border-[#eeeeee] rounded-xl p-4 sm:p-5 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <Building2 className="w-5 h-5 text-[#0E7C86] shrink-0" strokeWidth={1.5} />
+          <Building2 className="w-5 h-5 text-[#212121] shrink-0" strokeWidth={1.5} />
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="font-serif font-bold text-lg sm:text-xl text-[#0F1B2D]">
+              <h1 className="font-medium text-lg sm:text-xl text-[#212121]">
                 {project.name}
               </h1>
-              <span className="text-xs text-stone-500 font-medium">
+              <span className="text-xs text-[#838383] font-medium">
                 · {project.location}
               </span>
             </div>
-            <div className="text-[11px] font-mono text-stone-500">
+            <div className="text-[11px] font-mono text-[#838383]">
               RERA: {project.reraNumber}
               {project.reraValidUntil && (
                 <span className={reraExpired ? 'text-rose-700 font-semibold' : ''}>
@@ -190,7 +190,7 @@ export function ProjectView({
                 <span>Watching</span>
               </button>
               {isStopWatchingMenuOpen && (
-                <div className="absolute right-0 mt-1 w-36 bg-white border border-stone-200 rounded-lg shadow-lg p-1 z-30 animate-in fade-in duration-100">
+                <div className="absolute right-0 mt-1 w-36 bg-white border border-[#eeeeee] rounded-lg shadow-lg p-1 z-30 animate-in fade-in duration-100">
                   <button
                     type="button"
                     onClick={() => {
@@ -209,9 +209,9 @@ export function ProjectView({
             <button
               type="button"
               onClick={() => onOpenWatchSheet && onOpenWatchSheet(project)}
-              className="px-3 py-1.5 rounded-full border border-stone-300 hover:border-[#131313] bg-white text-stone-700 hover:text-[#131313] text-xs font-mono font-semibold inline-flex items-center gap-1.5 cursor-pointer min-h-[36px]"
+              className="px-3 py-1.5 rounded-full border border-[#e0e0e0] hover:border-[#212121] bg-white text-[#4a4a4a] hover:text-[#212121] text-xs font-mono font-semibold inline-flex items-center gap-1.5 cursor-pointer min-h-[36px]"
             >
-              <Bell className="w-3.5 h-3.5 text-[#131313]" strokeWidth={1.5} />
+              <Bell className="w-3.5 h-3.5 text-[#212121]" strokeWidth={1.5} />
               <span>Watch this project</span>
             </button>
           )}
@@ -225,7 +225,7 @@ export function ProjectView({
                 cx="18"
                 cy="18"
                 r="14"
-                className="stroke-stone-200 fill-none"
+                className="stroke-[#eeeeee] fill-none"
                 strokeWidth="3.5"
               />
               <circle
@@ -245,7 +245,7 @@ export function ProjectView({
                 strokeLinecap="round"
               />
             </svg>
-            <span className="absolute text-[11px] font-bold text-[#0F1B2D]">
+            <span className="absolute text-[11px] font-bold text-[#212121]">
               {project.score}
             </span>
           </div>
@@ -256,11 +256,11 @@ export function ProjectView({
       {projectAlerts.length > 0 && (
         <section
           aria-label="Recent regulatory updates"
-          className="bg-[#131313] text-white rounded-2xl p-5 sm:p-6 space-y-3 animate-in fade-in duration-200"
+          className="bg-[#212121] text-white rounded-2xl p-5 sm:p-6 space-y-3 animate-in fade-in duration-200"
         >
           <div className="flex items-center justify-between gap-3 flex-wrap">
-            <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest font-bold text-[#D6FD70]">
-              <span className="w-2 h-2 rounded-full bg-[#D6FD70] animate-pulse" />
+            <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest font-bold text-white">
+              <span className="w-2 h-2 rounded-full bg-[#212121] animate-pulse" />
               <span>Notice verified on {formatDate(projectAlerts[0].publishedAt)}</span>
             </div>
             <span className="font-mono text-[11px] uppercase tracking-wider text-[#AAAAAA]">
@@ -268,18 +268,18 @@ export function ProjectView({
             </span>
           </div>
           <div className="space-y-1.5">
-            <span className="inline-block font-mono text-[10px] uppercase tracking-wider font-bold px-2.5 py-0.5 rounded-full bg-[#D6FD70] text-[#131313]">
+            <span className="inline-block font-mono text-[10px] uppercase tracking-wider font-bold px-2.5 py-0.5 rounded-full bg-[#212121] text-white">
               {projectAlerts[0].type}
             </span>
             <p className="text-sm sm:text-base font-semibold leading-relaxed">{projectAlerts[0].whatChanged}</p>
             <p className="text-xs sm:text-sm text-[#CFCFCF] leading-relaxed">{projectAlerts[0].whatItMeans}</p>
           </div>
           {projectAlerts.length > 1 && (
-            <div className="pt-2 border-t border-[#2F2F2F]">
+            <div className="pt-2 border-t border-white/10">
               <button
                 type="button"
                 onClick={() => setShowAllUpdates(!showAllUpdates)}
-                className="font-mono text-[11px] uppercase tracking-wider font-bold text-[#D6FD70] hover:text-white inline-flex items-center gap-1 py-1 cursor-pointer"
+                className="font-mono text-[11px] uppercase tracking-wider font-bold text-white hover:text-white inline-flex items-center gap-1 py-1 cursor-pointer"
               >
                 <span>{showAllUpdates ? 'Hide earlier updates' : `Earlier updates (${projectAlerts.length - 1})`}</span>
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showAllUpdates ? 'rotate-180' : ''}`} strokeWidth={2} />
@@ -307,7 +307,7 @@ export function ProjectView({
           <div className="flex items-start gap-3">
             <AlertOctagon className="w-5 h-5 text-rose-700 shrink-0 mt-0.5" strokeWidth={1.5} />
             <div className="space-y-1">
-              <h2 className="font-serif font-bold text-lg text-rose-950">
+              <h2 className="font-medium text-lg text-rose-950">
                 Critical Safety Warning: Buffer Zone Conflict Detected
               </h2>
               <p className="text-xs sm:text-sm text-rose-900 leading-relaxed">
@@ -349,26 +349,26 @@ export function ProjectView({
         <div className="lg:col-span-8 space-y-10">
           
           {/* SECTION 1: "In plain words" */}
-          <section className="bg-white rounded-xl border border-stone-200 p-6 sm:p-8 space-y-3 text-left">
+          <section className="bg-white rounded-xl border border-[#eeeeee] p-6 sm:p-8 space-y-3 text-left">
             <div className="flex items-center justify-between">
-              <span className="text-xs uppercase font-bold tracking-wider text-[#0E7C86]">
+              <span className="text-xs uppercase font-bold tracking-wider text-[#212121]">
                 Section 1
               </span>
               <button
                 type="button"
                 onClick={handleShare}
-                className="text-xs text-stone-500 hover:text-[#0F1B2D] flex items-center gap-1 py-1 px-2.5 rounded-lg border border-stone-200 hover:bg-stone-50 transition-colors cursor-pointer"
+                className="text-xs text-[#838383] hover:text-[#212121] flex items-center gap-1 py-1 px-2.5 rounded-lg border border-[#eeeeee] hover:bg-[#f9f9f9] transition-colors cursor-pointer"
               >
                 {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" strokeWidth={1.5} /> : <Share2 className="w-3.5 h-3.5" strokeWidth={1.5} />}
                 <span>{copied ? 'Copied' : 'Share'}</span>
               </button>
             </div>
 
-            <h2 className="font-serif text-2xl font-bold text-[#0F1B2D]">
+            <h2 className="font-serif text-2xl font-bold text-[#212121]">
               In plain words
             </h2>
 
-            <p className="text-sm sm:text-base text-stone-700 leading-relaxed">
+            <p className="text-sm sm:text-base text-[#4a4a4a] leading-relaxed">
               {beginnerSummary}
             </p>
           </section>
@@ -376,20 +376,20 @@ export function ProjectView({
           {/* SECTION 2: "Safety checks" */}
           <section className="space-y-4 text-left">
             <div>
-              <span className="text-xs uppercase font-bold tracking-wider text-[#0E7C86]">
+              <span className="text-xs uppercase font-bold tracking-wider text-[#212121]">
                 Section 2
               </span>
-              <h2 className="font-serif text-2xl font-bold text-[#0F1B2D]">
+              <h2 className="font-serif text-2xl font-bold text-[#212121]">
                 Safety checks
               </h2>
-              <p className="text-xs text-stone-500 mt-0.5">
+              <p className="text-xs text-[#838383] mt-0.5">
                 Official state portal audits updated by our diligence desk.
               </p>
             </div>
 
             <div className="grid grid-cols-1 gap-3">
               {/* RERA */}
-              <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-3">
+              <div className="bg-white rounded-xl border border-[#eeeeee] p-5 space-y-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3">
                     {project.reraStatus === 'Active' ? (
@@ -398,10 +398,10 @@ export function ProjectView({
                       <AlertOctagon className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" strokeWidth={1.5} />
                     )}
                     <div>
-                      <h3 className="font-bold text-base text-[#0F1B2D]">
+                      <h3 className="font-bold text-base text-[#212121]">
                         <JargonTooltip term="RERA" /> Registration Status
                       </h3>
-                      <div className="text-xs text-stone-500 mt-0.5">
+                      <div className="text-xs text-[#838383] mt-0.5">
                         Audit Date: <strong>{project.lastVerifiedDate}</strong>
                       </div>
                     </div>
@@ -413,7 +413,7 @@ export function ProjectView({
                   </span>
                 </div>
 
-                <p className="text-xs sm:text-sm text-stone-600 leading-relaxed pl-7">
+                <p className="text-xs sm:text-sm text-[#6b6b6b] leading-relaxed pl-7">
                   {project.reraStatus === 'Active' && reraExpired
                     ? `Registered under TG-RERA No: ${project.reraNumber}, but the registration validity ended on ${formatDate(project.reraValidUntil)}. Ask for the extension order.`
                     : project.reraStatus === 'Active'
@@ -423,17 +423,17 @@ export function ProjectView({
 
                 <div className="pl-7 flex flex-wrap gap-1.5">
                   {project.reraValidUntil && (
-                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#F2F2F2] border border-[#E2E2E2] text-[#131313]">
+                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#f9f9f9] border border-[#eeeeee] text-[#212121]">
                       Valid until {formatDate(project.reraValidUntil)}
                     </span>
                   )}
                   {project.lastQprFiled && (
-                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#F2F2F2] border border-[#E2E2E2] text-[#131313]">
+                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#f9f9f9] border border-[#eeeeee] text-[#212121]">
                       Last QPR {project.lastQprFiled}
                     </span>
                   )}
                   {project.escrowAccount && (
-                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#F2F2F2] border border-[#E2E2E2] text-[#131313]">
+                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#f9f9f9] border border-[#eeeeee] text-[#212121]">
                       {project.escrowAccount}
                     </span>
                   )}
@@ -443,14 +443,14 @@ export function ProjectView({
                   <button
                     type="button"
                     onClick={() => toggleSafetyDetail('rera')}
-                    className="text-xs font-semibold text-[#0E7C86] hover:underline flex items-center gap-1 cursor-pointer py-1"
+                    className="text-xs font-semibold text-[#212121] hover:underline flex items-center gap-1 cursor-pointer py-1"
                   >
                     <span>{openSafetyDetails['rera'] ? 'Hide breakdown' : 'See why (Regulator disclosure)'}</span>
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform ${openSafetyDetails['rera'] ? 'rotate-180' : ''}`} strokeWidth={1.5} />
                   </button>
 
                   {openSafetyDetails['rera'] && (
-                    <div className="mt-2 p-3 bg-stone-50 rounded-lg border border-stone-200 text-xs text-stone-700 leading-relaxed">
+                    <div className="mt-2 p-3 bg-[#f9f9f9] rounded-lg border border-[#eeeeee] text-xs text-[#4a4a4a] leading-relaxed">
                       All land title deeds trace back to non-agricultural conversion. Escrow account records confirm construction funds are ring-fenced.
                     </div>
                   )}
@@ -458,7 +458,7 @@ export function ProjectView({
               </div>
 
               {/* Building Plans */}
-              <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-3">
+              <div className="bg-white rounded-xl border border-[#eeeeee] p-5 space-y-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3">
                     {project.buildingPlan === 'Approved' ? (
@@ -467,10 +467,10 @@ export function ProjectView({
                       <AlertOctagon className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" strokeWidth={1.5} />
                     )}
                     <div>
-                      <h3 className="font-bold text-base text-[#0F1B2D]">
+                      <h3 className="font-bold text-base text-[#212121]">
                         Building Plan Sanction (<JargonTooltip term="GHMC" /> / <JargonTooltip term="HMDA" />)
                       </h3>
-                      <div className="text-xs text-stone-500 mt-0.5">
+                      <div className="text-xs text-[#838383] mt-0.5">
                         Audit Date: <strong>{project.lastVerifiedDate}</strong>
                       </div>
                     </div>
@@ -482,7 +482,7 @@ export function ProjectView({
                   </span>
                 </div>
 
-                <p className="text-xs sm:text-sm text-stone-600 leading-relaxed pl-7">
+                <p className="text-xs sm:text-sm text-[#6b6b6b] leading-relaxed pl-7">
                   {project.buildingPlan === 'Approved'
                     ? `Town planning permissions and structural safety clearances approved for the entire master layout${project.sanctionedConfig ? `, sanctioned at ${project.sanctionedConfig}` : ''}.`
                     : 'The developer has applied for an additional floor permission amendment that is pending civic sign-off.'}
@@ -490,22 +490,22 @@ export function ProjectView({
 
                 <div className="pl-7 flex flex-wrap gap-1.5">
                   {project.sanctionedConfig && (
-                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#F2F2F2] border border-[#E2E2E2] text-[#131313]">
+                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#f9f9f9] border border-[#eeeeee] text-[#212121]">
                       Sanctioned {project.sanctionedConfig}
                     </span>
                   )}
                   {!!project.sanctionedFloors && (
-                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#F2F2F2] border border-[#E2E2E2] text-[#131313]">
+                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#f9f9f9] border border-[#eeeeee] text-[#212121]">
                       {project.sanctionedFloors} floors
                     </span>
                   )}
                   {project.permitNo && (
-                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#F2F2F2] border border-[#E2E2E2] text-[#131313]">
+                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#f9f9f9] border border-[#eeeeee] text-[#212121]">
                       Permit {project.permitNo}
                     </span>
                   )}
                   {project.ocStatus && (
-                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#F2F2F2] border border-[#E2E2E2] text-[#131313]">
+                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#f9f9f9] border border-[#eeeeee] text-[#212121]">
                       OC {project.ocStatus}
                     </span>
                   )}
@@ -515,14 +515,14 @@ export function ProjectView({
                   <button
                     type="button"
                     onClick={() => toggleSafetyDetail('plans')}
-                    className="text-xs font-semibold text-[#0E7C86] hover:underline flex items-center gap-1 cursor-pointer py-1"
+                    className="text-xs font-semibold text-[#212121] hover:underline flex items-center gap-1 cursor-pointer py-1"
                   >
                     <span>{openSafetyDetails['plans'] ? 'Hide breakdown' : 'See why (Sanction drawing notes)'}</span>
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform ${openSafetyDetails['plans'] ? 'rotate-180' : ''}`} strokeWidth={1.5} />
                   </button>
 
                   {openSafetyDetails['plans'] && (
-                    <div className="mt-2 p-3 bg-stone-50 rounded-lg border border-stone-200 text-xs text-stone-700 leading-relaxed">
+                    <div className="mt-2 p-3 bg-[#f9f9f9] rounded-lg border border-[#eeeeee] text-xs text-[#4a4a4a] leading-relaxed">
                       Approved drawings confirm compliant road setbacks, dual basement parking ventilation, and fire safety driveways.
                     </div>
                   )}
@@ -530,7 +530,7 @@ export function ProjectView({
               </div>
 
               {/* Lake Buffer */}
-              <div className="bg-white rounded-xl border border-stone-200 p-5 space-y-3">
+              <div className="bg-white rounded-xl border border-[#eeeeee] p-5 space-y-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3">
                     {project.lakeBuffer === 'Clear' ? (
@@ -539,10 +539,10 @@ export function ProjectView({
                       <XCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" strokeWidth={1.5} />
                     )}
                     <div>
-                      <h3 className="font-bold text-base text-[#0F1B2D]">
+                      <h3 className="font-bold text-base text-[#212121]">
                         Lake & Waterbody Buffer Zone (<JargonTooltip term="FTL" />)
                       </h3>
-                      <div className="text-xs text-stone-500 mt-0.5">
+                      <div className="text-xs text-[#838383] mt-0.5">
                         Audit Date: <strong>{project.lastVerifiedDate}</strong>
                       </div>
                     </div>
@@ -554,7 +554,7 @@ export function ProjectView({
                   </span>
                 </div>
 
-                <p className="text-xs sm:text-sm text-stone-600 leading-relaxed pl-7">
+                <p className="text-xs sm:text-sm text-[#6b6b6b] leading-relaxed pl-7">
                   {project.lakeBuffer === 'Clear'
                     ? 'Plot boundaries sit outside the mandatory 30-meter buffer line and irrigation channels.'
                     : 'Portions of the project boundary lie inside the lake buffer zone flagged under recent HYDRAA enforcement.'}
@@ -562,12 +562,12 @@ export function ProjectView({
 
                 <div className="pl-7 flex flex-wrap gap-1.5">
                   {project.nearestLakeMeters != null && (
-                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#F2F2F2] border border-[#E2E2E2] text-[#131313]">
+                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#f9f9f9] border border-[#eeeeee] text-[#212121]">
                       Nearest FTL edge {project.nearestLakeMeters} m
                     </span>
                   )}
                   {project.surveyNumbers && (
-                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#F2F2F2] border border-[#E2E2E2] text-[#131313]">
+                    <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#f9f9f9] border border-[#eeeeee] text-[#212121]">
                       {project.surveyNumbers}
                     </span>
                   )}
@@ -577,14 +577,14 @@ export function ProjectView({
                   <button
                     type="button"
                     onClick={() => toggleSafetyDetail('lake')}
-                    className="text-xs font-semibold text-[#0E7C86] hover:underline flex items-center gap-1 cursor-pointer py-1"
+                    className="text-xs font-semibold text-[#212121] hover:underline flex items-center gap-1 cursor-pointer py-1"
                   >
                     <span>{openSafetyDetails['lake'] ? 'Hide breakdown' : 'See why (Cadastral lake survey)'}</span>
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform ${openSafetyDetails['lake'] ? 'rotate-180' : ''}`} strokeWidth={1.5} />
                   </button>
 
                   {openSafetyDetails['lake'] && (
-                    <div className="mt-2 p-3 bg-stone-50 rounded-lg border border-stone-200 text-xs text-stone-700 leading-relaxed">
+                    <div className="mt-2 p-3 bg-[#f9f9f9] rounded-lg border border-[#eeeeee] text-xs text-[#4a4a4a] leading-relaxed">
                       Cross-referenced with National Remote Sensing Centre hydrological maps and state irrigation survey sheets.
                     </div>
                   )}
@@ -594,21 +594,21 @@ export function ProjectView({
           </section>
 
           {/* SECTION 3: "Where is it?" */}
-          <section className="bg-white rounded-xl border border-stone-200 p-6 sm:p-8 space-y-4 text-left">
+          <section className="bg-white rounded-xl border border-[#eeeeee] p-6 sm:p-8 space-y-4 text-left">
             <div>
-              <span className="text-xs uppercase font-bold tracking-wider text-[#0E7C86]">
+              <span className="text-xs uppercase font-bold tracking-wider text-[#212121]">
                 Section 3
               </span>
-              <h2 className="font-serif text-2xl font-bold text-[#0F1B2D]">
+              <h2 className="font-serif text-2xl font-bold text-[#212121]">
                 Where is it?
               </h2>
-              <p className="text-xs text-stone-500 mt-0.5">
+              <p className="text-xs text-[#838383] mt-0.5">
                 Layout survey plot relative to natural waterbodies and regional IT corridors.
               </p>
             </div>
 
             {/* Stylized SVG Map (Clean, flat line-drawn) */}
-            <div className="relative w-full h-64 sm:h-72 bg-[#F3EFE8] rounded-xl overflow-hidden border border-stone-300">
+            <div className="relative w-full h-64 sm:h-72 bg-[#f9f9f9] rounded-xl overflow-hidden border border-[#e0e0e0]">
               <svg className="w-full h-full" viewBox="0 0 600 300" preserveAspectRatio="none">
                 <defs>
                   <pattern id="gridPattern" width="30" height="30" patternUnits="userSpaceOnUse">
@@ -662,13 +662,13 @@ export function ProjectView({
                 className={`absolute p-2.5 rounded-lg border text-xs font-semibold bg-white flex items-center gap-2 ${
                   project.status === 'risk'
                     ? 'bottom-4 left-4 border-rose-200 text-rose-900'
-                    : 'top-4 left-4 border-stone-200 text-[#0F1B2D]'
+                    : 'top-4 left-4 border-[#eeeeee] text-[#212121]'
                 }`}
               >
-                <MapPin className={`w-4 h-4 ${project.status === 'risk' ? 'text-rose-600' : 'text-[#0E7C86]'}`} strokeWidth={1.5} />
+                <MapPin className={`w-4 h-4 ${project.status === 'risk' ? 'text-rose-600' : 'text-[#212121]'}`} strokeWidth={1.5} />
                 <div>
                   <div className="font-bold">{project.name}</div>
-                  <div className="text-[10px] text-stone-500 font-normal">
+                  <div className="text-[10px] text-[#838383] font-normal">
                     {project.location} ({project.microMarket})
                   </div>
                 </div>
@@ -686,8 +686,8 @@ export function ProjectView({
                   {project.lakeBuffer === 'Clear' ? 'Clear of Lake Buffer' : 'Inside Lake Buffer'}
                 </span>
 
-                <span className="text-[11px] font-medium bg-white text-stone-700 px-2.5 py-1 rounded-full border border-stone-200 flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-[#0E7C86]" strokeWidth={1.5} />
+                <span className="text-[11px] font-medium bg-white text-[#4a4a4a] px-2.5 py-1 rounded-full border border-[#eeeeee] flex items-center gap-1">
+                  <Clock className="w-3 h-3 text-[#212121]" strokeWidth={1.5} />
                   <span>{project.distanceToIT}</span>
                 </span>
               </div>
@@ -695,60 +695,60 @@ export function ProjectView({
           </section>
 
           {/* SECTION 4: "The numbers" */}
-          <section className="bg-white rounded-xl border border-stone-200 p-6 sm:p-8 space-y-6 text-left">
+          <section className="bg-white rounded-xl border border-[#eeeeee] p-6 sm:p-8 space-y-6 text-left">
             <div>
-              <span className="text-xs uppercase font-bold tracking-wider text-[#0E7C86]">
+              <span className="text-xs uppercase font-bold tracking-wider text-[#212121]">
                 Section 4
               </span>
-              <h2 className="font-serif text-2xl font-bold text-[#0F1B2D]">
+              <h2 className="font-serif text-2xl font-bold text-[#212121]">
                 The numbers
               </h2>
-              <p className="text-xs text-stone-500 mt-0.5">
+              <p className="text-xs text-[#838383] mt-0.5">
                 Pricing specifications and micro-market rate comparisons.
               </p>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div className="p-3.5 rounded-lg bg-stone-50 border border-stone-200">
-                <span className="text-[11px] text-stone-500 block mb-1">Price Range</span>
-                <span className="text-sm sm:text-base font-bold text-[#0F1B2D]">{project.priceRange}</span>
+              <div className="p-3.5 rounded-lg bg-[#f9f9f9] border border-[#eeeeee]">
+                <span className="text-[11px] text-[#838383] block mb-1">Price Range</span>
+                <span className="text-sm sm:text-base font-bold text-[#212121]">{project.priceRange}</span>
               </div>
-              <div className="p-3.5 rounded-lg bg-stone-50 border border-stone-200">
-                <span className="text-[11px] text-stone-500 block mb-1">Project Rate</span>
-                <span className="text-sm sm:text-base font-bold text-[#0E7C86]">
-                  ₹{project.ratePerSqFt.toLocaleString('en-IN')} <span className="text-xs font-normal text-stone-500">/ sq ft</span>
+              <div className="p-3.5 rounded-lg bg-[#f9f9f9] border border-[#eeeeee]">
+                <span className="text-[11px] text-[#838383] block mb-1">Project Rate</span>
+                <span className="text-sm sm:text-base font-bold text-[#212121]">
+                  ₹{project.ratePerSqFt.toLocaleString('en-IN')} <span className="text-xs font-normal text-[#838383]">/ sq ft</span>
                 </span>
               </div>
-              <div className="p-3.5 rounded-lg bg-stone-50 border border-stone-200">
-                <span className="text-[11px] text-stone-500 block mb-1">Configuration</span>
-                <span className="text-sm sm:text-base font-bold text-[#0F1B2D]">{project.config}</span>
+              <div className="p-3.5 rounded-lg bg-[#f9f9f9] border border-[#eeeeee]">
+                <span className="text-[11px] text-[#838383] block mb-1">Configuration</span>
+                <span className="text-sm sm:text-base font-bold text-[#212121]">{project.config}</span>
               </div>
-              <div className="p-3.5 rounded-lg bg-stone-50 border border-stone-200">
-                <span className="text-[11px] text-stone-500 block mb-1">Possession Year</span>
-                <span className="text-sm sm:text-base font-bold text-[#0F1B2D]">{project.possessionYear}</span>
+              <div className="p-3.5 rounded-lg bg-[#f9f9f9] border border-[#eeeeee]">
+                <span className="text-[11px] text-[#838383] block mb-1">Possession Year</span>
+                <span className="text-sm sm:text-base font-bold text-[#212121]">{project.possessionYear}</span>
               </div>
             </div>
 
             {/* RATE PER SQ FT VS AREA AVERAGE */}
-            <div className="p-5 rounded-xl bg-[#FAF8F5] border border-stone-200 space-y-3">
+            <div className="p-5 rounded-xl bg-[#f9f9f9] border border-[#eeeeee] space-y-3">
               <div className="flex items-center justify-between text-xs sm:text-sm">
-                <span className="font-semibold text-[#0F1B2D]">
+                <span className="font-semibold text-[#212121]">
                   Rate per sq ft vs. {project.location} Average:
                 </span>
-                <span className="font-bold text-[#0E7C86]">
+                <span className="font-bold text-[#212121]">
                   {rateDiffPercent >= 0 ? `+${rateDiffPercent}% vs avg` : `${rateDiffPercent}% vs avg`}
                 </span>
               </div>
 
               <div className="space-y-2.5 text-xs">
                 <div className="space-y-1">
-                  <div className="flex justify-between text-stone-600">
-                    <span className="font-medium text-[#0F1B2D]">{project.name}</span>
-                    <span className="font-bold text-[#0E7C86]">₹{project.ratePerSqFt.toLocaleString('en-IN')} / sq ft</span>
+                  <div className="flex justify-between text-[#6b6b6b]">
+                    <span className="font-medium text-[#212121]">{project.name}</span>
+                    <span className="font-bold text-[#212121]">₹{project.ratePerSqFt.toLocaleString('en-IN')} / sq ft</span>
                   </div>
-                  <div className="h-2 w-full bg-stone-200 rounded-full overflow-hidden">
+                  <div className="h-2 w-full bg-[#eeeeee] rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-[#0E7C86] rounded-full"
+                      className="h-full bg-[#212121] rounded-full"
                       style={{
                         width: `${Math.min(100, Math.max(20, (project.ratePerSqFt / 20000) * 100))}%`,
                       }}
@@ -757,13 +757,13 @@ export function ProjectView({
                 </div>
 
                 <div className="space-y-1">
-                  <div className="flex justify-between text-stone-600">
+                  <div className="flex justify-between text-[#6b6b6b]">
                     <span className="font-medium">{project.location} Benchmark</span>
-                    <span className="font-semibold text-stone-800">₹{areaAvgRate.toLocaleString('en-IN')} / sq ft</span>
+                    <span className="font-semibold text-[#212121]">₹{areaAvgRate.toLocaleString('en-IN')} / sq ft</span>
                   </div>
-                  <div className="h-2 w-full bg-stone-200 rounded-full overflow-hidden">
+                  <div className="h-2 w-full bg-[#eeeeee] rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-stone-400 rounded-full"
+                      className="h-full bg-[#a3a3a3] rounded-full"
                       style={{
                         width: `${Math.min(100, Math.max(20, (areaAvgRate / 20000) * 100))}%`,
                       }}
@@ -773,15 +773,15 @@ export function ProjectView({
               </div>
 
               {market.guidelineRatePerSqFt ? (
-                <div className="flex items-center justify-between gap-2 rounded-lg bg-[#F2F2F2] border border-[#E2E2E2] px-3 py-2">
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-[#585858]">IGR guideline value</span>
-                  <span className="font-mono text-xs font-bold text-[#131313]">
+                <div className="flex items-center justify-between gap-2 rounded-lg bg-[#f9f9f9] border border-[#eeeeee] px-3 py-2">
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-[#6b6b6b]">IGR guideline value</span>
+                  <span className="font-mono text-xs font-bold text-[#212121]">
                     ₹{market.guidelineRatePerSqFt.toLocaleString('en-IN')} / sq ft
                   </span>
                 </div>
               ) : null}
 
-              <p className="text-[11px] text-stone-500">
+              <p className="text-[11px] text-[#838383]">
                 Benchmark based on transacted registry records in {project.location} (Range: ₹{market.minRate.toLocaleString('en-IN')} to ₹{market.maxRate.toLocaleString('en-IN')}).
                 {market.guidelineRatePerSqFt ? ' Stamp duty is charged on the higher of your price and the IGR guideline value.' : ''}
               </p>
@@ -792,9 +792,9 @@ export function ProjectView({
               <button
                 type="button"
                 onClick={() => onNavigate('cost')}
-                className="w-full sm:w-auto min-h-[46px] px-5 py-2.5 rounded-xl bg-[#0F1B2D] hover:bg-stone-800 text-white text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full sm:w-auto min-h-[46px] px-5 py-2.5 rounded-xl bg-[#212121] hover:bg-black text-white text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Receipt className="w-4 h-4 text-[#0E7C86]" strokeWidth={1.5} />
+                <Receipt className="w-4 h-4 text-white" strokeWidth={1.5} />
                 <span>See the full cost (taxes, stamp duty, loan EMI)</span>
                 <ChevronRight className="w-4 h-4" strokeWidth={1.5} />
               </button>
@@ -802,15 +802,15 @@ export function ProjectView({
           </section>
 
           {/* SECTION 5: "Questions to ask the builder" */}
-          <section className="bg-white rounded-xl border border-stone-200 p-6 sm:p-8 space-y-4 text-left">
+          <section className="bg-white rounded-xl border border-[#eeeeee] p-6 sm:p-8 space-y-4 text-left">
             <div>
-              <span className="text-xs uppercase font-bold tracking-wider text-[#0E7C86]">
+              <span className="text-xs uppercase font-bold tracking-wider text-[#212121]">
                 Section 5
               </span>
-              <h2 className="font-serif text-2xl font-bold text-[#0F1B2D]">
+              <h2 className="font-serif text-2xl font-bold text-[#212121]">
                 Questions to ask the builder
               </h2>
-              <p className="text-xs text-stone-500 mt-0.5">
+              <p className="text-xs text-[#838383] mt-0.5">
                 Take these 5 specific questions with you to the sales gallery:
               </p>
             </div>
@@ -819,9 +819,9 @@ export function ProjectView({
               {tailoredQuestions.map((q, idx) => (
                 <div
                   key={idx}
-                  className="p-3.5 rounded-lg bg-stone-50 border border-stone-200 flex items-start gap-3 text-xs sm:text-sm text-stone-800"
+                  className="p-3.5 rounded-lg bg-[#f9f9f9] border border-[#eeeeee] flex items-start gap-3 text-xs sm:text-sm text-[#212121]"
                 >
-                  <span className="font-bold text-[#0E7C86] shrink-0 mt-0.5">
+                  <span className="font-bold text-[#212121] shrink-0 mt-0.5">
                     {idx + 1}.
                   </span>
                   <p className="leading-relaxed">{q}</p>
@@ -833,28 +833,28 @@ export function ProjectView({
           {/* WATCH & DOCUMENT UPLOAD SECTION */}
           <section className="space-y-4 text-left">
             <div>
-              <span className="text-xs uppercase font-bold tracking-wider text-[#0E7C86]">
+              <span className="text-xs uppercase font-bold tracking-wider text-[#212121]">
                 Buyer Tools
               </span>
-              <h2 className="font-serif text-2xl font-bold text-[#0F1B2D]">
+              <h2 className="font-serif text-2xl font-bold text-[#212121]">
                 Updates & Document Verification
               </h2>
-              <p className="text-xs text-stone-500 mt-0.5">
+              <p className="text-xs text-[#838383] mt-0.5">
                 Track status changes or have our diligence team review builder files.
               </p>
             </div>
 
             <div className="grid grid-cols-1 gap-4">
               {/* 1. WATCH FORM */}
-              <div className="bg-white rounded-xl border border-stone-200 p-5 sm:p-6 space-y-4">
+              <div className="bg-white rounded-xl border border-[#eeeeee] p-5 sm:p-6 space-y-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-2.5">
-                    <Bell className="w-4 h-4 text-[#0E7C86] shrink-0 mt-0.5" strokeWidth={1.5} />
+                    <Bell className="w-4 h-4 text-[#212121] shrink-0 mt-0.5" strokeWidth={1.5} />
                     <div>
-                      <h3 className="font-bold text-base text-[#0F1B2D]">
-                        Watch {project.name} <span className="font-normal text-xs text-stone-500">(optional)</span>
+                      <h3 className="font-bold text-base text-[#212121]">
+                        Watch {project.name} <span className="font-normal text-xs text-[#838383]">(optional)</span>
                       </h3>
-                      <p className="text-xs text-stone-600 mt-0.5">
+                      <p className="text-xs text-[#6b6b6b] mt-0.5">
                         Get an email notification if RERA quarterly reports, floor sanctions, or lake buffer records are updated.
                       </p>
                     </div>
@@ -863,7 +863,7 @@ export function ProjectView({
                   <button
                     type="button"
                     onClick={() => setIsWatchOpen(!isWatchOpen)}
-                    className="text-xs font-semibold text-[#0E7C86] hover:underline flex items-center gap-1 shrink-0 py-1 cursor-pointer"
+                    className="text-xs font-semibold text-[#212121] hover:underline flex items-center gap-1 shrink-0 py-1 cursor-pointer"
                   >
                     <span>{isWatchOpen ? 'Hide' : 'Watch updates'}</span>
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isWatchOpen ? 'rotate-180' : ''}`} strokeWidth={1.5} />
@@ -880,32 +880,32 @@ export function ProjectView({
                             setWatchSaved(true);
                           }
                         }}
-                        className="space-y-3 pt-2 border-t border-stone-100"
+                        className="space-y-3 pt-2 border-t border-[#f2f2f2]"
                       >
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
-                            <label className="block text-xs font-semibold text-[#0F1B2D] mb-1">
-                              Email address <span className="text-stone-400 font-normal">(optional unless watching)</span>
+                            <label className="block text-xs font-semibold text-[#212121] mb-1">
+                              Email address <span className="text-[#a3a3a3] font-normal">(optional unless watching)</span>
                             </label>
                             <input
                               type="email"
                               value={watchEmail}
                               onChange={(e) => setWatchEmail(e.target.value)}
                               placeholder="yourname@domain.com"
-                              className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs sm:text-sm focus:outline-none focus:border-[#0E7C86] min-h-[44px]"
+                              className="w-full px-3 py-2 rounded-xl border border-[#eeeeee] bg-white text-xs sm:text-sm focus:outline-none focus:border-[#212121] min-h-[44px]"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-xs font-semibold text-[#0F1B2D] mb-1">
-                              WhatsApp number <span className="text-stone-400 font-normal">(optional)</span>
+                            <label className="block text-xs font-semibold text-[#212121] mb-1">
+                              WhatsApp number <span className="text-[#a3a3a3] font-normal">(optional)</span>
                             </label>
                             <input
                               type="tel"
                               value={watchWhatsapp}
                               onChange={(e) => setWatchWhatsapp(e.target.value)}
                               placeholder="+91 98765 43210 (optional)"
-                              className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs sm:text-sm focus:outline-none focus:border-[#0E7C86] min-h-[44px]"
+                              className="w-full px-3 py-2 rounded-xl border border-[#eeeeee] bg-white text-xs sm:text-sm focus:outline-none focus:border-[#212121] min-h-[44px]"
                             />
                           </div>
                         </div>
@@ -916,14 +916,14 @@ export function ProjectView({
                         <button
                           type="submit"
                           disabled={!watchEmail.trim() || !watchEmail.includes('@')}
-                          className="px-6 py-2.5 rounded-full bg-[#D6FD70] hover:bg-[#c7f354] text-[#131313] text-xs font-bold font-mono uppercase tracking-wider transition-colors flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+                          className="px-6 py-2.5 rounded-full bg-[#212121] hover:bg-black text-white text-xs font-bold font-mono uppercase tracking-wider transition-colors flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
                         >
-                          <Bell className="w-3.5 h-3.5 text-[#131313]" strokeWidth={2} />
+                          <Bell className="w-3.5 h-3.5 text-white" strokeWidth={2} />
                           <span>Set alert for this project</span>
                         </button>
                       </form>
                     ) : (
-                      <div className="p-3 bg-stone-50 rounded-lg border border-stone-200 text-xs text-stone-700 flex items-center gap-2">
+                      <div className="p-3 bg-[#f9f9f9] rounded-lg border border-[#eeeeee] text-xs text-[#4a4a4a] flex items-center gap-2">
                         <Check className="w-4 h-4 text-emerald-600 shrink-0" strokeWidth={1.5} />
                         <span>You are now watching <strong>{project.name}</strong>. Updates will be sent to {watchEmail}.</span>
                       </div>
@@ -933,15 +933,15 @@ export function ProjectView({
               </div>
 
               {/* 2. DOCUMENT UPLOAD FORM */}
-              <div className="bg-white rounded-xl border border-stone-200 p-5 sm:p-6 space-y-4">
+              <div className="bg-white rounded-xl border border-[#eeeeee] p-5 sm:p-6 space-y-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-2.5">
-                    <Upload className="w-4 h-4 text-[#0E7C86] shrink-0 mt-0.5" strokeWidth={1.5} />
+                    <Upload className="w-4 h-4 text-[#212121] shrink-0 mt-0.5" strokeWidth={1.5} />
                     <div>
-                      <h3 className="font-bold text-base text-[#0F1B2D]">
-                        Upload document for legal check <span className="font-normal text-xs text-stone-500">(optional)</span>
+                      <h3 className="font-bold text-base text-[#212121]">
+                        Upload document for legal check <span className="font-normal text-xs text-[#838383]">(optional)</span>
                       </h3>
-                      <p className="text-xs text-stone-600 mt-0.5">
+                      <p className="text-xs text-[#6b6b6b] mt-0.5">
                         Have our diligence team review a builder brochure, draft agreement of sale, or survey sketch.
                       </p>
                     </div>
@@ -950,7 +950,7 @@ export function ProjectView({
                   <button
                     type="button"
                     onClick={() => setIsUploadOpen(!isUploadOpen)}
-                    className="text-xs font-semibold text-[#0E7C86] hover:underline flex items-center gap-1 shrink-0 py-1 cursor-pointer"
+                    className="text-xs font-semibold text-[#212121] hover:underline flex items-center gap-1 shrink-0 py-1 cursor-pointer"
                   >
                     <span>{isUploadOpen ? 'Hide' : 'Upload file'}</span>
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isUploadOpen ? 'rotate-180' : ''}`} strokeWidth={1.5} />
@@ -967,15 +967,15 @@ export function ProjectView({
                             setUploadSubmitted(true);
                           }
                         }}
-                        className="space-y-3 pt-2 border-t border-stone-100"
+                        className="space-y-3 pt-2 border-t border-[#f2f2f2]"
                       >
                         {/* File selector mock */}
                         <div>
-                          <label className="block text-xs font-semibold text-[#0F1B2D] mb-1">
+                          <label className="block text-xs font-semibold text-[#212121] mb-1">
                             Select agreement or brochure file (PDF, DOC, JPG)
                           </label>
                           <div className="flex items-center gap-2">
-                            <label className="px-4 py-2.5 rounded-xl border border-stone-300 hover:bg-stone-50 text-xs font-medium cursor-pointer inline-flex items-center gap-1.5 text-stone-700 min-h-[44px]">
+                            <label className="px-4 py-2.5 rounded-xl border border-[#e0e0e0] hover:bg-[#f9f9f9] text-xs font-medium cursor-pointer inline-flex items-center gap-1.5 text-[#4a4a4a] min-h-[44px]">
                               <Upload className="w-3.5 h-3.5" strokeWidth={1.5} />
                               <span>{uploadFileName || 'Choose document'}</span>
                               <input
@@ -1001,28 +1001,28 @@ export function ProjectView({
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
-                            <label className="block text-xs font-semibold text-[#0F1B2D] mb-1">
-                              Email address <span className="text-stone-400 font-normal">(optional unless uploading)</span>
+                            <label className="block text-xs font-semibold text-[#212121] mb-1">
+                              Email address <span className="text-[#a3a3a3] font-normal">(optional unless uploading)</span>
                             </label>
                             <input
                               type="email"
                               value={uploadEmail}
                               onChange={(e) => setUploadEmail(e.target.value)}
                               placeholder="yourname@domain.com"
-                              className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs sm:text-sm focus:outline-none focus:border-[#0E7C86] min-h-[44px]"
+                              className="w-full px-3 py-2 rounded-xl border border-[#eeeeee] bg-white text-xs sm:text-sm focus:outline-none focus:border-[#212121] min-h-[44px]"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-xs font-semibold text-[#0F1B2D] mb-1">
-                              WhatsApp number <span className="text-stone-400 font-normal">(optional)</span>
+                            <label className="block text-xs font-semibold text-[#212121] mb-1">
+                              WhatsApp number <span className="text-[#a3a3a3] font-normal">(optional)</span>
                             </label>
                             <input
                               type="tel"
                               value={uploadWhatsapp}
                               onChange={(e) => setUploadWhatsapp(e.target.value)}
                               placeholder="+91 98765 43210 (optional)"
-                              className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs sm:text-sm focus:outline-none focus:border-[#0E7C86] min-h-[44px]"
+                              className="w-full px-3 py-2 rounded-xl border border-[#eeeeee] bg-white text-xs sm:text-sm focus:outline-none focus:border-[#212121] min-h-[44px]"
                             />
                           </div>
                         </div>
@@ -1033,14 +1033,14 @@ export function ProjectView({
                         <button
                           type="submit"
                           disabled={!uploadFileName || !uploadEmail.trim() || !uploadEmail.includes('@')}
-                          className="px-6 py-2.5 rounded-full bg-[#D6FD70] hover:bg-[#c7f354] text-[#131313] text-xs font-bold font-mono uppercase tracking-wider transition-colors flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+                          className="px-6 py-2.5 rounded-full bg-[#212121] hover:bg-black text-white text-xs font-bold font-mono uppercase tracking-wider transition-colors flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
                         >
-                          <FileText className="w-3.5 h-3.5 text-[#131313]" strokeWidth={2} />
+                          <FileText className="w-3.5 h-3.5 text-white" strokeWidth={2} />
                           <span>Submit document for review</span>
                         </button>
                       </form>
                     ) : (
-                      <div className="p-3 bg-stone-50 rounded-lg border border-stone-200 text-xs text-stone-700 flex items-center gap-2">
+                      <div className="p-3 bg-[#f9f9f9] rounded-lg border border-[#eeeeee] text-xs text-[#4a4a4a] flex items-center gap-2">
                         <Check className="w-4 h-4 text-emerald-600 shrink-0" strokeWidth={1.5} />
                         <span>Document received: <strong>{uploadFileName}</strong>. Our legal desk will email review notes to {uploadEmail}.</span>
                       </div>
@@ -1054,30 +1054,30 @@ export function ProjectView({
 
         {/* Right Sidebar on Desktop (Sticky) */}
         <div className="hidden lg:block lg:col-span-4 sticky top-36 space-y-4 text-left">
-          <div className="bg-[#131313] text-white rounded-3xl border border-[#2F2F2F] p-6 space-y-4 shadow-xl">
-            <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#D6FD70]">
+          <div className="bg-[#212121] text-white rounded-3xl border border-white/10 p-6 space-y-4 shadow-xl">
+            <div className="text-xs font-mono font-bold uppercase tracking-wider text-white">
               Independent Advisory
             </div>
 
-            <h3 className="font-heading font-extrabold text-xl text-white">
+            <h3 className="font-medium text-xl text-white">
               Need a personalized legal audit?
             </h3>
 
             <p className="text-xs text-[#AAAAAA] leading-relaxed font-sans">
-              Speak directly with an HoI property analyst before signing any booking document or advancing funds for {project.name}.
+              Speak with a property expert before signing any booking document or advancing funds for {project.name}.
             </p>
 
-            <ul className="text-xs text-[#DDDDDD] space-y-1.5 pt-2 border-t border-[#2F2F2F] font-sans">
+            <ul className="text-xs text-[#DDDDDD] space-y-1.5 pt-2 border-t border-white/10 font-sans">
               <li className="flex items-center gap-2">
-                <Check className="w-3.5 h-3.5 text-[#D6FD70]" strokeWidth={2} />
+                <Check className="w-3.5 h-3.5 text-white" strokeWidth={2} />
                 <span>Zero sales pressure</span>
               </li>
               <li className="flex items-center gap-2">
-                <Check className="w-3.5 h-3.5 text-[#D6FD70]" strokeWidth={2} />
+                <Check className="w-3.5 h-3.5 text-white" strokeWidth={2} />
                 <span>Survey map verification</span>
               </li>
               <li className="flex items-center gap-2">
-                <Check className="w-3.5 h-3.5 text-[#D6FD70]" strokeWidth={2} />
+                <Check className="w-3.5 h-3.5 text-white" strokeWidth={2} />
                 <span>Price negotiation guidance</span>
               </li>
             </ul>
@@ -1086,12 +1086,12 @@ export function ProjectView({
             <button
               type="button"
               onClick={() => onNavigate('booking')}
-              className="w-full min-h-[50px] py-3.5 px-6 rounded-full bg-[#D6FD70] hover:bg-[#c7f354] text-[#131313] font-bold font-mono text-xs sm:text-sm uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+              className="w-full min-h-[50px] py-3.5 px-6 rounded-full bg-[#212121] hover:bg-black text-white font-bold font-mono text-xs sm:text-sm uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
             >
               <span>Talk to an Advisor about this project</span>
-              <ChevronRight className="w-4 h-4 text-[#131313]" strokeWidth={2} />
+              <ChevronRight className="w-4 h-4 text-white" strokeWidth={2} />
             </button>
-            <p className="text-center text-[11px] text-[#777777] font-mono">
+            <p className="text-center text-[11px] text-[#838383] font-mono">
               No phone number asked here · 20-min session
             </p>
           </div>
@@ -1099,13 +1099,13 @@ export function ProjectView({
       </div>
 
       {/* STICKY BOTTOM BAR ON MOBILE (Neon CTA Button) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-3 bg-[#131313] border-t border-[#2F2F2F] z-40">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-3 bg-[#212121] border-t border-white/10 z-40">
         <button
           type="button"
           onClick={() => onNavigate('booking')}
-          className="w-full min-h-[48px] py-3 px-5 rounded-full bg-[#D6FD70] hover:bg-[#c7f354] text-[#131313] font-bold font-mono text-xs sm:text-sm uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-md"
+          className="w-full min-h-[48px] py-3 px-5 rounded-full bg-[#212121] hover:bg-black text-white font-bold font-mono text-xs sm:text-sm uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-md"
         >
-          <PhoneCall className="w-4 h-4 text-[#131313]" strokeWidth={2} />
+          <PhoneCall className="w-4 h-4 text-white" strokeWidth={2} />
           <span>Talk to an Advisor about this project</span>
         </button>
       </div>

@@ -3,6 +3,7 @@ import type { DB } from './client';
 import { projects, microMarkets, projectAlerts } from './schema';
 import { MOCK_PROJECTS, MICRO_MARKETS } from '../mock-data';
 import { toDbStatus } from './mappers';
+import { DEMO_DATA } from '../demo';
 
 /**
  * Extra statutory facts for the seed projects that the original mock structure
@@ -143,6 +144,10 @@ export async function seedIfEmpty(db: DB): Promise<boolean> {
       guidelineUpdatedAt: new Date(),
     }))
   ).onConflictDoNothing();
+
+  // Area price ranges are fine anywhere. The sample projects are not: production starts empty
+  // and fills only from approved records.
+  if (!DEMO_DATA) return true;
 
   const now = Date.now();
   await db.insert(projects).values(
