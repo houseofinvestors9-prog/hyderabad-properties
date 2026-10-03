@@ -137,7 +137,7 @@ export const pendingUpdates = pgTable(
     aiSummaryWhatItMeans: text('ai_summary_what_it_means').notNull(),
     recommendedStatus: text('recommended_status').$type<DbProjectStatus>(),
     confidenceScore: real('confidence_score').notNull().default(0),
-    analyzer: text('analyzer').notNull().default('rules'), // 'gemini' | 'rules'
+    analyzer: text('analyzer').notNull().default('rules'), // 'claude' | 'rules' | 'structured' (older rows may say 'gemini')
     status: text('status').$type<PendingStatus>().notNull().default('pending'),
     reviewerNote: text('reviewer_note'),
     reviewedBy: text('reviewed_by'),

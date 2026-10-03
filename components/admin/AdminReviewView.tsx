@@ -189,7 +189,7 @@ function ReviewCard({ item, onDone }: { item: QueueItem; onDone: (id: string, ms
           )}
           <Pill>
             <Sparkles className="w-3 h-3" strokeWidth={2} />
-            {u.analyzer === 'gemini' ? 'Gemini read' : u.analyzer === 'structured' ? 'Structured data' : 'Rules read'}
+            {u.analyzer === 'claude' || u.analyzer === 'gemini' ? 'AI read' : u.analyzer === 'structured' ? 'Structured data' : 'Rules read'}
           </Pill>
           {item.watchers > 0 && (
             <Pill>
@@ -620,14 +620,14 @@ export function AdminReviewView({
   initialStats,
   initialSources,
   initialNotifications,
-  geminiEnabled,
+  claudeEnabled,
 }: {
   user: string;
   initialItems: QueueItem[];
   initialStats: Stats;
   initialSources: SourceRow[];
   initialNotifications: NotificationRow[];
-  geminiEnabled: boolean;
+  claudeEnabled: boolean;
 }) {
   const [tab, setTab] = useState<Tab>('queue');
   const [items, setItems] = useState<QueueItem[]>(initialItems);
@@ -779,7 +779,7 @@ export function AdminReviewView({
             Read a notice
           </button>
           <span className="font-mono text-[10px] uppercase tracking-wider text-[#6b6b6b]">
-            AI reader: {geminiEnabled ? 'Gemini' : 'rules fallback (add GEMINI_API_KEY)'}
+            AI reader: {claudeEnabled ? 'Claude' : 'rules fallback (add ANTHROPIC_API_KEY)'}
           </span>
         </section>
 

@@ -108,7 +108,7 @@ export interface EnqueueInput {
   whatItMeans: string;
   recommendedStatus?: DbProjectStatus | null;
   confidenceScore: number;
-  analyzer: 'gemini' | 'rules' | 'structured';
+  analyzer: 'claude' | 'rules' | 'structured';
 }
 
 /** Insert a pending update. Returns null if the same document was already queued. */

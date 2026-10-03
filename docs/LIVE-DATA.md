@@ -27,7 +27,7 @@ In the Review Desk, keep **Demo notices** selected and press **Run sync now**. T
 
 1. Create a Postgres database (Neon, Supabase, Cloud SQL) and set `DATABASE_URL`. Migrations and seeding run automatically on first boot.
 2. Set `ADMIN_USERS` (or `ADMIN_PASSWORD`), `ADMIN_SESSION_SECRET` and `CRON_SECRET`. The admin login refuses to work in production without them.
-3. Set `GEMINI_API_KEY` for AI reading. Without it, a deterministic rules reader is used (lower confidence, still reviewed by a human).
+3. Set `ANTHROPIC_API_KEY` for AI reading (Claude). Without it, a deterministic rules reader is used (lower confidence, still reviewed by a human).
 4. Schedule the sync. Either:
    - add repository secrets `SITE_URL` and `CRON_SECRET` and the included GitHub Action calls `/api/cron/sync-projects` every 6 hours, or
    - point Cloud Scheduler / any cron at `GET /api/cron/sync-projects` with header `Authorization: Bearer $CRON_SECRET`, or

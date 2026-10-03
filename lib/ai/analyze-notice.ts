@@ -51,7 +51,12 @@ export interface AnalyzeInput {
 export interface AnalyzeResult {
   analysis: NoticeAnalysis;
   proposedChanges: ProposedChanges;
-  analyzer: 'gemini' | 'rules';
+  analyzer: 'claude' | 'rules';
+}
+
+/** True when an Anthropic API key is configured for the AI reader. */
+export function claudeEnabled(): boolean {
+  return !!process.env.ANTHROPIC_API_KEY;
 }
 
 /** House voice: no dashes, no trade jargon. */
@@ -64,37 +69,33 @@ export function cleanCopy(s: string): string {
     .trim();
 }
 
-const JSON_SCHEMA = {
-  type: 'object',
-  properties: {
-    projectId: { type: 'string' },
-    documentType: { type: 'string', enum: [...DOCUMENT_TYPES] },
-    rawTitle: { type: 'string' },
-    whatChanged: { type: 'string', description: 'One factual sentence on what changed in the record.' },
-    whatItMeans: { type: 'string', description: 'One or two plain-English sentences on what this means for a home buyer.' },
-    recommendedStatus: { type: 'string', enum: ['verified', 'caution', 'risk'] },
-    confidenceScore: { type: 'number', minimum: 0, maximum: 1 },
-    eventDate: { type: ['string', 'null'], description: 'ISO date (YYYY-MM-DD) of the order or disclosure, if stated.' },
-    extractedData: {
-      type: 'object',
-      properties: {
-        reraStatus: { type: ['string', 'null'], enum: ['Active', 'Pending', 'Not Found', null] },
-        reraValidUntil: { type: ['string', 'null'], description: 'ISO date' },
-        escrowAccount: { type: ['string', 'null'] },
-        lastQprFiled: { type: ['string', 'null'] },
-        buildingPlan: { type: ['string', 'null'], enum: ['Approved', 'Pending', null] },
-        permitNo: { type: ['string', 'null'] },
-        sanctionedFloors: { type: ['integer', 'null'], description: 'Total floors above ground including ground floor.' },
-        sanctionedConfig: { type: ['string', 'null'], description: 'Format like 2B+G+34' },
-        ocStatus: { type: ['string', 'null'], enum: ['Issued', 'Applied', 'Not applied', null] },
-        bufferClear: { type: ['boolean', 'null'] },
-        nearestLakeMeters: { type: ['number', 'null'] },
-        penaltyAmountInr: { type: ['number', 'null'] },
-      },
-    },
-  },
-  required: ['projectId', 'documentType', 'rawTitle', 'whatChanged', 'whatItMeans', 'recommendedStatus', 'confidenceScore', 'extractedData'],
-} as const;
+/**
+ * Shape Claude must return (structured outputs). Every field is required and nullable so the
+ * constrained decoder accepts it; NoticeAnalysisSchema then applies the real limits.
+ */
+const ClaudeNoticeSchema = z.object({
+  documentType: z.enum(DOCUMENT_TYPES),
+  rawTitle: z.string(),
+  whatChanged: z.string().describe('One factual sentence on what changed in the record.'),
+  whatItMeans: z.string().describe('One or two plain-English sentences on what this means for a home buyer.'),
+  recommendedStatus: z.enum(['verified', 'caution', 'risk']),
+  confidenceScore: z.number().describe('0 to 1'),
+  eventDate: z.string().nullable().describe('ISO date (YYYY-MM-DD) of the order or disclosure, if stated.'),
+  extractedData: z.object({
+    reraStatus: z.enum(['Active', 'Pending', 'Not Found']).nullable(),
+    reraValidUntil: z.string().nullable().describe('ISO date'),
+    escrowAccount: z.string().nullable(),
+    lastQprFiled: z.string().nullable(),
+    buildingPlan: z.enum(['Approved', 'Pending']).nullable(),
+    permitNo: z.string().nullable(),
+    sanctionedFloors: z.number().int().nullable().describe('Total floors above ground including ground floor.'),
+    sanctionedConfig: z.string().nullable().describe('Format like 2B+G+34'),
+    ocStatus: z.enum(['Issued', 'Applied', 'Not applied']).nullable(),
+    bufferClear: z.boolean().nullable(),
+    nearestLakeMeters: z.number().nullable(),
+    penaltyAmountInr: z.number().nullable(),
+  }),
+});
 
 function currentFacts(p: ProjectRow) {
   return {
@@ -112,12 +113,13 @@ function currentFacts(p: ProjectRow) {
   };
 }
 
-async function analyzeWithGemini(input: AnalyzeInput): Promise<NoticeAnalysis> {
-  const { GoogleGenAI } = await import('@google/genai');
-  const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
+async function analyzeWithClaude(input: AnalyzeInput): Promise<NoticeAnalysis> {
+  const { default: Anthropic } = await import('@anthropic-ai/sdk');
+  const { betaZodOutputFormat } = await import('@anthropic-ai/sdk/helpers/beta/zod');
+  const client = new Anthropic();
   const prompt = [
     'You are the regulatory desk of hyderabad.properties, an independent property safety service for Hyderabad home buyers and NRIs.',
-    'Read the government record below (TG-RERA, TS-bPASS / HMDA / GHMC, HYDRAA lake FTL, or IGR) and return the JSON object described by the schema.',
+    'Read the government record below (TG-RERA, TS-bPASS / HMDA / GHMC, HYDRAA lake FTL, or IGR) and fill in the structured analysis.',
     'Rules:',
     '- whatChanged: one factual sentence. Quote order numbers, dates and amounts exactly as written. No speculation.',
     '- whatItMeans: plain English for a first-time buyer. No legal or sales jargon. No dashes. Never use the words broker or brokerage.',
@@ -133,21 +135,23 @@ async function analyzeWithGemini(input: AnalyzeInput): Promise<NoticeAnalysis> {
     input.rawText.slice(0, 60_000),
   ].join('\n');
 
-  const res = await ai.models.generateContent({
-    model: process.env.GEMINI_MODEL ?? 'gemini-2.5-flash',
-    contents: prompt,
-    config: {
-      responseMimeType: 'application/json',
-      responseJsonSchema: JSON_SCHEMA,
-      temperature: 0.1,
-    },
+  const res = await client.beta.messages.parse({
+    model: process.env.CLAUDE_MODEL ?? 'claude-opus-5-5',
+    max_tokens: 16000,
+    output_config: { effort: 'medium', format: betaZodOutputFormat(ClaudeNoticeSchema) },
+    // If Claude declines, the API retries on its default fallback model inside the same call.
+    betas: ['server-side-fallback-2026-07-01'],
+    fallbacks: 'default',
+    messages: [{ role: 'user', content: prompt }],
   });
-  const parsed = NoticeAnalysisSchema.parse(JSON.parse(res.text ?? '{}'));
-  return { ...parsed, projectId: input.project.id };
+  if (res.stop_reason === 'refusal') throw new Error(`Claude declined: ${res.stop_details?.category ?? 'unknown'}`);
+  if (!res.parsed_output) throw new Error(`No structured output (stop_reason ${res.stop_reason})`);
+  const parsed = NoticeAnalysisSchema.parse({ ...res.parsed_output, projectId: input.project.id });
+  return parsed;
 }
 
 // ---------------------------------------------------------------------------
-// Deterministic fallback, used when GEMINI_API_KEY is absent or the call fails.
+// Deterministic fallback, used when ANTHROPIC_API_KEY is absent or the call fails.
 // ---------------------------------------------------------------------------
 
 const MONTHS: Record<string, string> = {
@@ -336,14 +340,13 @@ export function extractedToChanges(ex: NoticeAnalysis['extractedData'], p: Proje
 
 export async function analyzeNotice(input: AnalyzeInput): Promise<AnalyzeResult> {
   let analysis: NoticeAnalysis;
-  let analyzer: 'gemini' | 'rules' = 'rules';
-  const key = process.env.GEMINI_API_KEY;
-  if (key && key !== 'MY_GEMINI_API_KEY' && process.env.AI_ANALYZER !== 'rules') {
+  let analyzer: 'claude' | 'rules' = 'rules';
+  if (claudeEnabled() && process.env.AI_ANALYZER !== 'rules') {
     try {
-      analysis = await analyzeWithGemini(input);
-      analyzer = 'gemini';
+      analysis = await analyzeWithClaude(input);
+      analyzer = 'claude';
     } catch (err) {
-      console.error('[analyze-notice] Gemini failed, using rules fallback:', err);
+      console.error('[analyze-notice] Claude failed, using rules fallback:', err);
       analysis = analyzeWithRules(input);
     }
   } else {

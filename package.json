@@ -14,8 +14,8 @@
     "worker:sync": "tsx scripts/sync.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.131.0",
     "@electric-sql/pglite": "^0.3.16",
-    "@google/genai": "^2.4.0",
     "@hookform/resolvers": "^5.2.1",
     "autoprefixer": "^10.4.21",
     "class-variance-authority": "^0.7.1",

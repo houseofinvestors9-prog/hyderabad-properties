@@ -4,6 +4,7 @@ import { AdminReviewView } from '@/components/admin/AdminReviewView';
 import { ProjectRequestsPanel } from '@/components/admin/ProjectRequestsPanel';
 import { getAdminStats, listProjectSources, listQueue, recentNotifications } from '@/lib/data/repo';
 import { listProjectRequests } from '@/lib/project-requests';
+import { claudeEnabled } from '@/lib/ai/analyze-notice';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,7 +30,7 @@ export default async function AdminPage() {
       initialStats={JSON.parse(JSON.stringify(stats))}
       initialSources={sources}
       initialNotifications={JSON.parse(JSON.stringify(notifications))}
-      geminiEnabled={!!process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'MY_GEMINI_API_KEY'}
+      claudeEnabled={claudeEnabled()}
     />
     <ProjectRequestsPanel initialRequests={JSON.parse(JSON.stringify(requests))} />
     </>
