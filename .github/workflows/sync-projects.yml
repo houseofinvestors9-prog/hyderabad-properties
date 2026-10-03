@@ -40,6 +40,17 @@ jobs:
             [ "${remaining:-0}" -eq 0 ] && break
           done
 
+      - name: TG-RERA orders and public notices
+        if: steps.check.outputs.skip != 'true'
+        run: |
+          for i in $(seq 1 20); do
+            out=$(curl --fail-with-body -sS -m 120 -H "Authorization: Bearer $CRON_SECRET" \
+              "$SITE_URL/api/cron/rera-registry?step=orders") || { echo "$out"; sleep 30; continue; }
+            echo "$out"
+            remaining=$(echo "$out" | sed -n 's/.*"remaining":\([0-9]*\).*/\1/p')
+            [ "${remaining:-0}" -eq 0 ] && break
+          done
+
       - name: Watched sources (RERA, permits, lake buffer, guideline values)
         if: steps.check.outputs.skip != 'true'
         run: |

@@ -1,0 +1,1 @@
+ALTER TABLE "rera_orders" ADD COLUMN "penalties_inr" jsonb DEFAULT '[]'::jsonb NOT NULL;

@@ -357,3 +357,37 @@ export const reraRegistry = pgTable(
 );
 
 export type ReraRegistryRow = typeof reraRegistry.$inferSelect;
+
+/**
+ * Orders and public notices published by TG-RERA (suo motu orders, penalty orders, notices to allottees,
+ * rejections), read from the PDFs and matched to registered projects and builders.
+ */
+export const reraOrders = pgTable(
+  'rera_orders',
+  {
+    id: text('id').primaryKey(), // the PDF file name on the RERA site
+    listing: text('listing').$type<'orders' | 'public_notices'>().notNull(),
+    kind: text('kind').$type<'suo_motu' | 'penalty' | 'notice' | 'rejection' | 'other'>().notNull(),
+    title: text('title').notNull(),
+    orderDate: text('order_date'), // ISO
+    pdfUrl: text('pdf_url').notNull(),
+    caseNo: text('case_no'),
+    /** Company or firm the order is against. Null when it is an individual. */
+    respondent: text('respondent'),
+    respondentKey: text('respondent_key'),
+    /** Consolidated penalty, or the only one. Null when the order imposes several without a total. */
+    penaltyInr: integer('penalty_inr'),
+    /** Each distinct penalty amount the order imposes, in order of appearance. */
+    penaltiesInr: jsonb('penalties_inr').$type<number[]>().notNull().default([]),
+    /** Registration numbers of registry projects this order names, by number or quoted project name. */
+    registrationNos: jsonb('registration_nos').$type<string[]>().notNull().default([]),
+    mentionedNumbers: jsonb('mentioned_numbers').$type<string[]>().notNull().default([]),
+    text: text('text'),
+    fetchedAt: timestamp('fetched_at', { withTimezone: true }),
+    error: text('error'),
+    firstSeenAt: timestamp('first_seen_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('rera_orders_date_idx').on(t.orderDate), index('rera_orders_respondent_idx').on(t.respondentKey)]
+);
+
+export type ReraOrderRow = typeof reraOrders.$inferSelect;

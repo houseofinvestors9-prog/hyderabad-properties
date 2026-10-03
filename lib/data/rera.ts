@@ -1,6 +1,7 @@
-import { and, asc, desc, eq, ilike, isNotNull, or, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, ilike, inArray, isNotNull, or, sql } from 'drizzle-orm';
 import { getDb } from '../db/client';
-import { reraRegistry, type ReraRegistryRow } from '../db/schema';
+import { reraOrders, reraRegistry, type ReraOrderRow, type ReraRegistryRow } from '../db/schema';
+import { builderKey } from '../ingest/rera-orders';
 
 export interface RegistryHit {
   slug: string;
@@ -190,4 +191,52 @@ export async function registryOverview(): Promise<RegistryOverview> {
       authority: r.details?.authority ?? null,
     })),
   };
+}
+
+export interface OrderView {
+  id: string;
+  kind: ReraOrderRow['kind'];
+  title: string;
+  respondent: string | null;
+  orderDate: string | null;
+  pdfUrl: string;
+  caseNo: string | null;
+  penaltyInr: number | null;
+  penaltiesInr: number[];
+  registrationNos: string[];
+}
+
+function toOrder(o: ReraOrderRow): OrderView {
+  // Orders against individuals keep a neutral title; the person's name is not repeated here.
+  const title = o.respondent || o.kind === 'notice' || o.kind === 'rejection' || /case no/i.test(o.title) ? o.title : `${o.kind === 'penalty' ? 'Penalty' : 'Suo motu'} order against an individual promoter`;
+  return { id: o.id, kind: o.kind, title, respondent: o.respondent, orderDate: o.orderDate, pdfUrl: o.pdfUrl, caseNo: o.caseNo, penaltyInr: o.penaltyInr, penaltiesInr: o.penaltiesInr, registrationNos: o.registrationNos };
+}
+
+/** Orders that name this project, and orders against its builder that do not. */
+export async function ordersForRegistry(row: ReraRegistryRow): Promise<{ project: OrderView[]; builder: OrderView[] }> {
+  const db = await getDb();
+  const all = await db.select().from(reraOrders).orderBy(desc(reraOrders.orderDate));
+  const project = all.filter((o) => o.registrationNos.includes(row.registrationNo));
+  const key = builderKey(row.promoter);
+  const builder = key
+    ? all.filter((o) => !project.includes(o) && o.respondentKey && (o.respondentKey === key || o.respondentKey.includes(key) || key.includes(o.respondentKey)))
+    : [];
+  return { project: project.map(toOrder), builder: builder.map(toOrder) };
+}
+
+export async function listOrders(): Promise<(OrderView & { projects: RegistryHit[] })[]> {
+  const db = await getDb();
+  const all = await db.select().from(reraOrders).orderBy(desc(reraOrders.orderDate));
+  const regNos = [...new Set(all.flatMap((o) => o.registrationNos))];
+  const rows = regNos.length ? await db.select().from(reraRegistry).where(inArray(reraRegistry.registrationNo, regNos)) : [];
+  const byNo = new Map(rows.map((r) => [r.registrationNo, toHit(r)]));
+  return all.map((o) => ({ ...toOrder(o), projects: o.registrationNos.map((n) => byNo.get(n)).filter((x): x is RegistryHit => !!x) }));
+}
+
+/** "Penalty ₹10,77,520" or "Penalties ₹12,70,400 and ₹8,46,960", as the order states them. */
+export function penaltyLabel(o: Pick<OrderView, 'penaltyInr' | 'penaltiesInr'>): string | null {
+  const inr = (n: number) => `₹${n.toLocaleString('en-IN')}`;
+  if (o.penaltyInr) return `Penalty ${inr(o.penaltyInr)}`;
+  if (o.penaltiesInr.length > 1) return `Penalties ${o.penaltiesInr.slice(0, -1).map(inr).join(', ')} and ${inr(o.penaltiesInr[o.penaltiesInr.length - 1])} under separate sections`;
+  return null;
 }
