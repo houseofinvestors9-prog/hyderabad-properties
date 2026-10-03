@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ArrowUpRight,
   Search,
@@ -28,6 +28,7 @@ import { PrivacyPledge } from '@/components/PrivacyPledge';
 import { OWNERSHIP_LINE } from '@/components/Footer';
 import { projectImage, AREA_IMAGES, REPRESENTATIVE_PHOTO_LABEL } from '@/lib/project-images';
 import { submitLead } from '@/lib/submit-lead';
+import type { RegistryHit, RegistryOverview } from '@/lib/data/rera';
 import { RequestProjectForm } from '@/components/RequestProjectForm';
 
 interface HomeViewProps {
@@ -122,6 +123,50 @@ export function HomeView({ onNavigate, onSelectProject, userPreferences, onUpdat
 
   const { projects, getProject } = useLiveData();
 
+  // TG-RERA registry: every registered project, shown as "official record, not yet checked"
+  const [registry, setRegistry] = useState<RegistryOverview | null>(null);
+  const [suggestions, setSuggestions] = useState<RegistryHit[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchBoxRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    fetch('/api/rera/overview')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j: RegistryOverview | null) => j && setRegistry(j))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const q = [searchQuery, searchArea].filter(Boolean).join(' ').trim();
+    if (searchQuery.trim().length < 2) {
+      setSuggestions([]);
+      return;
+    }
+    const ctrl = new AbortController();
+    const t = setTimeout(() => {
+      fetch(`/api/rera/search?q=${encodeURIComponent(q)}`, { signal: ctrl.signal })
+        .then((r) => (r.ok ? r.json() : { results: [] }))
+        .then((j: { results: RegistryHit[] }) => setSuggestions(j.results ?? []))
+        .catch(() => {});
+    }, 200);
+    return () => {
+      clearTimeout(t);
+      ctrl.abort();
+    };
+  }, [searchQuery, searchArea]);
+
+  useEffect(() => {
+    const close = (e: MouseEvent) => {
+      if (searchBoxRef.current && !searchBoxRef.current.contains(e.target as Node)) setShowSuggestions(false);
+    };
+    document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
+  }, []);
+
+  const checkedMatches = searchQuery.trim().length >= 2
+    ? projects.filter((p) => `${p.name} ${p.location}`.toLowerCase().includes(searchQuery.trim().toLowerCase())).slice(0, 3)
+    : [];
+
   const featured = ['aurelia-heights', 'skyline-crest']
     .map((id) => getProject(id))
     .filter(Boolean) as ProjectSafetyItem[];
@@ -150,13 +195,16 @@ export function HomeView({ onNavigate, onSelectProject, userPreferences, onUpdat
     <div className="animate-in fade-in duration-300">
       {/* 1. HERO: full-bleed rounded photo with the search bar on top, as in HouseMarket Home V1 */}
       <section className="px-2 sm:px-4 lg:px-6">
-        <div className="relative overflow-hidden rounded-[24px] min-h-[620px] sm:min-h-[680px] flex">
-          <img
-            src="/img/hero.jpg"
-            alt="Balcony of a high-rise apartment looking over the city at dusk"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/35 to-black/25 sm:bg-gradient-to-r sm:from-white/90 sm:via-white/45 sm:to-transparent" />
+        <div className="relative z-20 rounded-[24px] min-h-[620px] sm:min-h-[680px] flex">
+          {/* Photo is clipped in its own layer so the search suggestions can drop below the hero */}
+          <div className="absolute inset-0 overflow-hidden rounded-[24px]">
+            <img
+              src="/img/hero.jpg"
+              alt="Balcony of a high-rise apartment looking over the city at dusk"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/35 to-black/25 sm:bg-gradient-to-r sm:from-white/90 sm:via-white/45 sm:to-transparent" />
+          </div>
 
           <div className="relative hm-container flex flex-col justify-between py-12 sm:py-20">
             <div className="max-w-2xl space-y-5" data-reveal>
@@ -170,9 +218,11 @@ export function HomeView({ onNavigate, onSelectProject, userPreferences, onUpdat
             </div>
 
             {/* Search bar */}
+            <div className="relative mt-10 w-full max-w-3xl">
             <form
+              ref={searchBoxRef}
               onSubmit={handleSearchSubmit}
-              className="mt-10 w-full max-w-3xl bg-white rounded-[20px] sm:rounded-full p-2 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.25)] flex flex-col sm:flex-row sm:items-center gap-2"
+              className="relative w-full bg-white rounded-[20px] sm:rounded-full p-2 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.25)] flex flex-col sm:flex-row sm:items-center gap-2"
               data-reveal
               role="search"
             >
@@ -182,8 +232,13 @@ export function HomeView({ onNavigate, onSelectProject, userPreferences, onUpdat
                 <input
                   type="text"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Project or builder name"
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
+                  placeholder="Project, builder or RERA number"
+                  autoComplete="off"
                   className="w-full bg-transparent text-[15px] text-[#212121] placeholder:text-[#838383] focus:outline-none"
                 />
               </label>
@@ -197,7 +252,7 @@ export function HomeView({ onNavigate, onSelectProject, userPreferences, onUpdat
                   className="w-full bg-transparent text-[15px] text-[#212121] focus:outline-none cursor-pointer"
                 >
                   <option value="">Any area</option>
-                  {Array.from(new Set(projects.map((p) => p.location))).map((loc) => (
+                  {(registry?.areas.length ? registry.areas.map((a) => a.name) : Array.from(new Set(projects.map((p) => p.location)))).map((loc) => (
                     <option key={loc} value={loc}>
                       {loc}
                     </option>
@@ -210,7 +265,38 @@ export function HomeView({ onNavigate, onSelectProject, userPreferences, onUpdat
               >
                 Check
               </button>
+
+              {showSuggestions && (checkedMatches.length > 0 || suggestions.length > 0) && (
+                <div className="absolute left-0 right-0 top-full mt-2 z-30 rounded-[20px] bg-white shadow-[0_24px_60px_-20px_rgba(0,0,0,0.35)] border border-[#eeeeee] p-2 max-h-[420px] overflow-y-auto text-left">
+                  {checkedMatches.map((p) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => openProject(p)}
+                      className="w-full flex items-center justify-between gap-3 rounded-[14px] px-4 py-3 hover:bg-[#f9f9f9] text-left cursor-pointer"
+                    >
+                      <span>
+                        <span className="block text-[15px] font-medium text-[#212121]">{p.name}</span>
+                        <span className="block text-[13px] text-[#838383]">{p.location} · checked report</span>
+                      </span>
+                      <SafetyBadge status={p.status} size="sm" showScore={false} />
+                    </button>
+                  ))}
+                  {suggestions.length > 0 && (
+                    <p className="px-4 pt-2 pb-1 text-[12px] font-semibold uppercase tracking-wide text-[#a3a3a3]">On the TG-RERA record</p>
+                  )}
+                  {suggestions.map((h) => (
+                    <a key={h.slug} href={`/rera/${h.slug}`} className="block rounded-[14px] px-4 py-3 hover:bg-[#f9f9f9]">
+                      <span className="block text-[15px] font-medium text-[#212121]">{h.name}</span>
+                      <span className="block text-[13px] text-[#838383]">
+                        {[h.promoter, h.locality ?? h.mandal, h.projectStatus].filter(Boolean).join(' · ')}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              )}
             </form>
+            </div>
           </div>
         </div>
       </section>
@@ -219,9 +305,13 @@ export function HomeView({ onNavigate, onSelectProject, userPreferences, onUpdat
       <section className="hm-container">
         <div className="grid grid-cols-2 lg:grid-cols-4 border-b border-[#eeeeee]" data-reveal>
           {[
-            { value: String(projects.length), label: 'Projects checked so far' },
+            registry?.total
+              ? { value: registry.total.toLocaleString('en-IN'), label: 'Projects on the TG-RERA record' }
+              : { value: String(projects.length), label: 'Projects checked so far' },
             { value: String(SOURCES.length), label: 'Government sources read' },
-            { value: String(riskCount), label: 'Projects with something to look at' },
+            registry?.total
+              ? { value: registry.flagged.toLocaleString('en-IN'), label: 'Filings with a missed deadline or litigation' }
+              : { value: String(riskCount), label: 'Projects with something to look at' },
             { value: '₹0', label: 'Cost to you, always' },
           ].map((s, i) => (
             <div key={s.label} className={`py-8 sm:py-10 px-2 sm:px-6 ${i % 2 === 1 ? 'border-l' : ''} lg:border-l border-[#eeeeee] ${i === 0 ? 'lg:border-l-0' : ''}`}>
@@ -322,7 +412,57 @@ export function HomeView({ onNavigate, onSelectProject, userPreferences, onUpdat
         </div>
       </section>
 
+      {/* 5a. NEW ON THE TG-RERA RECORD: shown until our first checked reports are published */}
+      {featuredPair.length === 0 && registry && registry.recent.length > 0 && (
+        <section className="hm-container pt-24 sm:pt-32">
+          <div className="text-center max-w-2xl mx-auto space-y-4" data-reveal>
+            <h2 className="text-[34px] sm:text-[44px] leading-[1.15] font-medium tracking-[-0.02em] text-[#212121]">
+              Newly registered with TG-RERA
+            </h2>
+            <p className="text-[17px] text-[#838383]">
+              The builder&apos;s own filing for every registered project in and around Hyderabad: status, completion date,
+              approvals and location. Our full checks are added project by project.
+            </p>
+          </div>
+          <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {registry.recent.map((r) => (
+              <a
+                key={r.slug}
+                href={`/rera/${r.slug}`}
+                className="group rounded-[16px] border border-[#eeeeee] bg-white p-6 hover:shadow-[0_16px_40px_-20px_rgba(0,0,0,0.25)] transition-shadow"
+                data-reveal
+              >
+                <span className="inline-block rounded-full bg-[#f4f4f4] px-3 py-1 text-[12px] font-medium text-[#4a4a4a]">
+                  {r.projectStatus ?? 'Registered'}
+                </span>
+                <h3 className="mt-4 text-[20px] font-medium text-[#212121] group-hover:underline underline-offset-4">{r.name}</h3>
+                <p className="mt-1 flex items-center gap-1.5 text-[15px] text-[#838383]">
+                  <MapPin className="w-4 h-4 shrink-0" strokeWidth={1.6} />
+                  {[r.locality ?? r.mandal, r.district].filter(Boolean).join(', ')}
+                </p>
+                {r.promoter && <p className="mt-1 text-[14px] text-[#838383]">{r.promoter}</p>}
+                <div className="pt-3 mt-4 border-t border-[#eeeeee] flex items-center justify-between text-[14px]">
+                  <span className="text-[#212121]">
+                    {r.completion ? `Completion ${new Date(r.completion).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}` : r.registrationNo}
+                  </span>
+                  <span className="text-[#838383]">{r.totalUnits ? `${r.totalUnits.toLocaleString('en-IN')} units` : r.authority}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+          <div className="mt-10 text-center" data-reveal>
+            <a
+              href="/rera"
+              className="inline-block rounded-full bg-[#212121] hover:bg-black text-white text-[15px] font-semibold px-7 py-3 transition-colors"
+            >
+              Browse all {registry.total.toLocaleString('en-IN')} registered projects
+            </a>
+          </div>
+        </section>
+      )}
+
       {/* 5. FEATURED PROJECTS: two large photo cards with overlaid text */}
+      {featuredPair.length > 0 && (
       <section className="hm-container pt-24 sm:pt-32">
         <div className="text-center max-w-2xl mx-auto space-y-4" data-reveal>
           <h2 className="text-[34px] sm:text-[44px] leading-[1.15] font-medium tracking-[-0.02em] text-[#212121]">
@@ -412,6 +552,7 @@ export function HomeView({ onNavigate, onSelectProject, userPreferences, onUpdat
           </button>
         </div>
       </section>
+      )}
 
       {/* 6. MATCH QUIZ: three questions, then a shortlist (lead capture) */}
       <section className="hm-container pt-24 sm:pt-32">

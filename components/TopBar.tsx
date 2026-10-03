@@ -56,7 +56,7 @@ export function TopBar({ currentView, onNavigate, watchedCount = 0 }: TopBarProp
             <span className="text-[19px] font-semibold tracking-tight">hyderabad.properties</span>
           </button>
 
-          <nav className="hidden lg:flex items-center gap-7" aria-label="Main">
+          <nav className="hidden xl:flex items-center gap-7 whitespace-nowrap" aria-label="Main">
             {NAV.map((item) => {
               const active = currentView === item.view;
               return (
@@ -77,6 +77,9 @@ export function TopBar({ currentView, onNavigate, watchedCount = 0 }: TopBarProp
                 </button>
               );
             })}
+            <a href="/rera" className="text-[15px] font-medium text-[#6b6b6b] hover:text-[#212121] py-2">
+              RERA projects
+            </a>
           </nav>
         </div>
 
@@ -98,7 +101,7 @@ export function TopBar({ currentView, onNavigate, watchedCount = 0 }: TopBarProp
           <button
             type="button"
             onClick={() => setMenuOpen((v) => !v)}
-            className="lg:hidden w-11 h-11 inline-flex items-center justify-center rounded-full border border-[#eeeeee] text-[#212121] cursor-pointer"
+            className="xl:hidden w-11 h-11 inline-flex items-center justify-center rounded-full border border-[#eeeeee] text-[#212121] cursor-pointer"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
           >
@@ -108,7 +111,7 @@ export function TopBar({ currentView, onNavigate, watchedCount = 0 }: TopBarProp
       </div>
 
       {menuOpen && (
-        <div className="lg:hidden border-t border-[#eeeeee] bg-white">
+        <div className="xl:hidden border-t border-[#eeeeee] bg-white">
           <nav className="hm-container py-4 flex flex-col" aria-label="Mobile">
             {NAV.map((item) => (
               <button
@@ -123,6 +126,9 @@ export function TopBar({ currentView, onNavigate, watchedCount = 0 }: TopBarProp
                 {item.view === 'watching' && watchedCount > 0 ? ` (${watchedCount})` : ''}
               </button>
             ))}
+            <a href="/rera" className="text-left py-3 text-lg font-medium border-b border-[#f2f2f2] text-[#6b6b6b]">
+              RERA projects
+            </a>
             <div className="flex flex-col gap-2 pt-4">
               <button
                 type="button"

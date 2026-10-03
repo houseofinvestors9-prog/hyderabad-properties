@@ -131,3 +131,63 @@ export async function registryDistricts(): Promise<{ district: string; n: number
     .orderBy(desc(sql`count(*)`));
   return rows.map((r) => ({ district: r.district!, n: r.n }));
 }
+
+const METRO = ['Ranga Reddy', 'Medchal-Malkajgiri', 'Hyderabad', 'Sangareddy'];
+
+export interface RegistryCard extends RegistryHit {
+  approvedDate: string | null;
+  completion: string | null;
+  totalUnits: number | null;
+  authority: string | null;
+}
+
+export interface RegistryOverview {
+  total: number;
+  read: number;
+  flagged: number;
+  areas: { name: string; n: number }[];
+  recent: RegistryCard[];
+}
+
+/** Numbers and lists for the home page, from the TG-RERA registry. */
+export async function registryOverview(): Promise<RegistryOverview> {
+  const db = await getDb();
+  const today = new Date().toISOString().slice(0, 10);
+  const metro = sql`${reraRegistry.district} in (${sql.join(METRO.map((d) => sql`${d}`), sql`, `)})`;
+  const due = sql`coalesce(${reraRegistry.details}->>'revisedCompletion', ${reraRegistry.details}->>'proposedCompletion')`;
+
+  const [counts] = await db
+    .select({
+      total: sql<number>`count(*)::int`,
+      read: sql<number>`count(${reraRegistry.details})::int`,
+      flagged: sql<number>`count(*) filter (where (${due} < ${today} and coalesce(${reraRegistry.details}->>'projectStatus','') not ilike '%complet%') or ${reraRegistry.details}->>'litigation' ilike 'yes%')::int`,
+    })
+    .from(reraRegistry);
+
+  const areas = await db
+    .select({ name: reraRegistry.mandal, n: sql<number>`count(*)::int` })
+    .from(reraRegistry)
+    .where(and(metro, isNotNull(reraRegistry.mandal)))
+    .groupBy(reraRegistry.mandal)
+    .orderBy(desc(sql`count(*)`))
+    .limit(30);
+
+  const recentRows = await db
+    .select()
+    .from(reraRegistry)
+    .where(and(metro, isNotNull(reraRegistry.details), sql`${reraRegistry.details}->>'approvedDate' is not null`))
+    .orderBy(desc(sql`${reraRegistry.details}->>'approvedDate'`))
+    .limit(6);
+
+  return {
+    ...counts,
+    areas: areas.filter((a) => a.name).map((a) => ({ name: a.name!, n: a.n })),
+    recent: recentRows.map((r) => ({
+      ...toHit(r),
+      approvedDate: r.details?.approvedDate ?? null,
+      completion: r.details?.revisedCompletion ?? r.details?.proposedCompletion ?? null,
+      totalUnits: r.details?.totalUnits ?? null,
+      authority: r.details?.authority ?? null,
+    })),
+  };
+}
