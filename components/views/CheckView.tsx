@@ -25,6 +25,7 @@ import { ProjectSafetyItem, JARGON_DICTIONARY } from '@/lib/mock-data';
 import { useLiveData } from '@/components/live/LiveDataProvider';
 import { JargonTooltip } from '@/components/JargonTooltip';
 import { RequestProjectForm } from '@/components/RequestProjectForm';
+import type { RegistryHit } from '@/lib/data/rera';
 import { ViewType } from '@/components/TopBar';
 
 interface CheckViewProps {
@@ -57,6 +58,21 @@ export function CheckView({
   const [isNotFound, setIsNotFound] = useState(false);
   const [searchedQuery, setSearchedQuery] = useState('');
   const [isStopWatchingMenuOpen, setIsStopWatchingMenuOpen] = useState(false);
+  // Matches from the TG-RERA registry when we have no checked report for the search
+  const [registryHits, setRegistryHits] = useState<RegistryHit[]>([]);
+
+  useEffect(() => {
+    if (!isNotFound || searchedQuery.trim().length < 2) {
+      setRegistryHits([]);
+      return;
+    }
+    const ctrl = new AbortController();
+    fetch(`/api/rera/search?q=${encodeURIComponent(searchedQuery)}`, { signal: ctrl.signal })
+      .then((r) => (r.ok ? r.json() : { results: [] }))
+      .then((j: { results: RegistryHit[] }) => setRegistryHits(j.results ?? []))
+      .catch(() => {});
+    return () => ctrl.abort();
+  }, [isNotFound, searchedQuery]);
 
   // Expandable states for the 3 check rows
   const [expandedRows, setExpandedRows] = useState<{ [key: string]: boolean }>({});
@@ -650,6 +666,24 @@ export function CheckView({
               Give us the basics and we&apos;ll pull its RERA, approval and lake records, then send you the report. Every
               project buyers ask about gets added, so the next person searching for it finds it here.
             </p>
+            {registryHits.length > 0 && (
+              <div className="rounded-[14px] border border-[#eeeeee] p-4 space-y-3">
+                <p className="text-[14px] font-semibold text-[#212121]">On the TG-RERA public record</p>
+                <ul className="space-y-2">
+                  {registryHits.slice(0, 5).map((h) => (
+                    <li key={h.slug}>
+                      <a href={`/rera/${h.slug}`} className="group block rounded-[10px] px-3 py-2 -mx-3 hover:bg-[#f9f9f9]">
+                        <span className="text-[15px] font-medium text-[#212121] group-hover:underline underline-offset-2">{h.name}</span>
+                        <span className="block text-[13px] text-[#838383]">
+                          {[h.promoter, h.locality ?? h.mandal, h.registrationNo].filter(Boolean).join(' · ')}
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-[12px] text-[#a3a3a3]">Builder&apos;s own filing, status and completion date. Not yet checked by our team.</p>
+              </div>
+            )}
             <div className="rounded-[14px] bg-[#f9f9f9] p-4 text-[14px] text-[#4a4a4a] space-y-1">
               <p className="font-semibold text-[#212121]">Until then</p>
               <p>

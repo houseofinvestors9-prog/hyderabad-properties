@@ -22,6 +22,13 @@
       "when": 1790939723543,
       "tag": "0002_project_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791032934302,
+      "tag": "0003_rera_registry",
+      "breakpoints": true
     }
   ]
 }

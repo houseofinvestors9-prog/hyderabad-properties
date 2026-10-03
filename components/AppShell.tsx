@@ -67,9 +67,11 @@ function timeAgo(iso: string): string {
 interface AppShellProps {
   initialView?: ViewType;
   initialProjectId?: string;
+  /** Search to run on load, e.g. from /?view=check&q=… */
+  initialQuery?: string;
 }
 
-export function AppShell({ initialView = 'home', initialProjectId }: AppShellProps) {
+export function AppShell({ initialView = 'home', initialProjectId, initialQuery }: AppShellProps) {
   const live = useLiveData();
   const { projects, alerts } = live;
   const fallbackProject = projects[0] ?? MOCK_PROJECTS[0];
@@ -82,7 +84,7 @@ export function AppShell({ initialView = 'home', initialProjectId }: AppShellPro
     demoOverrides[selectedProjectId] ?? live.getProject(selectedProjectId) ?? fallbackProject;
 
   const [userPreferences, setUserPreferences] = useState<UserPreferences>({});
-  const [activeSearchTerm, setActiveSearchTerm] = useState<string>('');
+  const [activeSearchTerm, setActiveSearchTerm] = useState<string>(initialQuery ?? '');
 
 
   // Viewed projects tracking

@@ -7,6 +7,10 @@ import { PrivacyPledge } from '@/components/PrivacyPledge';
 interface RequestProjectFormProps {
   /** What the buyer typed into search, used to prefill the project name. */
   initialName?: string;
+  /** Prefill from a TG-RERA record when the buyer came from one. */
+  initialArea?: string;
+  initialDeveloper?: string;
+  initialReraNumber?: string;
   title?: string;
   className?: string;
 }
@@ -20,11 +24,18 @@ const field =
  * Asks for the basics of a project we have not checked yet. Every submission lands on the
  * Review Desk as a project to add, and in the CRM as a lead with a named project in mind.
  */
-export function RequestProjectForm({ initialName = '', title = 'Ask us to check it', className = '' }: RequestProjectFormProps) {
+export function RequestProjectForm({
+  initialName = '',
+  initialArea = '',
+  initialDeveloper = '',
+  initialReraNumber = '',
+  title = 'Ask us to check it',
+  className = '',
+}: RequestProjectFormProps) {
   const [projectName, setProjectName] = useState(initialName);
-  const [area, setArea] = useState('');
-  const [developer, setDeveloper] = useState('');
-  const [reraNumber, setReraNumber] = useState('');
+  const [area, setArea] = useState(initialArea);
+  const [developer, setDeveloper] = useState(initialDeveloper);
+  const [reraNumber, setReraNumber] = useState(initialReraNumber);
   const [stage, setStage] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');

@@ -29,12 +29,32 @@ In the Review Desk, keep **Demo notices** selected and press **Run sync now**. T
 2. Set `ADMIN_USERS` (or `ADMIN_PASSWORD`), `ADMIN_SESSION_SECRET` and `CRON_SECRET`. The admin login refuses to work in production without them.
 3. Set `ANTHROPIC_API_KEY` for AI reading (Claude). Without it, a deterministic rules reader is used (lower confidence, still reviewed by a human).
 4. Schedule the sync. Either:
-   - add repository secrets `SITE_URL` and `CRON_SECRET` and the included GitHub Action calls `/api/cron/sync-projects` every 6 hours, or
+   - add repository secrets `SITE_URL` and `CRON_SECRET` and the included GitHub Action runs the registry and `/api/cron/sync-projects` weekly (daily once public), or
    - point Cloud Scheduler / any cron at `GET /api/cron/sync-projects` with header `Authorization: Bearer $CRON_SECRET`, or
    - run `npm run worker:sync -- --live` as a Cloud Run job.
 5. Alerts: set `WHATSAPP_WEBHOOK_URL` (Gallabox, Wati, Zapier) and/or `RESEND_API_KEY`. Without them every alert is recorded in the `notifications` table as `logged`, visible in the desk's delivery log.
 
 All variables are documented in `.env.example`.
+
+## TG-RERA registry (every registered project)
+
+The public project map at `rerait.telangana.gov.in/GIS/default.aspx` loads all registered projects from one JSON feed
+(name, registration and certificate numbers, locality, survey numbers, coordinates). No captcha. The certificate link on
+that map opens the project's search result (promoter and a "View" link), and the View link opens the full public project page.
+
+`lib/ingest/rera-registry.ts` reads both into the `rera_registry` table:
+
+- `GET /api/cron/rera-registry?step=feed` refreshes the list (one request).
+- `GET /api/cron/rera-registry?step=details` reads due project pages for about 45 seconds and returns `remaining`. Call it
+  until `remaining` is 0. Pages are re-read every `RERA_REFRESH_DAYS` (default 7), 1.5 s apart (`RERA_REQUEST_GAP_MS`).
+- Changes to status, completion date, litigation, extension, plan approval, affected land and bookings are logged on the row.
+- Individual promoters are never named; projects and companies only.
+- The portal does not send its intermediate TLS certificate. `lib/ingest/certs.ts` supplies it (eMudhra emSign SSL CA - G1),
+  so verification stays on.
+- About 15% of feed rows have no certificate number; those show the feed facts only.
+
+Public pages: `/rera` (search and district list), `/rera/[slug]` (one record, "not yet checked" label, request form),
+`/sitemap.xml`. The Check page shows registry matches when we have no checked report.
 
 ## Sources
 

@@ -282,3 +282,78 @@ export const projectRequests = pgTable(
   },
   (t) => [index('project_requests_name_idx').on(t.nameKey), index('project_requests_status_idx').on(t.status, t.createdAt)]
 );
+
+/** Facts read from a project's TG-RERA page. Companies and projects only, never individuals. */
+export interface ReraDetails {
+  /** 'Individual' promoters are never named on our pages. */
+  promoterType?: 'Individual' | 'Organisation' | null;
+  promoterWebsite?: string | null;
+  authority?: string | null;
+  planApprovalNo?: string | null;
+  projectStatus?: string | null;
+  projectType?: string | null;
+  approvedDate?: string | null; // ISO
+  proposedCompletion?: string | null; // ISO
+  revisedCompletion?: string | null; // ISO
+  litigation?: string | null; // 'Yes' | 'No'
+  landAreaSqm?: number | null;
+  affectedAreaSqm?: number | null; // lost to road widening, lake FTL or nala widening
+  netAreaSqm?: number | null;
+  builtUpAreaSqm?: number | null;
+  buildings?: number | null;
+  maxSlabs?: number | null;
+  basements?: number | null;
+  totalUnits?: number | null;
+  bookedUnits?: number | null;
+  unitTypes?: string[];
+  workDonePercent?: number | null;
+  hasExtension?: boolean;
+  lastModified?: string | null; // ISO, as shown on the RERA search result
+}
+
+export interface ReraChange {
+  at: string; // ISO timestamp we noticed it
+  field: keyof ReraDetails | 'promoter' | 'name';
+  from: unknown;
+  to: unknown;
+}
+
+/**
+ * Every project registered with TG-RERA, from the authority's public map feed plus its public
+ * project page. Shown as "official record, not yet checked"; a checked report lives in `projects`.
+ */
+export const reraRegistry = pgTable(
+  'rera_registry',
+  {
+    registrationNo: text('registration_no').primaryKey(),
+    applicationNo: text('application_no'),
+    slug: text('slug').notNull(),
+    name: text('name').notNull(),
+    promoter: text('promoter'),
+    locality: text('locality'),
+    street: text('street'),
+    village: text('village'),
+    mandal: text('mandal'),
+    district: text('district'),
+    pinCode: text('pin_code'),
+    surveyNumbers: text('survey_numbers'),
+    lat: doublePrecision('lat'),
+    lng: doublePrecision('lng'),
+    detailUrl: text('detail_url'),
+    details: jsonb('details').$type<ReraDetails>(),
+    detailHash: text('detail_hash'),
+    detailFetchedAt: timestamp('detail_fetched_at', { withTimezone: true }),
+    detailError: text('detail_error'),
+    changes: jsonb('changes').$type<ReraChange[]>().notNull().default([]),
+    projectId: text('project_id').references(() => projects.id, { onDelete: 'set null' }),
+    firstSeenAt: timestamp('first_seen_at', { withTimezone: true }).notNull().defaultNow(),
+    lastSeenAt: timestamp('last_seen_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex('rera_registry_slug_idx').on(t.slug),
+    index('rera_registry_district_idx').on(t.district),
+    index('rera_registry_detail_idx').on(t.detailFetchedAt),
+  ]
+);
+
+export type ReraRegistryRow = typeof reraRegistry.$inferSelect;
