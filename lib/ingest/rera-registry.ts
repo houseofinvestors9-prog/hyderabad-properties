@@ -129,10 +129,9 @@ export async function syncRegistryFeed(db: DB): Promise<FeedResult> {
   if (typeof rows === 'string') rows = JSON.parse(rows);
   if (!Array.isArray(rows) || rows.length < 100) throw new Error(`RERA map feed returned ${Array.isArray(rows) ? rows.length : 'no'} rows`);
 
-  const existing = new Map((await db.select({ r: reraRegistry.registrationNo, name: reraRegistry.name }).from(reraRegistry)).map((x) => [x.r, x]));
+  const existing = new Set((await db.select({ r: reraRegistry.registrationNo }).from(reraRegistry)).map((x) => x.r));
   const now = new Date();
-  let added = 0;
-  let updated = 0;
+  const values = new Map<string, typeof reraRegistry.$inferInsert>();
 
   for (const r of rows) {
     const regNo = clean(r['Registration No.']);
@@ -140,7 +139,9 @@ export async function syncRegistryFeed(db: DB): Promise<FeedResult> {
     if (!regNo || !rawName) continue;
     const name = tidyName(rawName);
     const locality = clean(r.locality) ? tidyName(clean(r.locality)!) : null;
-    const values = {
+    values.set(regNo, {
+      registrationNo: regNo,
+      slug: registrySlug(name, locality, regNo),
       applicationNo: clean(r.Application_No),
       name,
       locality,
@@ -153,18 +154,35 @@ export async function syncRegistryFeed(db: DB): Promise<FeedResult> {
       lat: r.lat ? Number(r.lat) : null,
       lng: r.lng ? Number(r.lng) : null,
       lastSeenAt: now,
-    };
-    if (existing.has(regNo)) {
-      await db.update(reraRegistry).set(values).where(eq(reraRegistry.registrationNo, regNo));
-      updated++;
-    } else {
-      await db
-        .insert(reraRegistry)
-        .values({ registrationNo: regNo, slug: registrySlug(name, locality, regNo), ...values })
-        .onConflictDoNothing();
-      added++;
-    }
+    });
   }
+
+  // Batched upsert: a few round trips instead of one per project. The slug is kept once set.
+  const all = [...values.values()];
+  for (let i = 0; i < all.length; i += 200) {
+    await db
+      .insert(reraRegistry)
+      .values(all.slice(i, i + 200))
+      .onConflictDoUpdate({
+        target: reraRegistry.registrationNo,
+        set: {
+          applicationNo: sql`excluded.application_no`,
+          name: sql`excluded.name`,
+          locality: sql`excluded.locality`,
+          street: sql`excluded.street`,
+          village: sql`excluded.village`,
+          mandal: sql`excluded.mandal`,
+          district: sql`excluded.district`,
+          pinCode: sql`excluded.pin_code`,
+          surveyNumbers: sql`excluded.survey_numbers`,
+          lat: sql`excluded.lat`,
+          lng: sql`excluded.lng`,
+          lastSeenAt: sql`excluded.last_seen_at`,
+        },
+      });
+  }
+  const added = all.filter((v) => !existing.has(v.registrationNo)).length;
+  const updated = all.length - added;
   return { total: rows.length, added, updated };
 }
 

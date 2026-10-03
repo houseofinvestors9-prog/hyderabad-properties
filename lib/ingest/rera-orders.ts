@@ -180,6 +180,7 @@ export interface OrdersResult {
   matchedProjects: number;
   queuedForReview: number;
   remaining: number;
+  rematched: number;
   sampleErrors: string[];
 }
 
@@ -187,7 +188,7 @@ export interface OrdersResult {
 export async function syncReraOrders(db: DB, opts: { budgetMs?: number } = {}): Promise<OrdersResult> {
   const budget = opts.budgetMs ?? 45_000;
   const started = Date.now();
-  const out: OrdersResult = { listed: 0, added: 0, read: 0, errors: 0, matchedProjects: 0, queuedForReview: 0, remaining: 0, sampleErrors: [] };
+  const out: OrdersResult = { listed: 0, added: 0, read: 0, errors: 0, matchedProjects: 0, queuedForReview: 0, remaining: 0, rematched: 0, sampleErrors: [] };
 
   for (const l of LISTINGS) {
     const { buf } = await fetchBuf(l.url);
@@ -249,6 +250,19 @@ export async function syncReraOrders(db: DB, opts: { budgetMs?: number } = {}): 
   }
 
   out.remaining = (await db.select({ id: reraOrders.id }).from(reraOrders).where(isNull(reraOrders.fetchedAt))).length;
+
+  // Re-match every read order: the registry grows and gains promoter names after orders were first read.
+  if (out.remaining === 0 && Date.now() - started < budget - 5_000) {
+    const read = await db.select({ id: reraOrders.id, text: reraOrders.text, respondentKey: reraOrders.respondentKey, registrationNos: reraOrders.registrationNos }).from(reraOrders);
+    for (const o of read) {
+      if (!o.text) continue;
+      const { numbers, regNos } = matchOrder(o.text, o.respondentKey, registry);
+      if (JSON.stringify(regNos) !== JSON.stringify(o.registrationNos)) {
+        await db.update(reraOrders).set({ registrationNos: regNos, mentionedNumbers: numbers }).where(eq(reraOrders.id, o.id));
+        out.rematched++;
+      }
+    }
+  }
   return out;
 }
 
