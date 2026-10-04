@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 const SIGNER_KEY = 'hp_report_signer';
 
@@ -38,21 +38,18 @@ export function DraftReportsPanel({ initial, defaultSigner }: { initial: Report[
   const [signer, setSigner] = useState(defaultSigner);
   const [busy, setBusy] = useState<string | null>(null);
 
-  // Remember the reviewer's name on this device so it only has to be typed once.
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(SIGNER_KEY);
-      if (saved && !defaultSigner) setSigner(saved);
-    } catch {
-      /* storage unavailable: the prompt still asks */
-    }
-  }, [defaultSigner]);
   const [error, setError] = useState<{ id: string; message: string } | null>(null);
 
   async function act(id: string, action: 'publish' | 'unpublish') {
     let name = signer.trim();
     if (action === 'publish' && !name) {
-      name = (window.prompt('Your name, as it will appear on the published report:') ?? '').trim();
+      let saved = '';
+      try {
+        saved = localStorage.getItem(SIGNER_KEY) ?? '';
+      } catch {
+        /* storage unavailable */
+      }
+      name = (window.prompt('Your name, as it will appear on the published report:', saved) ?? '').trim();
       if (!name) return;
       setSigner(name);
     }
