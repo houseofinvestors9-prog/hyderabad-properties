@@ -14,6 +14,9 @@ export async function RegistryShell({ children }: { children: React.ReactNode })
             hyderabad.properties
           </Link>
           <nav className="flex items-center gap-2 sm:gap-6 text-[14px]">
+            <Link href="/builders" className="hidden md:inline text-[#4a4a4a] hover:text-[#212121]">
+              Builders
+            </Link>
             <Link href="/rera" className="hidden sm:inline text-[#4a4a4a] hover:text-[#212121]">
               All RERA projects
             </Link>

@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { BUILDERS } from '@/lib/builders';
 import { registrySitemapEntries } from '@/lib/data/rera';
 
 export const dynamic = 'force-dynamic';
@@ -10,6 +11,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     { url: `${SITE}/`, changeFrequency: 'daily', priority: 1 },
     { url: `${SITE}/rera`, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${SITE}/builders`, changeFrequency: 'weekly', priority: 0.8 },
+    ...BUILDERS.map((b) => ({ url: `${SITE}/builders/${b.slug}`, changeFrequency: 'weekly' as const, priority: 0.7 })),
     ...registry.map((r) => ({ url: `${SITE}/rera/${r.slug}`, lastModified: r.updated, changeFrequency: 'weekly' as const, priority: 0.6 })),
   ];
 }

@@ -6,6 +6,7 @@ import { SaveButton } from '@/components/account/SaveButton';
 import { RegistryShell } from '@/components/registry/RegistryShell';
 import { getRegistryBySlug, nearbyRegistry, ordersForRegistry, type OrderView } from '@/lib/data/rera';
 import type { ReraDetails, ReraRegistryRow } from '@/lib/db/schema';
+import { builderFor, marketedByOwner } from '@/lib/builders';
 
 export const dynamic = 'force-dynamic';
 
@@ -110,6 +111,7 @@ export default async function RegistryPage({ params }: Props) {
   const d = r.details;
   const [nearby, orders] = await Promise.all([nearbyRegistry(r), ordersForRegistry(r)]);
   const due = d?.revisedCompletion ?? d?.proposedCompletion;
+  const builder = builderFor(r);
 
   const facts: [string, string | null][] = [
     ['TG-RERA registration', r.registrationNo],
@@ -163,6 +165,19 @@ export default async function RegistryPage({ params }: Props) {
       </div>
 
       <h1 className="mt-4 text-[34px] sm:text-[48px] leading-[1.08] font-medium tracking-tight">{r.name}</h1>
+      {builder && (
+        <p className="mt-2 text-[14px] text-[#6b6b6b]">
+          <Link href={`/builders/${builder.slug}`} className="underline underline-offset-2 hover:text-[#212121]">
+            All {builder.name} projects on the TG-RERA record
+          </Link>
+        </p>
+      )}
+      {marketedByOwner(r.registrationNo) && (
+        <p className="mt-4 max-w-[720px] rounded-[12px] bg-[#f9f9f9] p-4 text-[14px] text-[#4a4a4a]">
+          Disclosure: House of Investors, which owns hyderabad.properties, is paid to market this project. This page shows the same
+          TG-RERA record, read the same way, as every other project.
+        </p>
+      )}
       <p className="mt-3 text-[17px] text-[#6b6b6b]">
         {r.promoter ? <>By {r.promoter} · </> : null}
         {place(r)}

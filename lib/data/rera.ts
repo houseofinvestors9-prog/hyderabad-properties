@@ -234,3 +234,15 @@ export function penaltyLabel(o: Pick<OrderView, 'penaltyInr' | 'penaltiesInr'>):
   if (o.penaltiesInr.length > 1) return `Penalties ${o.penaltiesInr.slice(0, -1).map(inr).join(', ')} and ${inr(o.penaltiesInr[o.penaltiesInr.length - 1])} under separate sections`;
   return null;
 }
+
+/** Every registered project the TG-RERA record ties to this builder (see lib/builders.ts for the rule). */
+export async function registryForBuilder(b: import('../builders').Builder): Promise<ReraRegistryRow[]> {
+  const { builderMatches } = await import('../builders');
+  const db = await getDb();
+  const rows = await db
+    .select()
+    .from(reraRegistry)
+    .where(or(...b.keywords.flatMap((k) => [ilike(reraRegistry.promoter, `%${k}%`), ilike(reraRegistry.name, `%${k}%`)])))
+    .orderBy(asc(reraRegistry.name));
+  return rows.filter((r) => builderMatches(b, r));
+}
