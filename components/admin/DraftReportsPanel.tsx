@@ -35,7 +35,7 @@ export function DraftReportsPanel({ initial, defaultSigner }: { initial: Report[
   const [items, setItems] = useState(initial);
   const [signer, setSigner] = useState(defaultSigner);
   const [busy, setBusy] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<{ id: string; message: string } | null>(null);
 
   async function act(id: string, action: 'publish' | 'unpublish') {
     setBusy(id);
@@ -47,7 +47,7 @@ export function DraftReportsPanel({ initial, defaultSigner }: { initial: Report[
     });
     const body = (await res.json().catch(() => ({}))) as { error?: string };
     setBusy(null);
-    if (!res.ok) return setError(body.error ?? 'Could not save.');
+    if (!res.ok) return setError({ id, message: res.status === 401 ? 'Your login has expired. Log in again, then sign off.' : body.error ?? 'Could not save.' });
     const now = new Date().toISOString();
     setItems((xs) =>
       xs.map((x) => (x.id === id ? { ...x, isLive: action === 'publish', signedOffBy: action === 'publish' ? signer : x.signedOffBy, signedOffAt: action === 'publish' ? now : x.signedOffAt } : x))
@@ -71,7 +71,6 @@ export function DraftReportsPanel({ initial, defaultSigner }: { initial: Report[
             placeholder="e.g. Nikhil, Review Desk"
           />
         </label>
-        {error && <p className="mt-2 text-[13px] text-rose-700">{error}</p>}
         <ul className="mt-4 divide-y divide-[#f0f0f0]">
           {items.map((r) => (
             <li key={r.id} className="py-5">
@@ -109,11 +108,13 @@ export function DraftReportsPanel({ initial, defaultSigner }: { initial: Report[
                     <button type="button" disabled={busy === r.id} onClick={() => act(r.id, 'unpublish')} className="rounded-full border border-[#e5e5e5] px-4 py-1.5 text-[13px] cursor-pointer">Unpublish</button>
                   </>
                 ) : (
-                  <button type="button" disabled={busy === r.id} onClick={() => act(r.id, 'publish')} className="rounded-full bg-[#212121] px-4 py-1.5 text-[13px] text-white cursor-pointer disabled:opacity-60">
+                  <button type="button" disabled={busy === r.id || !signer.trim()} onClick={() => act(r.id, 'publish')} className="rounded-full bg-[#212121] px-4 py-1.5 text-[13px] text-white cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed">
                     {busy === r.id ? 'Publishing…' : 'Sign off and publish'}
                   </button>
                 )}
+                {!r.isLive && !signer.trim() && <span className="self-center text-[12px] text-[#838383]">Add your name above to sign off</span>}
               </div>
+              {error?.id === r.id && <p className="mt-2 text-[13px] text-rose-700" role="alert">{error.message}</p>}
             </li>
           ))}
         </ul>

@@ -258,20 +258,19 @@ export const DRAFT_REPORTS: NewProject[] = [
     config: '3 BHK, 2,385 to 3,105 sq ft (developer); the TG-RERA record also lists 1 BHK',
     possessionYear: '2031 (TG-RERA date 5 Jun 2031)',
     distanceToIT: 'About 5.7 km to Wipro Circle, Financial District',
-    safetyScore: 70,
+    safetyScore: 74,
     status: 'caution',
     summary:
-      'Registered with TG-RERA with an HMDA permit on record and no litigation declared, at an early stage of construction. The filing says 783 sq m of the land is affected by road widening, a lake full tank level or nala widening without saying which, and several marketed figures differ from the filing. Get those answered in writing before you pay.',
+      'Registered with TG-RERA with an HMDA permit on record and no litigation declared, at an early stage of construction. The 783 sq m of land the filing marks as affected is road widening, according to the builder. The floors and flat types in the marketing differ from the TG-RERA filing, so get the plan your agreement is based on in writing before you pay.',
     whySummary:
-      'The registration is active (application P02400011009, certificate REA02400107806) with HMDA permit 004197. The nearest mapped lake is Manikonda (Yellamma) Cheruvu, about 500 m away, which is on HMDA’s lake list; no mapped nala or stream lies within about 800 m, and HMDA planned a wider Lanco Hills corridor in 2021, so road widening is the likeliest reading of the affected land, but nothing public confirms it. We found no TG-RERA order, court case or HYDRAA notice naming the project or survey 200. House of Investors, which owns this site, markets this project; it was checked the same way as every other.',
+      'The registration is active (application P02400011009, certificate REA02400107806) with HMDA permit 004197. The nearest mapped lake is Manikonda (Yellamma) Cheruvu, about 500 m away, which is on HMDA’s lake list; no mapped nala or stream lies within about 800 m, and Sri Aditya Homes told us the 783 sq m of affected land is road widening, which fits HMDA’s 2021 plan for a wider Lanco Hills corridor. We have not yet seen it marked on the sanction plan. We found no TG-RERA order, court case or HYDRAA notice naming the project or survey 200. House of Investors, which owns this site, markets this project; it was checked the same way as every other.',
     keyConcerns: [
-      '783 sq m of the land is declared affected by road widening, a lake FTL or nala widening; the filing does not say which.',
+      '783 sq m of the land is declared affected by widening. The builder says it is road widening; we have not seen it on the sanction plan.',
       'The TG-RERA record says 42 floors above ground; the project is marketed as 35 floors.',
       'The TG-RERA record lists 1 BHK and 3 BHK units; the project is marketed as 3 BHK only.',
-      'We could not confirm environmental clearance (SEIAA) for a project of this size.',
     ],
     questions: [
-      'What is the 783 sq m of affected land: road widening, a lake full tank level or a nala? Show it on the HMDA sanction plan for permit 004197.',
+      'Show me the 783 sq m of road widening on the HMDA sanction plan for permit 004197, and confirm none of it is a lake full tank level or nala.',
       'Why does TG-RERA show 42 floors and 1 BHK units when the brochure says 35 floors and 3 BHK only? Which plan is my agreement based on?',
       'How many homes are in the project as sanctioned, and has the plan been revised since registration?',
       'Share the environmental clearance (SEIAA) for the project.',

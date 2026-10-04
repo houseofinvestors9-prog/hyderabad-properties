@@ -66,8 +66,10 @@ export function ProjectView({
 
   // Micro-market calculations
   const { projects: liveProjects, marketFor, alertsFor } = useLiveData();
-  const realMarket = marketFor(project);
-  const market: MicroMarketLive = realMarket ?? MICRO_MARKETS[0];
+  // The micro_markets rows are still the template's demo ranges, not transacted prices. Keep the
+  // benchmark hidden until real figures are loaded with a source.
+  const realMarket: MicroMarketLive | null = null;
+  const market: MicroMarketLive = marketFor(project) ?? MICRO_MARKETS[0];
   const projectAlerts = alertsFor(project.id);
   const [showAllUpdates, setShowAllUpdates] = useState(false);
   const reraExpired = !!project.reraValidUntil && project.reraValidUntil < new Date().toISOString().slice(0, 10);
