@@ -23,7 +23,8 @@ g.__hpDb ??= {};
 const MIGRATIONS = path.join(process.cwd(), 'drizzle');
 
 async function connect(): Promise<DB> {
-  const url = process.env.DATABASE_URL;
+  // postgres-js does not understand channel_binding (Neon adds it to copied links); drop it.
+  const url = process.env.DATABASE_URL?.trim().replace(/([?&])channel_binding=[^&]*&?/, '$1').replace(/[?&]$/, '');
   if (url) {
     const { default: postgres } = await import('postgres');
     const { drizzle } = await import('drizzle-orm/postgres-js');
