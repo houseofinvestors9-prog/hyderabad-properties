@@ -77,13 +77,13 @@ export function WatchingView({
       <div className="space-y-1">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white border border-[#eeeeee] text-xs font-mono font-semibold tracking-wider uppercase text-[#212121] shadow-2xs">
           <Bell className="w-4 h-4 text-[#212121]" strokeWidth={1.5} />
-          <span>Active Monitoring Desk</span>
+          <span>Your list</span>
         </div>
         <h1 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-[#212121]">
           Projects You&apos;re Watching
         </h1>
         <p className="text-xs sm:text-sm text-[#6b6b6b] leading-relaxed">
-          Daily automated sweeps against Telangana RERA, HMDA, and municipal court dockets.
+          We re-read each project’s TG-RERA record every week. Alert messages are not switched on yet; your list is saved for when they are.
         </p>
       </div>
 
@@ -222,7 +222,7 @@ export function WatchingView({
                 You aren&apos;t watching any projects yet.
               </h3>
               <p className="text-xs text-[#6b6b6b] leading-relaxed">
-                Tap &ldquo;Watch this project&rdquo; on any project verification report or check result to receive immediate alerts if RERA or lake buffer statuses update.
+                Tap &ldquo;Watch this project&rdquo; on any checked report to add it here. We will message you about changes to its TG-RERA record once alerts are switched on.
               </p>
             </div>
 

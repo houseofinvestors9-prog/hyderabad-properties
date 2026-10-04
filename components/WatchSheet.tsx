@@ -161,7 +161,7 @@ export function WatchSheet({ project, isOpen, onClose, onStartWatching }: WatchS
 
         {/* Small muted line */}
         <p className="text-[11px] text-[#838383] pt-1 text-center">
-          Alerts use the latest verified records. Updates may take up to 24 hours to appear.
+          We save your request now. Alert messages are not switched on yet; when they are, we will message the number or email you give here.
         </p>
       </div>
     </div>
