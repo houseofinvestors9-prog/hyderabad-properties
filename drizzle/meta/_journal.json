@@ -43,6 +43,13 @@
       "when": 1791034647511,
       "tag": "0005_rera_order_penalties",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791095135793,
+      "tag": "0006_buyer_accounts",
+      "breakpoints": true
     }
   ]
 }

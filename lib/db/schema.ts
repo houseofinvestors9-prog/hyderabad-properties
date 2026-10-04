@@ -226,7 +226,7 @@ export type PendingUpdateRow = typeof pendingUpdates.$inferSelect;
 export type ProjectAlertRow = typeof projectAlerts.$inferSelect;
 export type WatchSubscriptionRow = typeof watchSubscriptions.$inferSelect;
 
-export type LeadSource = 'booking' | 'shortlist' | 'report' | 'concierge' | 'newsletter' | 'project_request';
+export type LeadSource = 'booking' | 'shortlist' | 'report' | 'concierge' | 'newsletter' | 'project_request' | 'signup';
 
 /**
  * People who asked us for something: a call, a shortlist, a full report.
@@ -248,6 +248,8 @@ export const leads = pgTable(
     pagePath: text('page_path'),
     utm: jsonb('utm').$type<Record<string, string>>(),
     consent: boolean('consent').notNull().default(false),
+    /** Set when the lead came from a logged-in buyer. */
+    userId: uuid('user_id'),
     forwardStatus: text('forward_status').$type<'sent' | 'logged' | 'failed'>().notNull().default('logged'),
     forwardError: text('forward_error'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
@@ -391,3 +393,68 @@ export const reraOrders = pgTable(
 );
 
 export type ReraOrderRow = typeof reraOrders.$inferSelect;
+
+// ---------------------------------------------------------------------------
+// Buyer accounts: optional WhatsApp login (one-time code sent through Gallabox)
+// ---------------------------------------------------------------------------
+
+/** A buyer who logged in with a WhatsApp number. The phone is the identity; there are no passwords. */
+export const users = pgTable(
+  'users',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    phone: text('phone').notNull(), // E.164, e.g. +919876543210
+    name: text('name'),
+    email: text('email'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    lastLoginAt: timestamp('last_login_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex('users_phone_idx').on(t.phone)]
+);
+
+export type UserRow = typeof users.$inferSelect;
+
+/** One-time login codes. Only a hash is stored; each code has an expiry and an attempt limit. */
+export const loginCodes = pgTable(
+  'login_codes',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    phone: text('phone').notNull(),
+    codeHash: text('code_hash').notNull(),
+    ip: text('ip'),
+    attempts: integer('attempts').notNull().default(0),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+    consumedAt: timestamp('consumed_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('login_codes_phone_idx').on(t.phone, t.createdAt), index('login_codes_ip_idx').on(t.ip, t.createdAt)]
+);
+
+/** Buyer sessions. The cookie holds a random token; only its hash is stored. */
+export const userSessions = pgTable(
+  'user_sessions',
+  {
+    tokenHash: text('token_hash').primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    userAgent: text('user_agent'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+  },
+  (t) => [index('user_sessions_user_idx').on(t.userId)]
+);
+
+/** Projects a buyer saved: a TG-RERA record (registration number) or a checked report (project id). */
+export const savedProjects = pgTable(
+  'saved_projects',
+  {
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    kind: text('kind').$type<'rera' | 'project'>().notNull(),
+    ref: text('ref').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex('saved_projects_pk').on(t.userId, t.kind, t.ref)]
+);

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { AccountLink } from '@/components/account/AccountLink';
 
 export type ViewType = 'home' | 'check' | 'project' | 'concierge' | 'booking' | 'cost' | 'commute' | 'watching';
 
@@ -84,10 +85,11 @@ export function TopBar({ currentView, onNavigate, watchedCount = 0 }: TopBarProp
         </div>
 
         <div className="flex items-center gap-2">
+          <AccountLink className="hidden md:inline-flex whitespace-nowrap text-[15px] font-medium text-[#212121] px-4 py-2 rounded-full hover:bg-[#f2f2f2] transition-colors" />
           <button
             type="button"
             onClick={() => go('booking')}
-            className="hidden md:inline-flex text-[15px] font-medium text-[#212121] px-4 py-2 rounded-full hover:bg-[#f2f2f2] transition-colors cursor-pointer"
+            className="hidden md:inline-flex whitespace-nowrap text-[15px] font-medium text-[#212121] px-4 py-2 rounded-full hover:bg-[#f2f2f2] transition-colors cursor-pointer"
           >
             Talk to an expert
           </button>
@@ -144,6 +146,7 @@ export function TopBar({ currentView, onNavigate, watchedCount = 0 }: TopBarProp
               >
                 Talk to an expert
               </button>
+              <AccountLink className="rounded-full border border-[#eeeeee] text-[#212121] font-semibold py-3 text-center" />
             </div>
           </nav>
         </div>

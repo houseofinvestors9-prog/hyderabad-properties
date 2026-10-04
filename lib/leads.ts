@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import { after } from 'next/server';
 import { getDb } from './db/client';
 import { leads, type LeadSource } from './db/schema';
 
@@ -15,6 +16,7 @@ export interface LeadInput {
   pagePath?: string;
   utm?: Record<string, string>;
   consent: boolean;
+  userId?: string;
 }
 
 const SOURCE_LABEL: Record<LeadInput['source'], string> = {
@@ -24,6 +26,7 @@ const SOURCE_LABEL: Record<LeadInput['source'], string> = {
   concierge: 'assistant chat',
   newsletter: 'newsletter',
   project_request: 'missing project request',
+  signup: 'WhatsApp login',
 };
 
 /**
@@ -96,19 +99,29 @@ async function forwardLead(id: string, createdAt: string, input: LeadInput): Pro
   return 'sent';
 }
 
-/** Store the lead first, then try to forward it. A failed forward never loses the lead. */
+/**
+ * Store the lead first, then forward it once the buyer already has their confirmation.
+ * A failed forward never loses the lead: it stays here with forward_status = failed.
+ */
 export async function captureLead(input: LeadInput) {
   const db = await getDb();
   const [row] = await db.insert(leads).values(input).returning();
 
-  try {
-    const status = await forwardLead(row.id, row.createdAt.toISOString(), input);
-    await db.update(leads).set({ forwardStatus: status }).where(eq(leads.id, row.id));
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    console.error('[leads] forward failed', row.id, message);
-    await db.update(leads).set({ forwardStatus: 'failed', forwardError: message }).where(eq(leads.id, row.id));
-  }
+  const forward = async () => {
+    try {
+      const status = await forwardLead(row.id, row.createdAt.toISOString(), input);
+      await db.update(leads).set({ forwardStatus: status }).where(eq(leads.id, row.id));
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error('[leads] forward failed', row.id, message);
+      await db.update(leads).set({ forwardStatus: 'failed', forwardError: message }).where(eq(leads.id, row.id));
+    }
+  };
 
+  try {
+    after(forward); // runs after the response is sent
+  } catch {
+    await forward(); // outside a request (scripts): forward inline
+  }
   return row.id;
 }

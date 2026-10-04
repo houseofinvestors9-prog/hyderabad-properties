@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { RequestProjectForm } from '@/components/RequestProjectForm';
+import { SaveButton } from '@/components/account/SaveButton';
 import { RegistryShell } from '@/components/registry/RegistryShell';
 import { getRegistryBySlug, nearbyRegistry, ordersForRegistry, penaltyLabel, type OrderView } from '@/lib/data/rera';
 import type { ReraDetails, ReraRegistryRow } from '@/lib/db/schema';
@@ -177,6 +178,9 @@ export default async function RegistryPage({ params }: Props) {
           {d?.projectStatus ? <> · {d.projectStatus}</> : null}
         </p>
       )}
+      <div className="mt-5">
+        <SaveButton kind="rera" refId={r.registrationNo} />
+      </div>
 
       <div className="mt-10 grid grid-cols-1 lg:grid-cols-[1.25fr_0.75fr] gap-8 lg:gap-12">
         <div className="space-y-8 min-w-0">

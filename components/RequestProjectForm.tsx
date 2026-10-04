@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Check } from 'lucide-react';
 import { PrivacyPledge } from '@/components/PrivacyPledge';
 
@@ -42,6 +42,19 @@ export function RequestProjectForm({
   const [email, setEmail] = useState('');
   const [website, setWebsite] = useState(''); // honeypot
   const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
+
+  // Logged-in buyers do not retype their details.
+  useEffect(() => {
+    fetch('/api/me', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((me: { user?: { phone: string; name: string | null; email: string | null } | null }) => {
+        if (!me.user) return;
+        setPhone((p) => p || me.user!.phone.replace(/^\+91/, ''));
+        setName((n) => n || me.user!.name || '');
+        setEmail((e) => e || me.user!.email || '');
+      })
+      .catch(() => {});
+  }, []);
   const [error, setError] = useState<string | null>(null);
 
   const submit = async (e: React.FormEvent) => {

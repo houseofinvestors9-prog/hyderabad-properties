@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import { BrandMark } from '@/components/TopBar';
+import { currentUser, loginAvailable } from '@/lib/buyer-auth';
 
 /** Header and footer for the server-rendered TG-RERA record pages. */
-export function RegistryShell({ children }: { children: React.ReactNode }) {
+export async function RegistryShell({ children }: { children: React.ReactNode }) {
+  const user = await currentUser().catch(() => null);
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b border-[#f0f0f0]">
@@ -18,6 +20,15 @@ export function RegistryShell({ children }: { children: React.ReactNode }) {
             <Link href="/rera" className="hidden sm:inline text-[#4a4a4a] hover:text-[#212121]">
               All RERA projects
             </Link>
+            {user ? (
+              <Link href="/account" className="text-[#4a4a4a] hover:text-[#212121]">
+                Account
+              </Link>
+            ) : loginAvailable() ? (
+              <Link href="/login" className="text-[#4a4a4a] hover:text-[#212121]">
+                Log in
+              </Link>
+            ) : null}
             <Link href="/?view=check" className="whitespace-nowrap rounded-full bg-[#212121] text-white px-4 sm:px-5 py-2.5 font-medium">
               Check a project
             </Link>

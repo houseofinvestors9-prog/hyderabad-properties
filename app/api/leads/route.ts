@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { captureLead } from '@/lib/leads';
+import { currentUser } from '@/lib/buyer-auth';
 import { badRequest } from '@/lib/server-auth';
 
 export const dynamic = 'force-dynamic';
@@ -47,7 +48,8 @@ export async function POST(req: Request) {
   if (lead.phone && !PHONE.test(lead.phone)) return badRequest('Enter a valid phone number.');
 
   try {
-    const id = await captureLead(lead);
+    const user = await currentUser().catch(() => null);
+    const id = await captureLead({ ...lead, userId: user?.id, phone: lead.phone ?? user?.phone });
     return NextResponse.json({ ok: true, id });
   } catch (err) {
     console.error('[leads] capture failed', err);
