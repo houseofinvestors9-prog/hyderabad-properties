@@ -82,6 +82,13 @@ export const projects = pgTable(
     keyConcerns: jsonb('key_concerns').$type<string[]>().notNull().default([]),
 
     sourceUrls: jsonb('source_urls').$type<SourceUrls>().notNull().default({}),
+    /** Questions a buyer should put to the builder in writing, from the check. */
+    questions: jsonb('questions').$type<string[]>().notNull().default([]),
+    /** Every source the report relies on, shown on the report. */
+    sources: jsonb('sources').$type<{ label: string; url: string }[]>().notNull().default([]),
+    /** Name of the person who signed the report off, shown publicly; null while it is a draft. */
+    signedOffBy: text('signed_off_by'),
+    signedOffAt: timestamp('signed_off_at', { withTimezone: true }),
     lastVerifiedAt: timestamp('last_verified_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
     version: integer('version').notNull().default(1),

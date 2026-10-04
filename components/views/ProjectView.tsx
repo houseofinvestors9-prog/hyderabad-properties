@@ -66,7 +66,8 @@ export function ProjectView({
 
   // Micro-market calculations
   const { projects: liveProjects, marketFor, alertsFor } = useLiveData();
-  const market: MicroMarketLive = marketFor(project) ?? MICRO_MARKETS[0];
+  const realMarket = marketFor(project);
+  const market: MicroMarketLive = realMarket ?? MICRO_MARKETS[0];
   const projectAlerts = alertsFor(project.id);
   const [showAllUpdates, setShowAllUpdates] = useState(false);
   const reraExpired = !!project.reraValidUntil && project.reraValidUntil < new Date().toISOString().slice(0, 10);
@@ -85,7 +86,9 @@ export function ProjectView({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const tailoredQuestions: string[] = project.status === 'risk'
+  const tailoredQuestions: string[] = project.questions?.length
+    ? project.questions
+    : project.status === 'risk'
     ? [
         'Can the builder show the official revenue survey map superimposing the 30-meter lake buffer line?',
         'Has the project received written confirmation from HYDRAA regarding survey plot clearance?',
@@ -109,13 +112,7 @@ export function ProjectView({
         'Can you provide the 30-year non-encumbrance certificate (EC) up to the current calendar month?'
       ];
 
-  const beginnerSummary = `${project.name} is a ${project.config} gated community in ${project.location}, scheduled for completion around ${project.possessionYear}. In terms of legal health, it currently ${
-    project.status === 'safe'
-      ? 'possesses clear government title deeds with verified municipal permits and sits outside lake conservation areas.'
-      : project.status === 'warning'
-      ? 'has valid fundamentals but has pending administrative updates or proximity to drainage canals that require verification.'
-      : 'carries serious regulatory red flags due to plot encroachment into protected lake buffer zones under active enforcement.'
-  } Before placing any deposit, verify that your exact floor and tower are sanctioned on the official layout.`;
+  const beginnerSummary = project.summary;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-200 pb-24 md:pb-12">
@@ -170,7 +167,7 @@ export function ProjectView({
               RERA: {project.reraNumber}
               {project.reraValidUntil && (
                 <span className={reraExpired ? 'text-rose-700 font-semibold' : ''}>
-                  {' '}· Valid until {formatDate(project.reraValidUntil)}
+                  {' '}· Completion due {formatDate(project.reraValidUntil)}
                 </span>
               )}
             </div>
@@ -373,6 +370,43 @@ export function ProjectView({
             </p>
           </section>
 
+          {(project.marketedByOwner || project.sources?.length) && (
+            <section className="bg-white rounded-xl border border-[#eeeeee] p-6 sm:p-8 space-y-5 text-left">
+              {project.marketedByOwner && (
+                <p className="rounded-lg bg-[#f9f9f9] p-4 text-sm text-[#4a4a4a] leading-relaxed">
+                  Disclosure: House of Investors, which owns hyderabad.properties, is paid to market this project. It was checked
+                  against the same records, in the same way, as every other project, and the questions in Section 5 apply in full.
+                </p>
+              )}
+              {project.sources && project.sources.length > 0 && (
+                <div className="space-y-2">
+                  <h3 className="text-xs uppercase font-bold tracking-wider text-[#212121]">Sources</h3>
+                  <ul className="space-y-1 text-sm text-[#4a4a4a]">
+                    {project.sources.map((src) => (
+                      <li key={src.url + src.label}>
+                        <a href={src.url} target="_blank" rel="noopener noreferrer nofollow" className="underline underline-offset-2 hover:no-underline">
+                          {src.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {project.signedOffBy && (
+                <p className="text-xs text-[#838383]">
+                  Checked and signed off by {project.signedOffBy}
+                  {project.signedOffAt
+                    ? ` on ${new Date(project.signedOffAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' })}`
+                    : ''}
+                  . Builder figures are as filed or advertised on that date.{' '}
+                  <a href={`/corrections?page=${encodeURIComponent(`/project?id=${project.id}`)}`} className="underline hover:text-[#212121]">
+                    Report an error
+                  </a>
+                </p>
+              )}
+            </section>
+          )}
+
           {/* SECTION 2: "Safety checks" */}
           <section className="space-y-4 text-left">
             <div>
@@ -383,7 +417,7 @@ export function ProjectView({
                 Safety checks
               </h2>
               <p className="text-xs text-[#838383] mt-0.5">
-                Official state portal audits updated by our diligence desk.
+                What we checked against the TG-RERA record, the HMDA permit and mapped water bodies.
               </p>
             </div>
 
@@ -402,7 +436,7 @@ export function ProjectView({
                         <JargonTooltip term="RERA" /> Registration Status
                       </h3>
                       <div className="text-xs text-[#838383] mt-0.5">
-                        Audit Date: <strong>{project.lastVerifiedDate}</strong>
+                        Checked: <strong>{project.lastVerifiedDate}</strong>
                       </div>
                     </div>
                   </div>
@@ -415,9 +449,9 @@ export function ProjectView({
 
                 <p className="text-xs sm:text-sm text-[#6b6b6b] leading-relaxed pl-7">
                   {project.reraStatus === 'Active' && reraExpired
-                    ? `Registered under TG-RERA No: ${project.reraNumber}, but the registration validity ended on ${formatDate(project.reraValidUntil)}. Ask for the extension order.`
+                    ? `Registered with TG-RERA as ${project.reraNumber}, but the completion date on file (${formatDate(project.reraValidUntil)}) has passed. Ask for the TG-RERA extension order.`
                     : project.reraStatus === 'Active'
-                    ? `Registered under TG-RERA No: ${project.reraNumber}. Escrow bank deposits and quarterly disclosures are up to date.`
+                    ? `Registered with TG-RERA as ${project.reraNumber}${project.reraValidUntil ? `, with completion due by ${formatDate(project.reraValidUntil)}` : ''}.`
                     : `Registration application renewal is currently processing. No active final certificate publicly listed on the portal.`}
                 </p>
 
@@ -451,7 +485,7 @@ export function ProjectView({
 
                   {openSafetyDetails['rera'] && (
                     <div className="mt-2 p-3 bg-[#f9f9f9] rounded-lg border border-[#eeeeee] text-xs text-[#4a4a4a] leading-relaxed">
-                      All land title deeds trace back to non-agricultural conversion. Escrow account records confirm construction funds are ring-fenced.
+                      We read the project’s TG-RERA page: registration, completion date, declared litigation and land affected by widening. We have not done a title search or seen the designated bank account; ask your lawyer for a title report and an encumbrance certificate.
                     </div>
                   )}
                 </div>
@@ -471,7 +505,7 @@ export function ProjectView({
                         Building Plan Sanction (<JargonTooltip term="GHMC" /> / <JargonTooltip term="HMDA" />)
                       </h3>
                       <div className="text-xs text-[#838383] mt-0.5">
-                        Audit Date: <strong>{project.lastVerifiedDate}</strong>
+                        Checked: <strong>{project.lastVerifiedDate}</strong>
                       </div>
                     </div>
                   </div>
@@ -484,7 +518,7 @@ export function ProjectView({
 
                 <p className="text-xs sm:text-sm text-[#6b6b6b] leading-relaxed pl-7">
                   {project.buildingPlan === 'Approved'
-                    ? `Town planning permissions and structural safety clearances approved for the entire master layout${project.sanctionedConfig ? `, sanctioned at ${project.sanctionedConfig}` : ''}.`
+                    ? `TG-RERA lists HMDA as the approving authority${project.permitNo ? `, permit ${project.permitNo}` : ''}${project.sanctionedConfig ? `. Configuration: ${project.sanctionedConfig}` : ''}.`
                     : 'The developer has applied for an additional floor permission amendment that is pending civic sign-off.'}
                 </p>
 
@@ -523,7 +557,7 @@ export function ProjectView({
 
                   {openSafetyDetails['plans'] && (
                     <div className="mt-2 p-3 bg-[#f9f9f9] rounded-lg border border-[#eeeeee] text-xs text-[#4a4a4a] leading-relaxed">
-                      Approved drawings confirm compliant road setbacks, dual basement parking ventilation, and fire safety driveways.
+                      We have not reviewed the sanction drawings. Ask the builder for the sanction plan copy and check that your tower and floor are on it.
                     </div>
                   )}
                 </div>
@@ -543,7 +577,7 @@ export function ProjectView({
                         Lake & Waterbody Buffer Zone (<JargonTooltip term="FTL" />)
                       </h3>
                       <div className="text-xs text-[#838383] mt-0.5">
-                        Audit Date: <strong>{project.lastVerifiedDate}</strong>
+                        Checked: <strong>{project.lastVerifiedDate}</strong>
                       </div>
                     </div>
                   </div>
@@ -556,14 +590,14 @@ export function ProjectView({
 
                 <p className="text-xs sm:text-sm text-[#6b6b6b] leading-relaxed pl-7">
                   {project.lakeBuffer === 'Clear'
-                    ? 'Plot boundaries sit outside the mandatory 30-meter buffer line and irrigation channels.'
+                    ? `No mapped lake lies near enough to put the site in a lake buffer${project.nearestLakeMeters != null ? `: the nearest mapped water is about ${project.nearestLakeMeters} m away` : ''}.`
                     : 'Portions of the project boundary lie inside the lake buffer zone flagged under recent HYDRAA enforcement.'}
                 </p>
 
                 <div className="pl-7 flex flex-wrap gap-1.5">
                   {project.nearestLakeMeters != null && (
                     <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#f9f9f9] border border-[#eeeeee] text-[#212121]">
-                      Nearest FTL edge {project.nearestLakeMeters} m
+                      Nearest mapped water {project.nearestLakeMeters} m
                     </span>
                   )}
                   {project.surveyNumbers && (
@@ -579,13 +613,13 @@ export function ProjectView({
                     onClick={() => toggleSafetyDetail('lake')}
                     className="text-xs font-semibold text-[#212121] hover:underline flex items-center gap-1 cursor-pointer py-1"
                   >
-                    <span>{openSafetyDetails['lake'] ? 'Hide breakdown' : 'See why (Cadastral lake survey)'}</span>
+                    <span>{openSafetyDetails['lake'] ? 'Hide breakdown' : 'See how we measured'}</span>
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform ${openSafetyDetails['lake'] ? 'rotate-180' : ''}`} strokeWidth={1.5} />
                   </button>
 
                   {openSafetyDetails['lake'] && (
                     <div className="mt-2 p-3 bg-[#f9f9f9] rounded-lg border border-[#eeeeee] text-xs text-[#4a4a4a] leading-relaxed">
-                      Cross-referenced with National Remote Sensing Centre hydrological maps and state irrigation survey sheets.
+                      Measured on OpenStreetMap water outlines and checked against HMDA’s lake list and HYDRAA notices. The notified full tank level (FTL) line can lie outside the water you see, and HMDA has notified final FTLs for only part of its lakes.
                     </div>
                   )}
                 </div>
@@ -603,94 +637,28 @@ export function ProjectView({
                 Where is it?
               </h2>
               <p className="text-xs text-[#838383] mt-0.5">
-                Layout survey plot relative to natural waterbodies and regional IT corridors.
+                The site on the map, with the nearest mapped water and the drive to the IT corridor.
               </p>
             </div>
 
-            {/* Stylized SVG Map (Clean, flat line-drawn) */}
-            <div className="relative w-full h-64 sm:h-72 bg-[#f9f9f9] rounded-xl overflow-hidden border border-[#e0e0e0]">
-              <svg className="w-full h-full" viewBox="0 0 600 300" preserveAspectRatio="none">
-                <defs>
-                  <pattern id="gridPattern" width="30" height="30" patternUnits="userSpaceOnUse">
-                    <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#E3DBD0" strokeWidth="0.8" />
-                  </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#gridPattern)" />
-
-                {/* Road lines */}
-                <path d="M 0 120 Q 200 130 400 90 T 600 80" fill="none" stroke="#D3C9BD" strokeWidth="4" />
-                <path d="M 280 0 Q 300 150 340 300" fill="none" stroke="#D3C9BD" strokeWidth="4" />
-
-                {/* Shaded Blue Lake and FTL Buffer Zone */}
-                <path
-                  d="M 360 210 Q 420 160 520 180 Q 580 230 510 280 Q 410 290 360 210 Z"
-                  fill="#BAE6FD"
-                  fillOpacity="0.4"
-                  stroke="#38BDF8"
-                  strokeWidth="1.5"
-                  strokeDasharray="4 3"
+            {project.siteLat != null && project.siteLng != null ? (
+              <div className="relative w-full h-64 sm:h-72 rounded-xl overflow-hidden border border-[#e0e0e0]">
+                <iframe
+                  title={`Map of ${project.name}`}
+                  className="w-full h-full"
+                  loading="lazy"
+                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${project.siteLng - 0.012},${project.siteLat - 0.008},${project.siteLng + 0.012},${project.siteLat + 0.008}&layer=mapnik&marker=${project.siteLat},${project.siteLng}`}
                 />
-                <path
-                  d="M 390 220 Q 440 180 500 200 Q 540 240 480 270 Q 420 270 390 220 Z"
-                  fill="#38BDF8"
-                  fillOpacity="0.8"
-                />
-
-                <text x="450" y="240" fill="#0369A1" fontSize="11" fontWeight="600" textAnchor="middle">
-                  Osman Lake
-                </text>
-                <text x="450" y="255" fill="#0284C7" fontSize="9" textAnchor="middle">
-                  30m FTL Conservation Buffer
-                </text>
-
-                {/* Project PIN Location */}
-                {project.status === 'risk' ? (
-                  <g transform="translate(415, 205)">
-                    <circle cx="0" cy="0" r="12" fill="#E11D48" />
-                    <circle cx="0" cy="0" r="4" fill="#FFFFFF" />
-                  </g>
-                ) : (
-                  <g transform="translate(220, 110)">
-                    <circle cx="0" cy="0" r="10" fill="#059669" />
-                    <circle cx="0" cy="0" r="4" fill="#FFFFFF" />
-                  </g>
-                )}
-              </svg>
-
-              {/* Pin Label Overlay */}
-              <div
-                className={`absolute p-2.5 rounded-lg border text-xs font-semibold bg-white flex items-center gap-2 ${
-                  project.status === 'risk'
-                    ? 'bottom-4 left-4 border-rose-200 text-rose-900'
-                    : 'top-4 left-4 border-[#eeeeee] text-[#212121]'
-                }`}
-              >
-                <MapPin className={`w-4 h-4 ${project.status === 'risk' ? 'text-rose-600' : 'text-[#212121]'}`} strokeWidth={1.5} />
-                <div>
-                  <div className="font-bold">{project.name}</div>
-                  <div className="text-[10px] text-[#838383] font-normal">
-                    {project.location} ({project.microMarket})
-                  </div>
-                </div>
               </div>
-
-              {/* Buffer Status & Commute Badges */}
-              <div className="absolute top-4 right-4 flex flex-col items-end gap-1.5">
-                <span
-                  className={`text-xs px-3 py-1 rounded-full font-bold ${
-                    project.lakeBuffer === 'Clear'
-                      ? 'bg-emerald-700 text-white'
-                      : 'bg-rose-700 text-white'
-                  }`}
-                >
-                  {project.lakeBuffer === 'Clear' ? 'Clear of Lake Buffer' : 'Inside Lake Buffer'}
-                </span>
-
-                <span className="text-[11px] font-medium bg-white text-[#4a4a4a] px-2.5 py-1 rounded-full border border-[#eeeeee] flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-[#212121]" strokeWidth={1.5} />
-                  <span>{project.distanceToIT}</span>
-                </span>
-              </div>
+            ) : null}
+            <div className="flex flex-wrap gap-2 text-xs">
+              <span className={`px-3 py-1 rounded-full font-bold ${project.lakeBuffer === 'Clear' ? 'bg-emerald-700 text-white' : 'bg-rose-700 text-white'}`}>
+                {project.lakeBuffer === 'Clear' ? 'Clear of lake buffer' : 'Inside lake buffer'}
+              </span>
+              <span className="px-2.5 py-1 rounded-full border border-[#eeeeee] text-[#4a4a4a]">{project.distanceToIT}</span>
+              {project.nearestLakeMeters != null && (
+                <span className="px-2.5 py-1 rounded-full border border-[#eeeeee] text-[#4a4a4a]">Nearest mapped water about {project.nearestLakeMeters} m</span>
+              )}
             </div>
           </section>
 
@@ -704,7 +672,7 @@ export function ProjectView({
                 The numbers
               </h2>
               <p className="text-xs text-[#838383] mt-0.5">
-                Pricing specifications and micro-market rate comparisons.
+                Prices as quoted by the builder or on property portals on the date shown.
               </p>
             </div>
 
@@ -729,7 +697,8 @@ export function ProjectView({
               </div>
             </div>
 
-            {/* RATE PER SQ FT VS AREA AVERAGE */}
+            {/* Rate per sq ft vs area average, only with real benchmark data */}
+            {realMarket && (
             <div className="p-5 rounded-xl bg-[#f9f9f9] border border-[#eeeeee] space-y-3">
               <div className="flex items-center justify-between text-xs sm:text-sm">
                 <span className="font-semibold text-[#212121]">
@@ -786,6 +755,7 @@ export function ProjectView({
                 {market.guidelineRatePerSqFt ? ' Stamp duty is charged on the higher of your price and the IGR guideline value.' : ''}
               </p>
             </div>
+            )}
 
             {/* "See the full cost" CTA Button */}
             <div className="pt-1">
@@ -811,7 +781,7 @@ export function ProjectView({
                 Questions to ask the builder
               </h2>
               <p className="text-xs text-[#838383] mt-0.5">
-                Take these 5 specific questions with you to the sales gallery:
+                Put these to the builder and get the answers in writing:
               </p>
             </div>
 

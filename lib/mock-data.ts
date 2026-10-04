@@ -38,6 +38,14 @@ export interface ProjectSafetyItem {
   ocStatus?: string | null;
   surveyNumbers?: string | null;
   nearestLakeMeters?: number | null;
+  siteLat?: number | null;
+  siteLng?: number | null;
+  questions?: string[];
+  sources?: { label: string; url: string }[];
+  signedOffBy?: string | null;
+  signedOffAt?: string | null;
+  /** House of Investors, which owns the site, is paid to market this project. */
+  marketedByOwner?: boolean;
   lastVerifiedAt?: string; // ISO timestamp
   updatedAt?: string; // ISO timestamp
   version?: number;

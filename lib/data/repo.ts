@@ -403,3 +403,10 @@ export async function recentNotifications(limit = 20) {
   const db = await getDb();
   return db.select().from(notifications).orderBy(desc(notifications.createdAt)).limit(limit);
 }
+
+/** The id of a checked report if it is live, for linking from the TG-RERA record page. */
+export async function liveReportId(id: string): Promise<string | null> {
+  const db = await getDb();
+  const [row] = await db.select({ id: projects.id }).from(projects).where(and(eq(projects.id, id), eq(projects.isLive, true))).limit(1);
+  return row?.id ?? null;
+}

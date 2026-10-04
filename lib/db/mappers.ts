@@ -1,5 +1,6 @@
 import type { ProjectSafetyItem, MicroMarketLive, ProjectAlertItem } from '../mock-data';
 import type { DbProjectStatus, ProjectRow, MicroMarketRow, ProjectAlertRow } from './schema';
+import { marketedByOwner } from '../builders';
 
 type UiStatus = ProjectSafetyItem['status'];
 
@@ -64,6 +65,13 @@ export function rowToProject(r: ProjectRow): ProjectSafetyItem {
     ocStatus: r.ocStatus,
     surveyNumbers: r.surveyNumbers,
     nearestLakeMeters: r.nearestLakeMeters,
+    siteLat: r.siteLat,
+    siteLng: r.siteLng,
+    questions: r.questions,
+    sources: r.sources,
+    signedOffBy: r.signedOffBy,
+    signedOffAt: r.signedOffAt?.toISOString() ?? null,
+    marketedByOwner: marketedByOwner(r.reraId),
     lastVerifiedAt: r.lastVerifiedAt.toISOString(),
     updatedAt: r.updatedAt.toISOString(),
     version: r.version,

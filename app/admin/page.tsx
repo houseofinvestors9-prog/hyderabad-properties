@@ -8,7 +8,9 @@ import { claudeEnabled } from '@/lib/ai/analyze-notice';
 import { registryStats } from '@/lib/data/rera';
 import { CorrectionsPanel } from '@/components/admin/CorrectionsPanel';
 import { getDb } from '@/lib/db/client';
-import { corrections } from '@/lib/db/schema';
+import { corrections, projects } from '@/lib/db/schema';
+import { DraftReportsPanel } from '@/components/admin/DraftReportsPanel';
+import { isNotNull, or } from 'drizzle-orm';
 import { desc, eq } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
@@ -28,6 +30,11 @@ export default async function AdminPage() {
     listProjectRequests(),
     registryStats(),
   ]);
+  const reports = await (await getDb())
+    .select()
+    .from(projects)
+    .where(or(eq(projects.isLive, false), isNotNull(projects.signedOffAt)))
+    .orderBy(projects.name);
   const openCorrections = await (await getDb()).select().from(corrections).where(eq(corrections.status, 'open')).orderBy(desc(corrections.createdAt));
   const when = (v: string | null) => (v ? new Date(v).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Kolkata' }) : 'never');
   return (
@@ -40,6 +47,7 @@ export default async function AdminPage() {
       initialNotifications={JSON.parse(JSON.stringify(notifications))}
       claudeEnabled={claudeEnabled()}
     />
+    <DraftReportsPanel initial={JSON.parse(JSON.stringify(reports))} defaultSigner="" />
     <ProjectRequestsPanel initialRequests={JSON.parse(JSON.stringify(requests))} />
     <CorrectionsPanel initial={JSON.parse(JSON.stringify(openCorrections))} />
     <section className="max-w-[1200px] mx-auto px-4 sm:px-8 pb-12">

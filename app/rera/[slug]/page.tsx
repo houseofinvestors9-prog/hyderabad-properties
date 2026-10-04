@@ -7,6 +7,7 @@ import { RegistryShell } from '@/components/registry/RegistryShell';
 import { getRegistryBySlug, nearbyRegistry, ordersForRegistry, type OrderView } from '@/lib/data/rera';
 import type { ReraDetails, ReraRegistryRow } from '@/lib/db/schema';
 import { builderFor, marketedByOwner } from '@/lib/builders';
+import { liveReportId } from '@/lib/data/repo';
 
 export const dynamic = 'force-dynamic';
 
@@ -112,6 +113,7 @@ export default async function RegistryPage({ params }: Props) {
   const [nearby, orders] = await Promise.all([nearbyRegistry(r), ordersForRegistry(r)]);
   const due = d?.revisedCompletion ?? d?.proposedCompletion;
   const builder = builderFor(r);
+  const reportId = r.projectId ? await liveReportId(r.projectId) : null;
 
   const facts: [string, string | null][] = [
     ['TG-RERA registration', r.registrationNo],
@@ -169,6 +171,14 @@ export default async function RegistryPage({ params }: Props) {
         <p className="mt-2 text-[14px] text-[#6b6b6b]">
           <Link href={`/builders/${builder.slug}`} className="underline underline-offset-2 hover:text-[#212121]">
             All {builder.name} projects on the TG-RERA record
+          </Link>
+        </p>
+      )}
+      {reportId && (
+        <p className="mt-4 max-w-[720px] rounded-[12px] border border-[#212121] p-4 text-[15px]">
+          A person on our team has checked this project.{' '}
+          <Link href={`/project?id=${reportId}`} className="font-medium underline underline-offset-2">
+            Read the checked report
           </Link>
         </p>
       )}
