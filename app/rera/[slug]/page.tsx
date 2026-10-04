@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { RequestProjectForm } from '@/components/RequestProjectForm';
 import { SaveButton } from '@/components/account/SaveButton';
 import { RegistryShell } from '@/components/registry/RegistryShell';
-import { getRegistryBySlug, nearbyRegistry, ordersForRegistry, penaltyLabel, type OrderView } from '@/lib/data/rera';
+import { getRegistryBySlug, nearbyRegistry, ordersForRegistry, type OrderView } from '@/lib/data/rera';
 import type { ReraDetails, ReraRegistryRow } from '@/lib/db/schema';
 
 export const dynamic = 'force-dynamic';
@@ -133,14 +133,9 @@ export default async function RegistryPage({ params }: Props) {
   ];
 
   const lookOut = notes(r, d);
-  if (orders.project.length) {
-    lookOut.unshift(
-      `TG-RERA has published ${orders.project.length === 1 ? 'an order or notice' : `${orders.project.length} orders or notices`} naming this project. Read ${orders.project.length === 1 ? 'it' : 'them'} below before you pay.`
-    );
-  }
-  if (orders.builder.length) {
+  if (orders.length) {
     lookOut.push(
-      `TG-RERA has published ${orders.builder.length === 1 ? 'an order' : `${orders.builder.length} orders`} against this builder that ${orders.builder.length === 1 ? 'does' : 'do'} not name this project. Worth reading for how the builder deals with the regulator.`
+      `TG-RERA has published ${orders.length === 1 ? 'a document' : `${orders.length} documents`} that cite${orders.length === 1 ? 's' : ''} this project's registration number. ${orders.length === 1 ? 'It is' : 'They are'} linked below.`
     );
   }
   const mapSrc =
@@ -223,17 +218,20 @@ export default async function RegistryPage({ params }: Props) {
                   TG-RERA project map
                 </a>
               )}
-              {r.detailFetchedAt && !r.detailError ? <>, read on {fmtDate(r.detailFetchedAt.toISOString())}</> : null}. Figures are as filed by the builder.
+              {r.detailFetchedAt && !r.detailError ? <>, read on {fmtDate(r.detailFetchedAt.toISOString())}</> : null}. Figures are as filed by the builder.{' '}
+              <Link href={`/corrections?page=${encodeURIComponent(`/rera/${r.slug}`)}`} className="underline underline-offset-2 hover:text-[#212121]">
+                Report an error
+              </Link>
             </p>
           </section>
 
-          {(orders.project.length > 0 || orders.builder.length > 0) && (
+          {orders.length > 0 && (
             <section className="rounded-[16px] border border-[#eeeeee] p-6 sm:p-7">
-              <h2 className="text-[20px] font-medium">TG-RERA orders and notices</h2>
-              {orders.project.length > 0 && <OrderList title="Naming this project" orders={orders.project} />}
-              {orders.builder.length > 0 && <OrderList title="Against this builder, other projects or the company" orders={orders.builder} />}
+              <h2 className="text-[20px] font-medium">Published by TG-RERA about this registration</h2>
+              <OrderList orders={orders} />
               <p className="mt-4 text-[13px] text-[#838383]">
-                Published by TG-RERA. An order records the Authority&apos;s finding at that date; read the PDF for what was decided and any compliance since.
+                Linked as published by TG-RERA, without our summary or comment. A document reflects the position on its date and
+                may since have been complied with, varied or appealed. Read it on the TG-RERA site.
               </p>
             </section>
           )}
@@ -304,10 +302,9 @@ export default async function RegistryPage({ params }: Props) {
   );
 }
 
-function OrderList({ title, orders }: { title: string; orders: OrderView[] }) {
+function OrderList({ orders }: { orders: OrderView[] }) {
   return (
     <div className="mt-4">
-      <p className="text-[13px] font-semibold uppercase tracking-wide text-[#838383]">{title}</p>
       <ul className="mt-2 divide-y divide-[#f0f0f0]">
         {orders.map((o) => (
           <li key={o.id} className="py-3">
@@ -315,7 +312,7 @@ function OrderList({ title, orders }: { title: string; orders: OrderView[] }) {
               {o.title}
             </a>
             <p className="mt-1 text-[13px] text-[#838383]">
-              {[fmtDate(o.orderDate), o.caseNo ? `Case ${o.caseNo}` : null, penaltyLabel(o)]
+              {[fmtDate(o.orderDate), o.caseNo ? `Case ${o.caseNo}` : null]
                 .filter(Boolean)
                 .join(' · ')}
             </p>

@@ -14,9 +14,6 @@ export async function RegistryShell({ children }: { children: React.ReactNode })
             hyderabad.properties
           </Link>
           <nav className="flex items-center gap-2 sm:gap-6 text-[14px]">
-            <Link href="/rera/orders" className="hidden md:inline text-[#4a4a4a] hover:text-[#212121]">
-              RERA orders
-            </Link>
             <Link href="/rera" className="hidden sm:inline text-[#4a4a4a] hover:text-[#212121]">
               All RERA projects
             </Link>
@@ -39,8 +36,13 @@ export async function RegistryShell({ children }: { children: React.ReactNode })
       <footer className="border-t border-[#f0f0f0] mt-10">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-8 py-8 text-[13px] text-[#838383] space-y-2">
           <p>
-            Project facts on these pages come from Telangana RERA&apos;s public records, as filed by each builder. A verdict appears
-            only after a person on our team has checked the project.
+            Project facts on these pages are reproduced from Telangana RERA&apos;s public records as filed by each builder, with the
+            date we read them. They are not our opinion of any builder or project, and not legal advice. A verdict appears only after
+            a person on our team has checked the project.
+          </p>
+          <p>
+            Spotted something wrong or out of date? <Link href="/corrections" className="underline hover:text-[#212121]">Ask us to correct it</Link>.
+            Builders can send documents too; we reply within three working days.
           </p>
           <p>hyderabad.properties is owned and operated by House of Investors.</p>
         </div>

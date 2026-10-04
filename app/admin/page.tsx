@@ -6,6 +6,10 @@ import { getAdminStats, listProjectSources, listQueue, recentNotifications } fro
 import { listProjectRequests } from '@/lib/project-requests';
 import { claudeEnabled } from '@/lib/ai/analyze-notice';
 import { registryStats } from '@/lib/data/rera';
+import { CorrectionsPanel } from '@/components/admin/CorrectionsPanel';
+import { getDb } from '@/lib/db/client';
+import { corrections } from '@/lib/db/schema';
+import { desc, eq } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,6 +28,7 @@ export default async function AdminPage() {
     listProjectRequests(),
     registryStats(),
   ]);
+  const openCorrections = await (await getDb()).select().from(corrections).where(eq(corrections.status, 'open')).orderBy(desc(corrections.createdAt));
   const when = (v: string | null) => (v ? new Date(v).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Kolkata' }) : 'never');
   return (
     <>
@@ -36,6 +41,7 @@ export default async function AdminPage() {
       claudeEnabled={claudeEnabled()}
     />
     <ProjectRequestsPanel initialRequests={JSON.parse(JSON.stringify(requests))} />
+    <CorrectionsPanel initial={JSON.parse(JSON.stringify(openCorrections))} />
     <section className="max-w-[1200px] mx-auto px-4 sm:px-8 pb-12">
       <div className="rounded-[16px] border border-[#eeeeee] p-6">
         <h2 className="text-[18px] font-medium">TG-RERA registry</h2>

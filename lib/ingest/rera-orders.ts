@@ -157,19 +157,14 @@ interface Matchable {
   promoter: string | null;
 }
 
-/** Projects an order names: by RERA number first, then by a quoted project name (same builder when known). */
-export function matchOrder(text: string, respondentKey: string | null, registry: Matchable[]) {
+/**
+ * Projects an order cites, by TG-RERA registration or certificate number only. We do not link orders to
+ * projects by name or by builder: that would be our inference, not the regulator's.
+ */
+export function matchOrder(text: string, _respondentKey: string | null, registry: Matchable[]) {
   const numbers = [...new Set([...text.matchAll(/\b(P0\d{9,12}|REA0\d{9,12})\b/g)].map((m) => m[1]))];
   const byNumber = registry.filter((r) => numbers.includes(r.registrationNo) || (r.applicationNo && numbers.includes(r.applicationNo)));
-  const quoted = [...text.matchAll(/[“"]([^”"\n]{3,60})[”"]/g)].map((m) => normName(m[1]));
-  const byName = registry.filter((r) => {
-    const n = normName(r.name);
-    if (!quoted.includes(n)) return false;
-    if (respondentKey && r.promoter) return builderKey(r.promoter)?.includes(respondentKey) || respondentKey.includes(builderKey(r.promoter) ?? '###');
-    return true;
-  });
-  const regNos = [...new Set([...byNumber, ...byName].map((r) => r.registrationNo))];
-  return { numbers, regNos };
+  return { numbers, regNos: [...new Set(byNumber.map((r) => r.registrationNo))] };
 }
 
 export interface OrdersResult {

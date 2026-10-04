@@ -458,3 +458,21 @@ export const savedProjects = pgTable(
   },
   (t) => [uniqueIndex('saved_projects_pk').on(t.userId, t.kind, t.ref)]
 );
+
+/** Correction or takedown requests about a published page, from buyers or builders. Reviewed on the Review Desk. */
+export const corrections = pgTable(
+  'corrections',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    pageUrl: text('page_url'),
+    fromRole: text('from_role').$type<'buyer' | 'builder' | 'other'>().notNull().default('other'),
+    name: text('name'),
+    organisation: text('organisation'),
+    contact: text('contact').notNull(),
+    message: text('message').notNull(),
+    status: text('status').$type<'open' | 'resolved'>().notNull().default('open'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    resolvedAt: timestamp('resolved_at', { withTimezone: true }),
+  },
+  (t) => [index('corrections_status_idx').on(t.status, t.createdAt)]
+);

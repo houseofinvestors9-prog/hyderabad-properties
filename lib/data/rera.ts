@@ -1,7 +1,6 @@
 import { and, asc, desc, eq, ilike, inArray, isNotNull, or, sql } from 'drizzle-orm';
 import { getDb } from '../db/client';
 import { reraOrders, reraRegistry, type ReraOrderRow, type ReraRegistryRow } from '../db/schema';
-import { builderKey } from '../ingest/rera-orders';
 
 export interface RegistryHit {
   slug: string;
@@ -212,16 +211,11 @@ function toOrder(o: ReraOrderRow): OrderView {
   return { id: o.id, kind: o.kind, title, respondent: o.respondent, orderDate: o.orderDate, pdfUrl: o.pdfUrl, caseNo: o.caseNo, penaltyInr: o.penaltyInr, penaltiesInr: o.penaltiesInr, registrationNos: o.registrationNos };
 }
 
-/** Orders that name this project, and orders against its builder that do not. */
-export async function ordersForRegistry(row: ReraRegistryRow): Promise<{ project: OrderView[]; builder: OrderView[] }> {
+/** Orders that cite this project's registration number. Nothing is attached by builder or by name. */
+export async function ordersForRegistry(row: ReraRegistryRow): Promise<OrderView[]> {
   const db = await getDb();
   const all = await db.select().from(reraOrders).orderBy(desc(reraOrders.orderDate));
-  const project = all.filter((o) => o.registrationNos.includes(row.registrationNo));
-  const key = builderKey(row.promoter);
-  const builder = key
-    ? all.filter((o) => !project.includes(o) && o.respondentKey && (o.respondentKey === key || o.respondentKey.includes(key) || key.includes(o.respondentKey)))
-    : [];
-  return { project: project.map(toOrder), builder: builder.map(toOrder) };
+  return all.filter((o) => o.registrationNos.includes(row.registrationNo)).map(toOrder);
 }
 
 export async function listOrders(): Promise<(OrderView & { projects: RegistryHit[] })[]> {
