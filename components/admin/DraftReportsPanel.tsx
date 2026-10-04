@@ -1,6 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+const SIGNER_KEY = 'hp_report_signer';
 
 interface Report {
   id: string;
@@ -35,22 +37,45 @@ export function DraftReportsPanel({ initial, defaultSigner }: { initial: Report[
   const [items, setItems] = useState(initial);
   const [signer, setSigner] = useState(defaultSigner);
   const [busy, setBusy] = useState<string | null>(null);
+
+  // Remember the reviewer's name on this device so it only has to be typed once.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(SIGNER_KEY);
+      if (saved && !defaultSigner) setSigner(saved);
+    } catch {
+      /* storage unavailable: the prompt still asks */
+    }
+  }, [defaultSigner]);
   const [error, setError] = useState<{ id: string; message: string } | null>(null);
 
   async function act(id: string, action: 'publish' | 'unpublish') {
+    let name = signer.trim();
+    if (action === 'publish' && !name) {
+      name = (window.prompt('Your name, as it will appear on the published report:') ?? '').trim();
+      if (!name) return;
+      setSigner(name);
+    }
+    if (action === 'publish') {
+      try {
+        localStorage.setItem(SIGNER_KEY, name);
+      } catch {
+        /* not remembered, still published */
+      }
+    }
     setBusy(id);
     setError(null);
     const res = await fetch('/api/admin/reports', {
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ id, action, signer }),
+      body: JSON.stringify({ id, action, signer: name }),
     });
     const body = (await res.json().catch(() => ({}))) as { error?: string };
     setBusy(null);
     if (!res.ok) return setError({ id, message: res.status === 401 ? 'Your login has expired. Log in again, then sign off.' : body.error ?? 'Could not save.' });
     const now = new Date().toISOString();
     setItems((xs) =>
-      xs.map((x) => (x.id === id ? { ...x, isLive: action === 'publish', signedOffBy: action === 'publish' ? signer : x.signedOffBy, signedOffAt: action === 'publish' ? now : x.signedOffAt } : x))
+      xs.map((x) => (x.id === id ? { ...x, isLive: action === 'publish', signedOffBy: action === 'publish' ? name : x.signedOffBy, signedOffAt: action === 'publish' ? now : x.signedOffAt } : x))
     );
   }
 
@@ -104,15 +129,15 @@ export function DraftReportsPanel({ initial, defaultSigner }: { initial: Report[
               <div className="mt-3 flex gap-2">
                 {r.isLive ? (
                   <>
+                    <span className="self-center text-[13px] text-emerald-700">Published, signed off by {r.signedOffBy}</span>
                     <a href={`/project?id=${r.id}`} target="_blank" rel="noreferrer" className="rounded-full border border-[#e5e5e5] px-4 py-1.5 text-[13px]">View live</a>
                     <button type="button" disabled={busy === r.id} onClick={() => act(r.id, 'unpublish')} className="rounded-full border border-[#e5e5e5] px-4 py-1.5 text-[13px] cursor-pointer">Unpublish</button>
                   </>
                 ) : (
-                  <button type="button" disabled={busy === r.id || !signer.trim()} onClick={() => act(r.id, 'publish')} className="rounded-full bg-[#212121] px-4 py-1.5 text-[13px] text-white cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed">
+                  <button type="button" disabled={busy === r.id} onClick={() => act(r.id, 'publish')} className="rounded-full bg-[#212121] px-4 py-1.5 text-[13px] text-white cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed">
                     {busy === r.id ? 'Publishing…' : 'Sign off and publish'}
                   </button>
                 )}
-                {!r.isLive && !signer.trim() && <span className="self-center text-[12px] text-[#838383]">Add your name above to sign off</span>}
               </div>
               {error?.id === r.id && <p className="mt-2 text-[13px] text-rose-700" role="alert">{error.message}</p>}
             </li>
