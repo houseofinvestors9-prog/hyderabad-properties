@@ -317,6 +317,8 @@ export function parseProjectPage(html: string): Omit<ReraDetails, 'hasExtension'
     for (const r of tbl.rows) {
       const n = num(r[cCount]);
       if (n == null) continue;
+      // Clubhouse and amenity rows are not homes.
+      if (/AMENIT|CLUB|COMMON|UTILITY|SOCIETY/i.test(r[cType] ?? '')) continue;
       totalUnits += n;
       bookedUnits += num(r[cBooked]) ?? 0;
       const type = (r[cType] ?? '')

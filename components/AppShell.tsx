@@ -436,7 +436,7 @@ export function AppShell({ initialView = 'home', initialProjectId, initialQuery 
         {currentView === 'booking' && (
           <BookingView
             onNavigate={handleNavigate}
-            selectedProject={selectedProject}
+            selectedProject={live.getProject(selectedProjectId) ?? (DEMO_DATA ? selectedProject : undefined)}
             userPreferences={userPreferences}
             onBookingConfirmed={(details) => setBookingDetails(details)}
           />

@@ -12,6 +12,28 @@ type Props = { params: Promise<{ slug: string }> };
 
 const SQM_PER_ACRE = 4046.86;
 
+/** Drop repeated parts: "Tellapur, Tellapur, RC Puram" -> "Tellapur, RC Puram". */
+function dedupe(parts: (string | null | undefined)[]): string[] {
+  const seen = new Set<string>();
+  return parts.filter((p): p is string => {
+    const k = p?.trim().toLowerCase();
+    if (!k || seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+}
+
+/** Flat types as a buyer reads them: standard BHK labels only, builder typos and amenity rows dropped. */
+function unitTypes(d: ReraDetails): string[] {
+  const out = new Set<string>();
+  for (const t of d.unitTypes ?? []) {
+    const m = t.match(/^(\d(?:\.5)?)\s*BHK$/);
+    if (m) out.add(`${m[1]} BHK`);
+    else if (/^(OFFICE|SHOP|COMMERCIAL|RETAIL|VILLA|PLOT|DUPLEX|PENTHOUSE|STUDIO)/.test(t)) out.add(t.charAt(0) + t.slice(1).toLowerCase());
+  }
+  return [...out].sort();
+}
+
 function place(r: ReraRegistryRow): string {
   return [r.locality, r.mandal && r.mandal !== r.locality ? r.mandal : null, r.district].filter(Boolean).join(', ');
 }
@@ -72,7 +94,8 @@ function notes(r: ReraRegistryRow, d: ReraDetails | null | undefined): string[] 
     out.push(`${area(d.affectedAreaSqm)} of the land is marked as affected by road widening, a lake full tank level (FTL) or nala widening. The filing does not say which. Our full check confirms the lake buffer on the map.`);
   }
   if (d.hasExtension) out.push('TG-RERA has issued an extension certificate for this project.');
-  if (d.totalUnits && d.bookedUnits != null && d.totalUnits >= 10) {
+  // A zero means the builder never updated it, not that nothing sold; say nothing then.
+  if (d.totalUnits && d.bookedUnits && d.totalUnits >= 10) {
     const pct = Math.round((d.bookedUnits / d.totalUnits) * 100);
     out.push(`The builder reports ${d.bookedUnits.toLocaleString('en-IN')} of ${d.totalUnits.toLocaleString('en-IN')} units booked (${pct}%). Builders update this figure themselves, so treat it as indicative.`);
   }
@@ -97,15 +120,15 @@ export default async function RegistryPage({ params }: Props) {
     ['Completion date as first filed', fmtDate(d?.proposedCompletion)],
     ['Revised completion date', d?.revisedCompletion && d.revisedCompletion !== d.proposedCompletion ? fmtDate(d.revisedCompletion) : null],
     ['Litigation declared by builder', d?.litigation ?? null],
-    ['Units', d?.totalUnits ? `${d.totalUnits.toLocaleString('en-IN')}${d.unitTypes?.length ? ` (${d.unitTypes.join(', ')})` : ''}` : null],
+    ['Units', d?.totalUnits ? `${d.totalUnits.toLocaleString('en-IN')}${unitTypes(d).length ? ` (${unitTypes(d).join(', ')})` : ''}` : null],
     ['Towers or blocks', d?.buildings ? String(d.buildings) : null],
     ['Floors (tallest block)', d?.maxSlabs ? `${d.maxSlabs} above ground${d.basements ? `, ${d.basements} basement${d.basements === 1 ? '' : 's'}` : ''}` : null],
     ['Total land', area(d?.landAreaSqm)],
     ['Land affected by road, lake FTL or nala widening', d?.affectedAreaSqm ? area(d.affectedAreaSqm) : d?.affectedAreaSqm === 0 ? 'None declared' : null],
-    ['Approved built-up area', area(d?.builtUpAreaSqm)],
+    ['Approved built-up area', d?.builtUpAreaSqm ? `${Math.round(d.builtUpAreaSqm * 10.764).toLocaleString('en-IN')} sq ft` : null],
     ['Construction progress (builder reported)', d?.workDonePercent != null ? `${d.workDonePercent}%` : null],
     ['Survey numbers', r.surveyNumbers],
-    ['Location', [r.street, place(r), r.pinCode].filter(Boolean).join(', ') || null],
+    ['Location', dedupe([r.street, r.locality, r.mandal, r.district, r.pinCode]).join(', ') || null],
   ];
 
   const lookOut = notes(r, d);

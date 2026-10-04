@@ -143,14 +143,14 @@ export function BookingView({
 
   const handleConfirmBooking = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
+    if (whatsapp.replace(/\D/g, '').length < 10) return;
 
     const slot = `${activeSlot.dayLabel}, ${activeSlot.times[timezone]}`;
     setIsSending(true);
     setBookingError(null);
     const err = await submitLead({
       source: 'booking',
-      email: email.trim(),
+      email: email.trim() || undefined,
       phone: whatsapp.trim(),
       projectId: selectedProject?.id,
       projectName: selectedProject?.name,
@@ -191,7 +191,7 @@ export function BookingView({
           className="text-xs font-semibold text-[#6b6b6b] hover:text-[#212121] inline-flex items-center gap-1.5 py-1 min-h-[44px] cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
-          <span>{step === 2 && !isBooked ? 'Back to time selection' : 'Back to project report'}</span>
+          <span>{step === 2 && !isBooked ? 'Back to time selection' : selectedProject ? 'Back to project report' : 'Back'}</span>
         </button>
       </div>
 
@@ -323,7 +323,7 @@ export function BookingView({
                   </div>
                   <div>
                     <span className="text-[#a3a3a3] block text-[11px]">Subject Property</span>
-                    <strong className="text-[#212121]">{selectedProject?.name || 'Aurelia Heights'}</strong>
+                    <strong className="text-[#212121]">{selectedProject?.name || 'Any project you are considering'}</strong>
                   </div>
                   {userPreferences?.budget && (
                     <div>
@@ -356,13 +356,12 @@ export function BookingView({
               <div className="space-y-4">
                 <div>
                   <label className="block text-xs font-semibold text-[#212121] mb-1">
-                    Email address <span className="text-rose-600">*</span>
+                    Email address <span className="text-[#a3a3a3] font-normal">(optional)</span>
                   </label>
                   <div className="relative">
                     <Mail className="w-4 h-4 text-[#a3a3a3] absolute left-3.5 top-1/2 -translate-y-1/2" strokeWidth={1.5} />
                     <input
                       type="email"
-                      required
                       placeholder="e.g. yourname@domain.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -370,7 +369,7 @@ export function BookingView({
                     />
                   </div>
                   <span className="text-[11px] text-[#a3a3a3] mt-1 block">
-                    We send the calendar invite and dial-in details here.
+                    Only if you want the notes from the call by email.
                   </span>
                 </div>
 
@@ -407,10 +406,10 @@ export function BookingView({
                 </p>
               )}
 
-              {/* Confirm CTA - disabled until email and WhatsApp are filled */}
+              {/* Confirm CTA - disabled until a WhatsApp number is filled */}
               <button
                 type="submit"
-                disabled={isSending || !email.trim() || !email.includes('@') || whatsapp.replace(/\D/g, '').length < 10}
+                disabled={isSending || whatsapp.replace(/\D/g, '').length < 10}
                 className="w-full min-h-[52px] py-3.5 px-6 rounded-full bg-[#212121] hover:bg-black text-white text-sm font-bold font-mono uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <PhoneCall className="w-4 h-4 text-white" strokeWidth={2} />
@@ -431,14 +430,16 @@ export function BookingView({
                 You&apos;re booked
               </h2>
               <p className="text-xs text-[#838383]">
-                Confirmation sent to <strong>{email}</strong>
+                We&apos;ll confirm the slot on WhatsApp at <strong>{whatsapp}</strong>
               </p>
             </div>
           </div>
 
           <div className="p-4 rounded-xl bg-[#f9f9f9] border border-[#eeeeee] text-xs space-y-1">
             <div><strong>Time:</strong> {activeSlot.dayLabel}, {activeSlot.times[timezone]}</div>
-            <div><strong>Property:</strong> {selectedProject?.name || 'Aurelia Heights'} ({selectedProject?.location || 'Neopolis'})</div>
+            {selectedProject && (
+              <div><strong>Property:</strong> {selectedProject.name} ({selectedProject.location})</div>
+            )}
           </div>
 
           <div className="space-y-3 pt-2">
@@ -453,7 +454,7 @@ export function BookingView({
               </div>
               <div className="flex items-start gap-2.5">
                 <span className="font-bold text-[#212121]">2.</span>
-                <span>You receive a calendar invite with a Google Meet link.</span>
+                <span>We confirm the slot with you on WhatsApp.</span>
               </div>
               <div className="flex items-start gap-2.5">
                 <span className="font-bold text-[#212121]">3.</span>

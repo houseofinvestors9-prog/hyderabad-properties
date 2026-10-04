@@ -563,7 +563,6 @@ export function HomeView({ onNavigate, onSelectProject, userPreferences, onUpdat
             </h2>
             <p className="text-[17px] text-[#838383] leading-relaxed">
               Answer three quick questions and we’ll show the checked projects that fit how and when you plan to buy.
-              No phone number needed.
             </p>
           </div>
 
@@ -824,10 +823,10 @@ function QuizResults({
     setError(null);
     const err = await submitLead({
       source: 'shortlist',
-      email: email.trim(),
-      phone: phone.trim() || undefined,
+      email: email.trim() || undefined,
+      phone: phone.trim(),
       preferences: { ...userPreferences },
-      message: `Shortlist: ${projects.map((p) => p.name).join(', ')}`,
+      message: projects.length ? `Shortlist: ${projects.map((p) => p.name).join(', ')}` : 'No checked project matched yet; send matches as reports go live.',
     });
     if (err) {
       setError(err);
@@ -879,29 +878,36 @@ function QuizResults({
       </div>
 
       <div className="rounded-[14px] bg-white border border-[#eeeeee] p-5 space-y-3">
-        <h4 className="text-[17px] font-semibold text-[#212121]">Email me this shortlist with the source documents</h4>
+        {projects.length === 0 && (
+          <p className="text-[15px] text-[#6b6b6b]">
+            We haven&apos;t finished a full check on a project that fits these answers yet. New reports go live every week.
+          </p>
+        )}
+        <h4 className="text-[17px] font-semibold text-[#212121]">
+          {projects.length ? 'Get this shortlist with the source documents' : 'Tell me when a matching report is ready'}
+        </h4>
         {state === 'sent' ? (
           <p className="flex items-center gap-2 text-[15px] text-[#212121]">
-            <Check className="w-4 h-4" strokeWidth={2} /> On its way to {email}.
+            <Check className="w-4 h-4" strokeWidth={2} /> Thanks. We&apos;ll message you on WhatsApp at {phone}.
           </p>
         ) : (
           <form onSubmit={send} className="space-y-3">
             <div className="grid sm:grid-cols-2 gap-3">
               <input
-                type="email"
+                type="tel"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email address"
-                aria-label="Email address"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="WhatsApp number"
+                aria-label="WhatsApp number"
                 className="w-full px-4 min-h-[48px] rounded-full border border-[#eeeeee] bg-white text-[15px] focus:outline-none focus:border-[#212121]"
               />
               <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="WhatsApp (optional)"
-                aria-label="WhatsApp number, optional"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email (optional)"
+                aria-label="Email address, optional"
                 className="w-full px-4 min-h-[48px] rounded-full border border-[#eeeeee] bg-white text-[15px] focus:outline-none focus:border-[#212121]"
               />
             </div>
@@ -911,7 +917,7 @@ function QuizResults({
               disabled={state === 'sending'}
               className="rounded-full bg-[#212121] hover:bg-black text-white text-[15px] font-semibold px-6 py-3 transition-colors cursor-pointer disabled:opacity-60"
             >
-              {state === 'sending' ? 'Sending…' : 'Send me the shortlist'}
+              {state === 'sending' ? 'Sending…' : projects.length ? 'Send me the shortlist' : 'Notify me'}
             </button>
             <PrivacyPledge compact />
           </form>

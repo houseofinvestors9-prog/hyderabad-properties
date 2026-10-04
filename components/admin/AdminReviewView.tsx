@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useState } from 'react';
+import { DEMO_DATA } from '@/lib/demo';
 import {
   Shield,
   RefreshCw,
@@ -635,7 +636,7 @@ export function AdminReviewView({
   const [stats, setStats] = useState<Stats>(initialStats);
   const [notificationsLog, setNotificationsLog] = useState<NotificationRow[]>(initialNotifications);
   const [toast, setToast] = useState<{ msg: string; url?: string } | null>(null);
-  const [mode, setMode] = useState<'simulate' | 'live'>('simulate');
+  const [mode, setMode] = useState<'simulate' | 'live'>(DEMO_DATA ? 'simulate' : 'live');
   const [syncing, setSyncing] = useState(false);
   const [showIntake, setShowIntake] = useState(false);
 
