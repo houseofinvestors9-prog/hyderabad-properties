@@ -270,7 +270,7 @@ export function AppShell({ initialView = 'home', initialProjectId, initialQuery 
       return [{ projectId: project.id, channel, contact, watchedAt: 'Just now', watchedAtIso: now }, ...prev];
     });
 
-    showToast(`Now watching ${project.name}. Alerts active.`);
+    showToast(`Now watching ${project.name}. We will message you once alerts are switched on.`);
 
     fetch('/api/watch', {
       method: 'POST',
@@ -283,7 +283,7 @@ export function AppShell({ initialView = 'home', initialProjectId, initialQuery 
           showToast(body.error ?? 'Could not save your alert. Please try again.', 5000);
         }
       })
-      .catch(() => showToast('You are offline. Alerts will start once you reconnect and watch again.', 5000));
+      .catch(() => showToast('You are offline. Please reconnect and tap Watch again.', 5000));
   };
 
   const handleStopWatching = (projectId: string) => {
@@ -450,7 +450,7 @@ export function AppShell({ initialView = 'home', initialProjectId, initialQuery 
           />
         )}
 
-        {currentView === 'commute' && (
+        {currentView === 'commute' && DEMO_DATA && (
           <CommuteView
             onNavigate={handleNavigate}
             onSelectProject={handleSelectProject}

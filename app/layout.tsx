@@ -15,9 +15,11 @@ const description =
   'Free, independent checks for Hyderabad homes. RERA status, building approvals, lake buffer zones and the true cost of buying, in one report.';
 
 export const metadata: Metadata = {
+  // Makes every canonical and share-image URL absolute (relative ones are ignored by search engines and WhatsApp).
+  metadataBase: new URL(process.env.PUBLIC_SITE_URL || 'https://hyderabad.properties'),
   title,
   description,
-  openGraph: { title, description, type: 'website' },
+  openGraph: { title, description, type: 'website', siteName: 'hyderabad.properties', locale: 'en_IN' },
   twitter: { card: 'summary_large_image', title, description },
 };
 

@@ -67,7 +67,7 @@ export function WatchSheet({ project, isOpen, onClose, onStartWatching }: WatchS
 
         {/* Plain Explanation */}
         <p className="text-xs sm:text-sm text-[#6b6b6b] leading-relaxed">
-          We re-check this project&apos;s registration, approvals and penalty record. If something changes, we message you.
+          We re-check this project&apos;s registration, approvals and penalty record. Once alerts are switched on, we will message you when something changes.
         </p>
 
         {/* Form */}

@@ -29,7 +29,7 @@ export function Footer({ onNavigate, isAdvisorDemoOpen, onToggleAdvisorDemo, onS
       title: 'Check',
       links: [
         { label: 'Check a project', view: 'check' },
-        { label: 'Search by commute', view: 'commute' },
+        ...(DEMO_DATA ? [{ label: 'Search by commute', view: 'commute' as ViewType }] : []),
         { label: 'True cost calculator', view: 'cost' },
       ],
     },
@@ -80,7 +80,10 @@ export function Footer({ onNavigate, isAdvisorDemoOpen, onToggleAdvisorDemo, onS
 
         <div className="py-8 border-t border-[#eeeeee] flex flex-col lg:flex-row lg:items-center justify-between gap-4 text-sm text-[#838383]">
           <div className="space-y-1">
-            <p>{OWNERSHIP_LINE}</p>
+            <p>
+              {OWNERSHIP_LINE}{' '}
+              <a href="/privacy" className="underline hover:text-[#212121]">Privacy policy</a>
+            </p>
             <p>{FOOTER_DISCLAIMER}</p>
           </div>
 

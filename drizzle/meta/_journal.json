@@ -64,6 +64,13 @@
       "when": 1791099976700,
       "tag": "0008_report_signoff",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1791292622260,
+      "tag": "0009_rate_limit_hits",
+      "breakpoints": true
     }
   ]
 }
