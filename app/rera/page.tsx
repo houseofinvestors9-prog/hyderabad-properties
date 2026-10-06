@@ -13,6 +13,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   return {
     title: `TG-RERA registered projects in ${where} · hyderabad.properties`,
     description: `Every project registered with Telangana RERA in ${where}: builder, status, completion date, approvals and location, from the public record.`,
+    alternates: { canonical: district ? `/rera?district=${encodeURIComponent(district)}` : '/rera' },
   };
 }
 

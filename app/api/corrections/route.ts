@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getDb } from '@/lib/db/client';
 import { corrections } from '@/lib/db/schema';
+import { clientIp, rateLimit } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,6 +21,8 @@ export async function POST(req: Request) {
   const parsed = Body.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message ?? 'Invalid request' }, { status: 400 });
   const { website: _hp, ...row } = parsed.data;
+  const limited = await rateLimit('corrections', [{ key: clientIp(req), max: 5, windowMinutes: 60 }]);
+  if (limited) return limited;
   const db = await getDb();
   await db.insert(corrections).values(row);
   return NextResponse.json({ ok: true });

@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { captureLead } from '@/lib/leads';
 import { currentUser } from '@/lib/buyer-auth';
 import { badRequest } from '@/lib/server-auth';
+import { clientIp, phoneKey, rateLimit } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -46,6 +47,15 @@ export async function POST(req: Request) {
   const { website: _honeypot, ...lead } = parsed.data;
   if (lead.email && !EMAIL.test(lead.email)) return badRequest('Enter a valid email address.');
   if (lead.phone && !PHONE.test(lead.phone)) return badRequest('Enter a valid phone number.');
+
+  // Every lead lands on a person's calling list, so cap what one visitor or one number can send.
+  const ip = clientIp(req);
+  const limited = await rateLimit('leads', [
+    { key: ip, max: 5, windowMinutes: 10 },
+    { key: ip, max: 20, windowMinutes: 24 * 60 },
+    { key: phoneKey(lead.phone), max: 3, windowMinutes: 60 },
+  ]);
+  if (limited) return limited;
 
   try {
     const user = await currentUser().catch(() => null);

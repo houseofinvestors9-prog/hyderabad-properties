@@ -15,6 +15,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   return {
     title: `${p.name}, ${p.location}: ${p.statusLabel} · hyderabad.properties`,
     description: `Independent check of ${p.name}: RERA ${p.reraStatus}, building plan ${p.buildingPlan}, lake buffer ${p.lakeBuffer}. Last verified ${p.lastVerifiedDate}.`,
+    alternates: { canonical: `/project?id=${encodeURIComponent(p.id)}` },
   };
 }
 

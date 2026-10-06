@@ -47,7 +47,10 @@ export async function RegistryShell({ children }: { children: React.ReactNode })
             Spotted something wrong or out of date? <Link href="/corrections" className="underline hover:text-[#212121]">Ask us to correct it</Link>.
             Builders can send documents too; we reply within three working days.
           </p>
-          <p>hyderabad.properties is owned and operated by House of Investors.</p>
+          <p>
+            hyderabad.properties is owned and operated by House of Investors.{' '}
+            <Link href="/privacy" className="underline hover:text-[#212121]">Privacy policy</Link>
+          </p>
         </div>
       </footer>
     </div>
