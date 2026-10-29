@@ -36,8 +36,8 @@ with a confidence label. Where no API key is set, a deterministic rules reader r
 instead, at lower confidence.
 
 **Nothing publishes automatically.** Every verdict waits for a named person to press
-approve on the review desk. Being wrong in public about somebody's project is a lawsuit,
-not a bad metric.
+approve on the review desk. A wrong verdict in public about somebody's project carries
+legal exposure, so a person signs it.
 
 ## Stack
 
