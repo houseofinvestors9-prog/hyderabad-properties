@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createProjectRequest } from '@/lib/project-requests';
+import { clientIp, phoneKey, rateLimit } from '@/lib/rate-limit';
 import { badRequest } from '@/lib/server-auth';
 
 export const dynamic = 'force-dynamic';
@@ -41,6 +42,13 @@ export async function POST(req: Request) {
   const { consent: _consent, website: _honeypot, ...input } = parsed.data;
   if (input.requesterEmail && !EMAIL.test(input.requesterEmail)) return badRequest('Enter a valid email address.');
   if (input.requesterPhone && !PHONE.test(input.requesterPhone)) return badRequest('Enter a valid phone number.');
+
+  const ip = clientIp(req);
+  const limited = await rateLimit('project-requests', [
+    { key: ip, max: 5, windowMinutes: 60 },
+    { key: phoneKey(input.requesterPhone), max: 5, windowMinutes: 24 * 60 },
+  ]);
+  if (limited) return limited;
 
   try {
     const id = await createProjectRequest(input);

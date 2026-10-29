@@ -91,16 +91,17 @@ export function PrivacyPledge({ compact = false, variant, className = '' }: Priv
 
             <div className="text-xs sm:text-sm text-[#4a4a4a] space-y-3 leading-relaxed">
               <p>
-                <strong>What we collect:</strong> We collect your email address, optional WhatsApp number, and shortlisted property preferences.
+                <strong>What we collect:</strong> Your name, phone or WhatsApp number, email if you give it, and the projects and preferences you tell us about.
               </p>
               <p>
-                <strong>Why we collect it:</strong> We use this information solely to prepare for your consultation and share independent legal verification reports.
+                <strong>Why we collect it:</strong> To reply to your request, arrange visits you ask for and tell you when a project check is ready.
               </p>
               <p>
-                <strong>Who sees it:</strong> Only the House of Investors team that runs hyderabad.properties sees your details. We never sell them or pass them to brokers or marketing lists.
+                <strong>Who sees it:</strong> The House of Investors team that runs hyderabad.properties. A builder sees your name and number only if you ask us to arrange a visit to their project. We never sell your details.
               </p>
               <p>
-                <strong>How to delete:</strong> Reply STOP to any message or email <em>privacy@hyderabad.properties</em> and we completely delete your records within 24 hours.
+                <strong>How to delete:</strong> Reply STOP on WhatsApp, or email <em>admin@hoinvestors.com</em>, and we delete your records within 30 days.{' '}
+                <a href="/privacy" className="underline">Full privacy policy</a>
               </p>
             </div>
 

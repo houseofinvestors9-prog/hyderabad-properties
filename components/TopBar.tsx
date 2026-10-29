@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { AccountLink } from '@/components/account/AccountLink';
+import { DEMO_DATA } from '@/lib/demo';
 
 export type ViewType = 'home' | 'check' | 'project' | 'concierge' | 'booking' | 'cost' | 'commute' | 'watching';
 
@@ -15,7 +16,8 @@ interface TopBarProps {
 const NAV: { view: ViewType; label: string }[] = [
   { view: 'home', label: 'Home' },
   { view: 'check', label: 'Check a project' },
-  { view: 'commute', label: 'Search by commute' },
+  // Commute times are still sample figures, so the view only shows on demo builds.
+  ...(DEMO_DATA ? [{ view: 'commute' as ViewType, label: 'Search by commute' }] : []),
   { view: 'cost', label: 'True cost' },
   { view: 'watching', label: 'Watching' },
 ];

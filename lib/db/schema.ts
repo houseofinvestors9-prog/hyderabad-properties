@@ -483,3 +483,15 @@ export const corrections = pgTable(
   },
   (t) => [index('corrections_status_idx').on(t.status, t.createdAt)]
 );
+
+/** One row per public form submission, used to rate-limit the open endpoints across all app processes. */
+export const rateLimitHits = pgTable(
+  'rate_limit_hits',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    bucket: text('bucket').notNull(),
+    key: text('key').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('rate_limit_hits_lookup_idx').on(t.bucket, t.key, t.createdAt)]
+);

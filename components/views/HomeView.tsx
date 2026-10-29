@@ -30,6 +30,7 @@ import { projectImage, AREA_IMAGES, REPRESENTATIVE_PHOTO_LABEL } from '@/lib/pro
 import { submitLead } from '@/lib/submit-lead';
 import type { RegistryHit, RegistryOverview } from '@/lib/data/rera';
 import { RequestProjectForm } from '@/components/RequestProjectForm';
+import { DEMO_DATA } from '@/lib/demo';
 
 interface HomeViewProps {
   onNavigate: (view: ViewType, query?: string) => void;
@@ -360,7 +361,7 @@ export function HomeView({ onNavigate, onSelectProject, userPreferences, onUpdat
                 n: '3',
                 icon: BellRing,
                 title: 'Watch it until you sign',
-                body: 'Get a WhatsApp or email alert the day a registration lapses, a penalty lands or an approval changes.',
+                body: 'Save the projects on your shortlist. Alerts when a registration lapses, a penalty lands or an approval changes are coming soon.',
               },
             ].map((step) => (
               <div key={step.n} className="grid grid-cols-[48px_1fr] gap-5" data-reveal>
@@ -623,6 +624,7 @@ export function HomeView({ onNavigate, onSelectProject, userPreferences, onUpdat
             </h2>
             <p className="text-[17px] text-[#838383]">Current price ranges per sq ft and what to watch for in each corridor.</p>
           </div>
+          {DEMO_DATA && (
           <button
             type="button"
             onClick={() => onNavigate('commute')}
@@ -630,6 +632,7 @@ export function HomeView({ onNavigate, onSelectProject, userPreferences, onUpdat
           >
             Search by commute
           </button>
+          )}
         </div>
 
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-5">

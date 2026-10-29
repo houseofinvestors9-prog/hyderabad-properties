@@ -5,6 +5,7 @@ import { RegistryShell } from '@/components/registry/RegistryShell';
 export const metadata: Metadata = {
   title: 'Ask for a correction · hyderabad.properties',
   description: 'Tell us if something on hyderabad.properties is wrong or out of date.',
+  alternates: { canonical: '/corrections' },
 };
 
 type Props = { searchParams: Promise<{ page?: string }> };

@@ -132,12 +132,8 @@ export function CheckView({
 
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
-  // 3 Clickable example chips
-  const exampleChips = [
-    { label: 'Aurelia Heights', query: 'Aurelia Heights' },
-    { label: 'Lakeview Residency', query: 'Lakeview Residency' },
-    { label: 'Banyan Park', query: 'Banyan Park' },
-  ];
+  // Example chips: the first three projects we have actually checked
+  const exampleChips = liveProjects.slice(0, 3).map((p) => ({ label: p.name, query: p.name }));
 
   // Autocomplete filtering based on user input
   const matchingProjects = searchTerm.trim().length > 0

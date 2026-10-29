@@ -1,5 +1,5 @@
 import { createHash, createHmac, randomBytes, randomInt, timingSafeEqual } from 'node:crypto';
-import { and, count, desc, eq, gt, isNull } from 'drizzle-orm';
+import { and, count, desc, eq, gt, isNull, lt } from 'drizzle-orm';
 import { cookies } from 'next/headers';
 import { getDb } from './db/client';
 import { loginCodes, savedProjects, userSessions, users, type UserRow } from './db/schema';
@@ -60,6 +60,11 @@ export async function requestLoginCode(rawPhone: string, ip: string | null): Pro
     const sinceHour = new Date(Date.now() - 60 * 60_000);
     const [{ n: perIp }] = await db.select({ n: count() }).from(loginCodes).where(and(eq(loginCodes.ip, ip), gt(loginCodes.createdAt, sinceHour)));
     if (perIp >= 10) return { ok: false, error: 'Too many attempts. Try again in an hour.', status: 429 };
+  }
+
+  // The privacy policy promises login records (with their IP) are gone within 30 days.
+  if (Math.random() < 0.05) {
+    await db.delete(loginCodes).where(lt(loginCodes.createdAt, new Date(Date.now() - 30 * 86_400_000)));
   }
 
   const code = String(randomInt(0, 1_000_000)).padStart(6, '0');

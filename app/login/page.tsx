@@ -27,8 +27,8 @@ export default async function LoginPage({ searchParams }: Props) {
       <div className="max-w-[440px] mx-auto py-6 sm:py-12">
         <h1 className="text-[34px] sm:text-[42px] leading-[1.1] font-medium tracking-tight">Log in with WhatsApp</h1>
         <p className="mt-3 text-[16px] text-[#6b6b6b]">
-          Save projects, get alerts when a project&apos;s RERA record or orders change, and see the status of the checks you asked
-          for. Logging in is optional; every report stays free without it.
+          Save projects and see the status of the checks you asked for. Alerts when a project&apos;s RERA record or orders change
+          are coming soon. Logging in is optional; every report stays free without it.
         </p>
         <div className="mt-8">
           {loginAvailable() ? (
@@ -41,7 +41,8 @@ export default async function LoginPage({ searchParams }: Props) {
         </div>
         <p className="mt-8 text-[13px] leading-relaxed text-[#838383]">
           By logging in you agree that House of Investors, which runs hyderabad.properties, may contact you on this number about
-          the projects you look at. We never sell your details or pass them to brokers. Reply STOP on WhatsApp at any time.
+          the projects you look at. We never sell your details or pass them to brokers. Reply STOP on WhatsApp at any time.{' '}
+          <a href="/privacy" className="underline hover:text-[#212121]">Privacy policy</a>
         </p>
       </div>
     </RegistryShell>

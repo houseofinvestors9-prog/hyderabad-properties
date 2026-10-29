@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { addWatch, removeWatch } from '@/lib/data/repo';
 import { badRequest } from '@/lib/server-auth';
+import { clientIp, rateLimit } from '@/lib/rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,6 +22,8 @@ export async function POST(req: Request) {
   if (!parsed.success) return badRequest('Invalid watch request', parsed.error.flatten());
   const { projectId, channel, contact } = parsed.data;
   if (!validContact(channel, contact)) return badRequest('Enter a valid phone number or email.');
+  const limited = await rateLimit('watch', [{ key: clientIp(req), max: 20, windowMinutes: 60 }]);
+  if (limited) return limited;
   try {
     const row = await addWatch(projectId, channel, contact);
     return NextResponse.json({ ok: true, id: row.id });
