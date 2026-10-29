@@ -354,6 +354,8 @@ export const reraRegistry = pgTable(
     detailFetchedAt: timestamp('detail_fetched_at', { withTimezone: true }),
     detailError: text('detail_error'),
     changes: jsonb('changes').$type<ReraChange[]>().notNull().default([]),
+    lakeScreen: jsonb('lake_screen').$type<LakeScreen>(),
+    guideline: jsonb('guideline').$type<GuidelineMatch>(),
     projectId: text('project_id').references(() => projects.id, { onDelete: 'set null' }),
     firstSeenAt: timestamp('first_seen_at', { withTimezone: true }).notNull().defaultNow(),
     lastSeenAt: timestamp('last_seen_at', { withTimezone: true }).notNull().defaultNow(),
@@ -494,4 +496,167 @@ export const rateLimitHits = pgTable(
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index('rate_limit_hits_lookup_idx').on(t.bucket, t.key, t.createdAt)]
+);
+
+/**
+ * Lakes notified by HMDA's Lake Protection Committee (lakes.hmda.gov.in), with links to the official
+ * FTL map, cadastral map and the list of survey numbers inside the FTL and buffer zone.
+ */
+export const hmdaLakes = pgTable(
+  'hmda_lakes',
+  {
+    lakeId: text('lake_id').primaryKey(), // as HMDA writes it, e.g. "1025" or "2500/27"
+    name: text('name').notNull(),
+    district: text('district'),
+    mandal: text('mandal'),
+    village: text('village'),
+    preliminaryNotified: text('preliminary_notified'), // ISO date
+    finalNotified: text('final_notified'), // ISO date
+    ftlPdf: text('ftl_pdf'), // file name under lakes.hmda.gov.in/hmdalake/
+    cadastralPdf: text('cadastral_pdf'),
+    surveyPdf: text('survey_pdf'),
+    /** Survey numbers HMDA lists inside the FTL or buffer zone, read from the scanned survey PDF. */
+    surveyNumbers: jsonb('survey_numbers').$type<{ number: string; zone: 'ftl' | 'buffer' | 'both' | null }[]>(),
+    surveyVillage: text('survey_village'),
+    surveyReadAt: timestamp('survey_read_at', { withTimezone: true }),
+    surveyError: text('survey_error'),
+    firstSeenAt: timestamp('first_seen_at', { withTimezone: true }).notNull().defaultNow(),
+    lastSeenAt: timestamp('last_seen_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('hmda_lakes_village_idx').on(t.village)]
+);
+
+/** Mapped water bodies from OpenStreetMap, used to measure how far a project point is from the nearest lake edge. */
+export const waterBodies = pgTable(
+  'water_bodies',
+  {
+    id: text('id').primaryKey(), // "way/123" or "relation/456"
+    name: text('name'),
+    kind: text('kind'), // lake, pond, reservoir, river ...
+    areaSqm: doublePrecision('area_sqm'),
+    minLat: doublePrecision('min_lat').notNull(),
+    minLng: doublePrecision('min_lng').notNull(),
+    maxLat: doublePrecision('max_lat').notNull(),
+    maxLng: doublePrecision('max_lng').notNull(),
+    rings: jsonb('rings').$type<[number, number][][][]>().notNull(), // polygons -> rings -> [lng, lat]
+    tile: text('tile').notNull(),
+    fetchedAt: timestamp('fetched_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('water_bodies_bbox_idx').on(t.minLat, t.maxLat, t.minLng, t.maxLng), index('water_bodies_tile_idx').on(t.tile)]
+);
+
+/** Villages on the Registration & Stamps unit-rate search, and when we last read their rates. */
+export const igrVillages = pgTable(
+  'igr_villages',
+  {
+    id: text('id').primaryKey(), // `${districtCode}|${mandalCode}|${villageCode}`
+    districtCode: text('district_code').notNull(),
+    districtName: text('district_name').notNull(),
+    mandalCode: text('mandal_code').notNull(),
+    mandalName: text('mandal_name').notNull(),
+    villageCode: text('village_code').notNull(),
+    villageName: text('village_name').notNull(),
+    rowCount: integer('row_count'),
+    fetchedAt: timestamp('fetched_at', { withTimezone: true }),
+    error: text('error'),
+  },
+  (t) => [index('igr_villages_mandal_idx').on(t.districtCode, t.mandalName), index('igr_villages_due_idx').on(t.fetchedAt)]
+);
+
+/** One row of the government unit-rate (guideline value) table for a village, per locality or road. */
+export const igrRates = pgTable(
+  'igr_rates',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    villageId: text('village_id')
+      .notNull()
+      .references(() => igrVillages.id, { onDelete: 'cascade' }),
+    wardBlock: text('ward_block'),
+    locality: text('locality').notNull(),
+    landPerSqYd: integer('land_per_sq_yd'),
+    aptGroundPerSqFt: integer('apt_ground_per_sq_ft'),
+    aptFirstPerSqFt: integer('apt_first_per_sq_ft'),
+    aptOtherPerSqFt: integer('apt_other_per_sq_ft'),
+    classification: text('classification'),
+    effectiveDate: text('effective_date'), // ISO
+    fetchedAt: timestamp('fetched_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('igr_rates_village_idx').on(t.villageId)]
+);
+
+/** Automated lake screen for one registered project. Not a verdict: a person reviews before any report says more. */
+export interface LakeScreen {
+  checkedAt: string;
+  level: 'survey_listed' | 'very_close' | 'nearby' | 'clear' | 'unknown';
+  nearest: { name: string | null; kind: string | null; distanceM: number; osmId: string } | null;
+  nearby: { name: string | null; distanceM: number }[];
+  /** HMDA lakes in the same village whose FTL / buffer survey list includes one of the project's survey numbers. */
+  surveyMatches: { lakeId: string; lakeName: string; surveyNumbers: string[]; zone: string | null; pdf: string | null }[];
+  /** Notified lakes in the same village (official maps to check), even without a survey number match. */
+  villageLakes: { lakeId: string; lakeName: string; ftlPdf: string | null }[];
+}
+
+/** Government guideline value (unit rate) matched to a registered project's village. */
+export interface GuidelineMatch {
+  village: string;
+  mandal: string;
+  district: string;
+  effectiveDate: string | null;
+  /** Apartment rate per sq ft for "other floors" on the village's general residential row, if there is one. */
+  baseAptPerSqFt: number | null;
+  minAptPerSqFt: number | null;
+  maxAptPerSqFt: number | null;
+  minLandPerSqYd: number | null;
+  maxLandPerSqYd: number | null;
+  rows: number;
+  matchedBy: 'village' | 'locality';
+}
+
+/** Small key-value store for ingestion bookkeeping (for example which map tiles were fetched when). */
+export const ingestState = pgTable('ingest_state', {
+  key: text('key').primaryKey(),
+  value: jsonb('value').$type<unknown>(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** What we read from a building permit, commencement or occupancy document uploaded on TG-RERA. */
+export interface PermitFacts {
+  documentType: 'building_permit' | 'commencement' | 'occupancy' | 'extension' | 'other';
+  authority: string | null;
+  fileNo: string | null;
+  issuedOn: string | null; // ISO
+  validUntil: string | null; // ISO
+  blocks: { name: string; basements: number | null; floorsAboveGround: number | null }[];
+  siteAreaSqm: number | null;
+  units: number | null;
+  surveyNumbers: string | null;
+  conditionsOfNote: string[];
+}
+
+/**
+ * Documents a builder uploaded to its TG-RERA project page (permits, plans, title, encumbrance, OC).
+ * Listed on every page read; the permit, commencement, occupancy and extension documents are also read.
+ */
+export const reraDocuments = pgTable(
+  'rera_documents',
+  {
+    id: text('id').primaryKey(), // `${registrationNo}:${section}:${docId}`
+    registrationNo: text('registration_no')
+      .notNull()
+      .references(() => reraRegistry.registrationNo, { onDelete: 'cascade' }),
+    docId: text('doc_id').notNull(),
+    section: text('section').notNull(),
+    name: text('name').notNull(),
+    kind: text('kind').$type<'permit' | 'plan' | 'occupancy' | 'extension' | 'title' | 'encumbrance' | 'mortgage' | 'progress' | 'other'>().notNull(),
+    url: text('url').notNull(),
+    contentHash: text('content_hash'),
+    pages: integer('pages'),
+    textChars: integer('text_chars'),
+    facts: jsonb('facts').$type<PermitFacts>(),
+    readAt: timestamp('read_at', { withTimezone: true }),
+    readError: text('read_error'),
+    firstSeenAt: timestamp('first_seen_at', { withTimezone: true }).notNull().defaultNow(),
+    lastSeenAt: timestamp('last_seen_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('rera_documents_project_idx').on(t.registrationNo), index('rera_documents_kind_idx').on(t.kind, t.readAt)]
 );

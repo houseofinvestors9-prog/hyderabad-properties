@@ -5,6 +5,7 @@ import { request } from 'node:https';
 import { rootCertificates } from 'node:tls';
 import { sha256 } from './fetcher';
 import { EMSIGN_SSL_CA_G1 } from './certs';
+import { parseDocumentList, saveDocumentList } from './rera-documents';
 
 /**
  * TG-RERA registry.
@@ -49,7 +50,7 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const CA = [...rootCertificates, EMSIGN_SSL_CA_G1];
 
 /** HTTPS GET with the portal's missing intermediate certificate supplied. Follows redirects. */
-export function get(url: string, referer?: string, redirects = 3): Promise<string> {
+export function getBuffer(url: string, referer?: string, redirects = 3): Promise<{ body: Buffer; type: string }> {
   return new Promise((resolve, reject) => {
     const req = request(
       url,
@@ -66,7 +67,7 @@ export function get(url: string, referer?: string, redirects = 3): Promise<strin
         const status = res.statusCode ?? 0;
         if (status >= 300 && status < 400 && res.headers.location && redirects > 0) {
           res.resume();
-          resolve(get(new URL(res.headers.location, url).toString(), referer, redirects - 1));
+          resolve(getBuffer(new URL(res.headers.location, url).toString(), referer, redirects - 1));
           return;
         }
         if (status !== 200) {
@@ -76,7 +77,7 @@ export function get(url: string, referer?: string, redirects = 3): Promise<strin
         }
         const chunks: Buffer[] = [];
         res.on('data', (c: Buffer) => chunks.push(c));
-        res.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+        res.on('end', () => resolve({ body: Buffer.concat(chunks), type: String(res.headers['content-type'] ?? '') }));
         res.on('error', reject);
       }
     );
@@ -84,6 +85,10 @@ export function get(url: string, referer?: string, redirects = 3): Promise<strin
     req.on('error', reject);
     req.end();
   });
+}
+
+export async function get(url: string, referer?: string): Promise<string> {
+  return (await getBuffer(url, referer)).body.toString('utf8');
 }
 
 function clean(s: string | null | undefined): string | null {
@@ -424,6 +429,7 @@ async function enrichOne(db: DB, row: ReraRegistryRow): Promise<'updated' | 'unc
     const html = await get(detailUrl, `${BASE}/SearchList/Search`);
     const parsed = parseProjectPage(html);
     if (!parsed.projectStatus && !parsed.authority && !parsed.landAreaSqm) throw new Error('Project page did not contain project information');
+    await saveDocumentList(db, row.registrationNo, parseDocumentList(html));
     const details: ReraDetails = { ...parsed, hasExtension: hit?.hasExtension ?? row.details?.hasExtension ?? false, lastModified: hit?.lastModified ?? row.details?.lastModified ?? null };
     // Individuals are not named on our pages: keep company promoters only.
     const promoterName = details.promoterType === 'Individual' ? null : hit?.promoter ? tidyName(hit.promoter) : row.promoter;
